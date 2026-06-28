@@ -1,0 +1,87 @@
+[
+  {
+    "id": 1,
+    "title": "Modern Tokyo Discovery",
+    "location": "Japan",
+    "price": "$850",
+    "rating": 4.8,
+    "duration": "5 Days",
+    "description": "<h3>Experience Tokyo</h3><p>Explore the neon-lit streets of <strong>Shinjuku</strong> and the temples of <strong>Asakusa</strong>.</p><ul><li>Visit Meiji Shrine</li><li>Authentic Ramen workshop</li></ul>",
+    "images": [
+      "https://images.unsplash.com/photo-1518391846015-55a9cc003b25",
+      "https://images.unsplash.com/photo-1503899036084-c55cdd92da26",
+      "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf"
+    ],
+    "highlights": ["Luxury Stay", "Local Guide", "Entrance Fees Included", "Free WiFi"]
+  },
+  {
+    "id": 2,
+    "title": "Santorini Sunset Dream",
+    "location": "Greece",
+    "price": "$1200",
+    "rating": 4.9,
+    "duration": "4 Days",
+    "description": "<h3>Experience Santorini</h3><p>Witness the world's most beautiful sunsets over the iconic blue-domed churches and white-washed buildings.</p>",
+    "images": [
+      "https://images.unsplash.com/photo-1533105079780-92b9be482077",
+      "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff"
+    ],
+    "highlights": ["Private Pool", "Sunset Cruise", "Wine Tasting"]
+  },
+  {
+    "id": 3,
+    "title": "Dubai Luxury Safari",
+    "location": "UAE",
+    "price": "$950",
+    "rating": 4.7,
+    "duration": "6 Days",
+    "description": "<h3>Desert Luxury</h3><p>From gold souks to desert dunes, experience the unmatched luxury and adventure of Dubai.</p>",
+    "images": [
+      "https://images.unsplash.com/photo-1512453979798-5ea266f8880c",
+      "https://images.unsplash.com/photo-1526495124232-a04e1849168c"
+    ],
+    "highlights": ["Desert Safari", "Burj Khalifa Tour", "Dune Bashing"]
+  },
+  {
+    "id": 4,
+    "title": "Swiss Alps Adventure",
+    "location": "Switzerland",
+    "price": "$1500",
+    "rating": 4.9,
+    "duration": "7 Days",
+    "description": "<h3>Alpine Majesty</h3><p>Explore the breathtaking snowy peaks and crystal-clear lakes of the majestic Swiss Alps.</p>",
+    "images": [
+      "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e",
+      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4"
+    ],
+    "highlights": ["Skiing Pass", "Cable Car Access", "Mountain Resort Stay"]
+  },
+  {
+    "id": 5,
+    "title": "Bali Tropical Paradise",
+    "location": "Indonesia",
+    "price": "$650",
+    "rating": 4.6,
+    "duration": "5 Days",
+    "description": "<h3>Island Escape</h3><p>Relax in the lush jungles and pristine beaches of Bali, the ultimate tropical escape.</p>",
+    "images": [
+      "https://images.unsplash.com/photo-1552733407-5d5c46c3bb3b",
+      "https://images.unsplash.com/photo-1537996194471-e657df975ab4"
+    ],
+    "highlights": ["Beachfront Villa", "Yoga Sessions", "Snorkeling"]
+  },
+  {
+    "id": 6,
+    "title": "Paris Romantic Escape",
+    "location": "France",
+    "price": "$1100",
+    "rating": 4.8,
+    "duration": "3 Days",
+    "description": "<h3>City of Love</h3><p>Indulge in the art, culture, and romance of the world's most stylish city.</p>",
+    "images": [
+      "https://images.unsplash.com/photo-1502602898657-3e91760cbb34",
+      "https://images.unsplash.com/photo-1499856871958-5b9627545d1a"
+    ],
+    "highlights": ["Eiffel Tower Visit", "Louvre Museum Tour", "French Cuisine Dinner"]
+  }
+]

@@ -1,0 +1,419 @@
+
+/* /* --- Tour Card Styling (Updated for Alignment) --- */
+.tour-card {
+  background: #fff;
+  border-radius: 15px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.tour-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(0, 128, 128, 0.15) !important;
+}
+
+.tour-img-wrapper {
+  position: relative;
+  height: 230px; 
+  overflow: hidden;
+  flex-shrink: 0; 
+}
+
+.tour-img-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.tour-card:hover .tour-img-wrapper img {
+  transform: scale(1.1);
+}
+
+/* --- Card Body Alignment Fix --- */
+.tour-card .card-body {
+  padding: 1.5rem; 
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; 
+}
+
+.tour-card .card-title {
+  display: -webkit-box;
+  -webkit-line-clamp: 2; 
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.4;
+  min-height: 3.2rem;
+  margin-bottom: 1rem;
+}
+
+
+.tour-card .d-flex.justify-content-between.align-items-center.border-top {
+  margin-top: auto; 
+  padding-top: 1rem;
+}
+
+.tour-price-badge {
+  z-index: 2;
+  font-weight: 600;
+}
+
+
+/* --- Blog Card Components Styles --- */
+.blog-card {
+  background-color: var(--accent-alice-blue); /* Alice Blue Card Background */
+  border-radius: 12px;
+  overflow: hidden;
+  height: 100%;
+  transition: transform 0.3s ease;
+  
+  /* বাটন নিচে রাখার জন্য Flexbox লজিক */
+  display: flex;
+  flex-direction: column;
+}
+
+.blog-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 30px rgba(0, 128, 128, 0.1) !important;
+}
+
+/* Image Wrapper */
+.blog-img-box {
+  position: relative;
+  height: 220px;
+  overflow: hidden;
+  flex-shrink: 0; /* ইমেজ যেন সংকুচিত না হয় */
+}
+
+.blog-img-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.blog-card:hover .blog-img-box img {
+  transform: scale(1.1);
+}
+
+/* Date Badge */
+.blog-date {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background-color: var(--primary-teal);
+  color: white;
+  padding: 5px 15px;
+  font-size: 12px;
+  font-weight: 500;
+  z-index: 2;
+}
+
+/* Content Area */
+.blog-content {
+  padding: 1.5rem; /* Bootstrap p-4 এর সমতুল্য */
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; /* এটি বাকি খালি জায়গা দখল করবে */
+}
+
+.blog-title {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.4;
+  transition: color 0.3s;
+  min-height: 3rem; /* টাইটেল ১ লাইনের হলেও ২ লাইনের জায়গা ধরে রাখবে */
+}
+
+.blog-card:hover .blog-title {
+  color: var(--secondary-coral);
+}
+
+.blog-excerpt {
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  color: var(--secondary-text); /* বা text-secondary */
+}
+
+/* --- Read More Link --- */
+.read-more-btn {
+  color: var(--secondary-coral); /* Coral Link */
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 700;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  
+  /* ম্যাজিক লাইন: এটি বাটনকে সবসময় নিচে ঠেলে দেবে */
+  margin-top: auto; 
+}
+
+.read-more-btn:hover {
+  color: var(--primary-teal);
+  gap: 12px !important;
+}
+
+/* Responsive */
+@media (max-width: 991px) {
+  .blog-img-box {
+    height: 200px;
+  }
+}
+
+/* Newsletter Container */
+.newsletter-wrapper {
+  background-color: var(--accent-alice-blue); /* Alice Blue Background */
+  border: 1px solid rgba(0, 128, 128, 0.05);
+}
+
+.icon-box-coral {
+  background-color: var(--secondary-coral);
+  color: white;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  font-size: 1.2rem;
+}
+
+.ls-1 { letter-spacing: 1px; }
+
+/* --- Input Styling --- */
+.custom-input-teal {
+  border: 2px solid var(--primary-teal) !important; /* Teal Border */
+  border-right: none;
+  border-radius: 8px 0 0 8px !important;
+  font-weight: 500;
+}
+
+.custom-input-teal:focus {
+  box-shadow: none;
+  background-color: #fff;
+}
+
+/* --- Subscribe Button --- */
+.btn-coral-subscribe {
+  background-color: var(--secondary-coral) !important; /* Coral Button */
+  color: white !important;
+  border: 2px solid var(--secondary-coral) !important;
+  border-radius: 0 8px 8px 0 !important;
+  font-weight: 700;
+  transition: all 0.3s ease;
+}
+
+.btn-coral-subscribe:hover {
+  background-color: #e05a5a !important;
+  border-color: #e05a5a !important;
+  transform: translateY(-2px);
+}
+
+/* Responsive */
+/* ডেস্কটপ ভিউ: বাটন এবং ইনপুট যখন জোড়া থাকবে */
+@media (min-width: 576px) {
+  .custom-input-teal {
+    border-top-right-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+  }
+  .btn-coral-subscribe {
+    border-top-left-radius: 0 !important;
+    border-bottom-left-radius: 0 !important;
+    border-left: none !important;
+  }
+}
+
+/* মোবাইল ভিউ: বাটন যখন নিচে নামবে */
+@media (max-width: 575.98px) {
+  .custom-input-teal {
+    border-radius: 8px !important;
+    text-align: center;
+    width: 100%!important;  
+  }
+  .btn-coral-subscribe {
+    border-radius: 8px !important;
+    width: 100%;
+  }
+}
+
+
+/* FQA */
+/* --- FAQ Styles --- */
+.faq-section .header-line {
+  width: 60px;
+  height: 3px;
+  background-color: var(--secondary-coral);
+  margin-top: 10px;
+}
+.custom-accordion{
+  transition: all 0.3s ease;
+}
+
+.custom-accordion .accordion-item {
+  border-radius: 10px !important;
+  overflow: hidden;
+}
+
+.custom-accordion .accordion-button {
+  background-color: var(--accent-alice-blue);
+  color: var(--primary-teal);
+  padding: 20px;
+  border: none;
+  transition: all 0.3s ease;
+}
+
+.custom-accordion .accordion-button:not(.collapsed) {
+  background-color: var(--primary-teal);
+  color: white !important; /* একটিভ অবস্থায় ব্যাকগ্রাউন্ড টিল */
+  box-shadow: none;
+}
+
+/* Accordion Arrow Color */
+.custom-accordion .accordion-button::after {
+  filter: brightness(0.5); /* ডিফল্ট আইকন ডার্ক */
+}
+
+.custom-accordion .accordion-button:not(.collapsed)::after {
+  filter: brightness(0) invert(1); /* টিল ব্যাকগ্রাউন্ডে আইকন সাদা */
+}
+
+.custom-accordion .accordion-button:focus {
+  box-shadow: none;
+  border-color: rgba(0, 128, 128, 0.1);
+}
+
+.custom-accordion .accordion-body {
+  background-color: #fff;
+  border-top: 1px solid rgba(0, 128, 128, 0.1);
+  line-height: 1.7;
+}
+
+/* Hover Effect */
+.custom-accordion .accordion-item:hover {
+  transform: scale(1.01);
+  transition: 0.3s;
+}
+
+
+/* Gallery */
+
+/* Gallery Styles */
+/* --- Modern Gallery Styles --- */
+
+.gallery-card {
+  transition: all 0.4s ease;
+  background-color: var(--white);
+  border: 2px solid transparent;
+  cursor: pointer;
+}
+
+.gallery-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--light-coral);
+  box-shadow: var(--shadow-md) !important;
+}
+
+.gallery-img {
+  transition: transform 0.6s ease;
+}
+
+.gallery-card:hover .gallery-img {
+  transform: scale(1.1);
+}
+
+.gallery-hover-overlay {
+  background: var(--slider-overlay); /* Teal Overlay with transparency */
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.gallery-card:hover .gallery-hover-overlay {
+  opacity: 1;
+}
+
+.expand-icon {
+  transform: scale(0.5);
+  transition: transform 0.4s ease;
+}
+
+.gallery-card:hover .expand-icon {
+  transform: scale(1);
+}
+
+/* --- Lightbox (মোডাল) --- */
+.modern-lightbox-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9); /* পুরোপুরি কালো ব্যাকগ্রাউন্ড */
+  z-index: 999999 !important; /* সব কিছুর উপরে থাকবে */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  cursor: zoom-out;
+  animation: fadeIn 0.3s ease; /* Animate.css না থাকলে এই সিম্পল অ্যানিমেশন কাজ করবে */
+}
+
+/* ক্লোজ বাটন */
+.lightbox-close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  color: var(--white);
+  font-size: 35px;
+  cursor: pointer;
+  z-index: 100000;
+  transition: var(--transition);
+  opacity: 0.7;
+}
+
+.lightbox-close-btn:hover {
+  color: var(--secondary-coral);
+  opacity: 1;
+  transform: rotate(90deg);
+}
+
+/* মোডাল ইমেজ */
+.lightbox-content-wrapper {
+  max-width: 90vw;
+  max-height: 85vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: default;
+}
+
+.lightbox-img {
+  max-height: 85vh;
+  object-fit: contain;
+  border: 4px solid var(--white);
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+}
+
+/* সিম্পল CSS অ্যানিমেশন (যদি Animate.css না থাকে) */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes zoomIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* Animate.css ক্লাস ব্যাকআপ */
+.animate__zoomIn {
+  animation: zoomIn 0.3s ease-out;
+}

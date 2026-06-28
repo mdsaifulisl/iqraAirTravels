@@ -1,0 +1,514 @@
+/* hero */
+/* Slider Wrapper */
+.hero-wrapper {
+  height: 80vh;
+  min-height: 600px;
+}
+
+.manual-slider {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.custom-slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+  display: flex;
+  align-items: center;
+  z-index: 1;
+}
+
+.custom-slide.active {
+  opacity: 1;
+  z-index: 2;
+}
+
+.slide-img {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-size: cover;
+  background-position: center;
+}
+
+.slider-overlay-teal {
+  position: absolute;
+  width: 100%; height: 100%;
+  background: rgba(0, 64, 64, 0.7); /* Teal Overlay */
+}
+
+/* Animations */
+.animate-up { animation: fadeInUp 0.8s ease-out forwards; }
+.animate-down { animation: fadeInDown 0.8s ease-out forwards; }
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Form Styling */
+.flight-search-container {
+  position: absolute;
+  bottom: 60px;
+  width: 100%;
+  z-index: 10;
+}
+
+.search-box-white {
+  background: #ffffff;
+  border-top: 5px solid var(--secondary-coral);
+}
+
+.text-teal { color: var(--primary-teal); }
+.border-teal { border-color: rgba(0, 128, 128, 0.3) !important; }
+.btn-coral {
+  background-color: var(--secondary-coral);
+  color: white;
+  border: none;
+  transition: 0.3s;
+}
+.btn-coral:hover {
+  background-color: #e05a5a;
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* Navigation Buttons */
+.nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 15;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid white;
+  color: white;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.nav-btn:hover { background: var(--secondary-coral); border-color: var(--secondary-coral); }
+.prev-btn { left: 30px; }
+.next-btn { right: 30px; }
+
+@media (max-width: 991px) {
+  .hero-wrapper { height: auto; }
+  .manual-slider { height: 500px; }
+  .flight-search-container { position: relative; bottom: 0; margin-top: -50px; padding-bottom: 50px; }
+  .display-3 { font-size: 2.5rem; }
+}
+
+
+/* FeaturedTours.css */
+
+/* Section Base */
+.bg-alice-blue { background-color: var(--accent-alice-blue); }
+.text-teal { color: var(--primary-teal); }
+.text-coral { color: var(--secondary-coral); }
+.bg-light-coral { background-color: var(--light-coral); }
+
+.header-line {
+  width: 70px;
+  height: 3px;
+  background-color: var(--secondary-coral);
+  margin-top: 15px;
+}
+
+.tour-price-badge {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: var(--primary-teal);
+  color: #fff;
+  padding: 5px 15px;
+  border-radius: 30px;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+/* Special Offer specific */
+.rotate-3 {
+  transform: rotate(3deg);
+  transition: 0.3s;
+}
+
+.rotate-3:hover {
+  transform: rotate(0deg);
+}
+
+.z-index-1 { position: relative; z-index: 1; }
+
+
+/* SpecialVacation.css */
+
+/* Custom Variable used from your SRS */
+
+
+.special-card-wrapper {
+  background-color: var(--white);
+  transition: transform 0.4s ease;
+}
+
+.offer-image {
+  height: 500px;
+  position: relative;
+}
+
+.offer-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Discount Badge Styling */
+.discount-tag {
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  background-color: var(--secondary-coral);
+  color: white;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+  z-index: 5;
+}
+
+.ls-2 {
+  letter-spacing: 2px;
+}
+
+/* Animations */
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-bounce {
+  animation: bounce 3s infinite ease-in-out;
+}
+
+/* Responsive Handling */
+@media (max-width: 991px) {
+  .offer-image {
+    height: 350px;
+  }
+  
+  .special-card-wrapper {
+    border-radius: 20px !important;
+  }
+  
+  .display-5 {
+    font-size: 2rem;
+  }
+}
+
+.price-tag .text-teal {
+  color: var(--primary-teal);
+}
+
+
+
+/* ExplorePlaces.css */
+
+.header-line {
+  width: 70px;
+  height: 3px;
+  background-color: var(--secondary-coral);
+  margin-top: 15px;
+}
+
+
+.place-card-wrapper {
+  display: block;
+  text-decoration: none;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: box-shadow 0.3s ease;
+}
+
+.place-card {
+  position: relative;
+  height: 350px; 
+  border-radius: 12px;
+  overflow: hidden;
+  border: 4px solid transparent;
+  transition: border-color 0.3s ease-in-out;
+}
+
+.place-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+
+.place-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(0,0,0,0) 50%, rgba(0,0,0,0.8) 100%);
+  display: flex;
+  align-items: flex-end; 
+  justify-content: center;
+  padding: 30px;
+}
+
+.place-info {
+  opacity: 1;
+  transition: transform 0.4s ease;
+}
+
+/* --- Hover Effects (Teal Border) --- */
+.place-card-wrapper:hover .place-card {
+  border-color: var(--primary-teal); /* Teal Border on Hover */
+  box-shadow: 0 10px 20px rgba(0, 128, 128, 0.2);
+}
+
+.place-card-wrapper:hover .place-image img {
+  transform: scale(1.1);
+}
+
+.place-card-wrapper:hover .place-info {
+  transform: translateY(-10px); 
+}
+
+
+.btn-teal-outline {
+  background-color: transparent;
+  border: 2px solid var(--primary-teal);
+  color: var(--primary-teal);
+  border-radius: 30px;
+  transition: 0.3s;
+}
+
+.btn-teal-outline:hover {
+  background-color: var(--primary-teal);
+  color: var(--white);
+}
+
+
+@media (max-width: 991px) {
+  .place-card {
+    height: 300px;
+  }
+}
+
+@media (max-width: 575px) {
+  .display-5 {
+    font-size: 2.2rem;
+  }
+}
+
+/* ========= DesiredCountry.jsx ======== */
+
+.ls-1 { letter-spacing: 1px; }
+
+.border-teal-light {
+  border: 1px solid rgba(0, 128, 128, 0.1);
+}
+
+.selection-box {
+  transition: transform 0.3s ease;
+}
+
+.selection-box:hover {
+  transform: translateY(-5px);
+}
+
+
+.custom-select-teal {
+  border: 2px solid var(--primary-teal) !important; 
+  border-radius: 8px;
+  font-weight: 500;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.custom-select-teal:focus {
+  box-shadow: 0 0 10px rgba(0, 128, 128, 0.1);
+  border-color: var(--secondary-coral) !important; 
+}
+
+.select-icon {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+  font-size: 1.2rem;
+}
+
+/* --- Button Styling --- */
+.desired-vacation .btn-coral {
+  background-color: var(--secondary-coral); 
+  border: none;
+  color: var(--white);
+  min-width: 200px;
+  transition: all 0.3s ease;
+}
+
+.desired-vacation .btn-coral:hover {
+  background-color: #e05a5a;
+  box-shadow: 0 5px 15px rgba(255, 107, 107, 0.3);
+  transform: scale(1.02);
+}
+
+
+@media (max-width: 576px) {
+  .custom-select-teal {
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+  
+  .desired-vacation .btn-coral {
+    width: 100%;
+  }
+}
+
+
+
+/* ========= Testimonials Section ======== */
+.testimonials-section {
+  background-color: var(--accent-alice-blue);
+  overflow: hidden; /* স্লাইডারের বাইরের অংশ লুকানোর জন্য */
+}
+
+.testimonial-slider-container {
+  width: 100%;
+  max-width: 850px; 
+  margin: 0 auto;
+  position: relative;
+}
+
+/* স্লাইডার ট্র্যাক যা নড়াচড়া করবে */
+.testimonial-track {
+  display: flex;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.testimonial-slide {
+  min-width: 100%;
+  padding: 15px;
+}
+
+.testimonial-card {
+  background-color: var(--white);
+  padding: 40px 30px;
+  border-radius: 15px;
+  position: relative;
+  transition: transform 0.3s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-bottom: 4px solid var(--primary-teal); /* নিচ দিয়ে একটি টিল বর্ডার */
+}
+
+.testimonial-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 128, 128, 0.1) !important;
+}
+
+.quote-icon {
+  color: var(--secondary-coral); 
+  font-size: 2.5rem;
+  opacity: 0.3;
+  margin-bottom: 20px;
+}
+
+.testimonial-text {
+  font-style: italic;
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+.customer-img img {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border: 3px solid var(--accent-alice-blue);
+}
+
+.customer-name {
+  color: var(--primary-teal); 
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+/* ========= Dots Navigation ======== */
+.slider-dots {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 30px;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #cbd5e0;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.dot.active {
+  background-color: var(--secondary-coral); /* Active Dot Coral */
+  width: 30px;
+  border-radius: 10px;
+}
+
+.header-line {
+  width: 60px;
+  height: 3px;
+  background-color: var(--secondary-coral);
+  margin-top: 15px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .testimonial-card {
+    padding: 30px 20px;
+  }
+  .testimonial-text {
+    font-size: 1rem;
+  }
+  .testimonial-slider-container {
+    max-width: 100%;
+  }
+}
+
+
+/* Blog Section */
+.blog-section .header-line {
+  width: 60px;
+  height: 3px;
+  background-color: var(--secondary-coral);
+  margin-top: 15px;
+}

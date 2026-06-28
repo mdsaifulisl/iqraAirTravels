@@ -1,0 +1,109 @@
+[
+  {
+    "id": "thailand",
+    "title": "Thailand Visa Application & Requirements for Bangladeshis",
+    "country": "Thailand",
+    "type": "Tourist Sticker Visa",
+    "fee": "5,500 BDT",
+    "duration": "5-7 Working Days",
+    "validity": "90 Days",
+    "entry": "Single Entry",
+    "continent": "Asia",
+    "images": [
+      "https://images.unsplash.com/photo-1518391846015-55a9cc003b25?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "requirements": [
+      "Original Passport with at least 7 months validity",
+      "Two recent 3.5cm x 4.5cm photographs (White background)",
+      "Last 6 months bank statement & solvency certificate",
+      "Professional documents (NOC/Trade License/Student ID)",
+      "Visiting card and copy of NID/Birth Certificate"
+    ],
+    "description": "<h3>1. Additional Details</h3><p>Thailand is one of the most popular tourist destinations for Bangladeshis. We provide comprehensive support for Thailand sticker visas, ensuring all your documents are perfectly organized for a high success rate.</p><p>Our team is here to help you every step of the way, providing personalized guidance and support to ensure your visa application is successful.</p><ul><li>Smooth and hassle-free visa application process</li><li>Personalized guidance and support</li><li>High success rate for Bangladeshis</li></ul>"
+  },
+  {
+    "id": "singapore",
+    "title": "Singapore E-Visa Requirements for Bangladeshis",
+    "country": "Singapore",
+    "type": "E-Visa",
+    "fee": "4,500 BDT",
+    "duration": "3-5 Days",
+    "validity": "30-60 Days",
+    "entry": "Single/Multiple",
+    "continent": "Asia",
+    "images": [
+      "https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "requirements": [
+      "Passport scan copy",
+      "Photo (Digital copy)",
+      "NOC from employer",
+      "Bank statement (if required)"
+    ],
+    "description": "<h3>Singapore Visa Process</h3><p>Explore the garden city with our fast-track E-visa service. Singapore offers a seamless digital application process for Bangladeshi tourists.</p><ul><li>Fast processing within 3-5 days</li><li>Direct delivery to your email</li><li>Expert document review</li></ul>"
+  },
+  {
+    "id": "dubai",
+    "title": "Dubai (UAE) Tourist Visa for Bangladeshis",
+    "country": "Dubai (UAE)",
+    "type": "Tourist Visa",
+    "fee": "12,000 BDT",
+    "duration": "2-3 Days",
+    "validity": "30 Days",
+    "entry": "Single Entry",
+    "continent": "Middle East",
+    "images": [
+      "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "requirements": [
+      "Passport scan copy",
+      "Recent color photo scan",
+      "NID copy"
+    ],
+    "description": "<h3>Dubai Travel Guide</h3><p>Get your Dubai tourist visa quickly and easily. Perfect for a short luxury getaway or transit.</p><ul><li>Processing in just 48-72 hours</li><li>No original passport required for application</li><li>100% online process</li></ul>"
+  },
+  {
+    "id": "malaysia",
+    "title": "Malaysia Tourist E-Visa Requirements",
+    "country": "Malaysia",
+    "type": "Tourist E-Visa",
+    "fee": "6,000 BDT",
+    "duration": "4-6 Days",
+    "validity": "90 Days",
+    "entry": "Single Entry",
+    "continent": "Asia",
+    "images": [
+      "https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "requirements": [
+      "Passport scan copy",
+      "White background photo",
+      "Confirmed return flight ticket",
+      "Hotel booking confirmation"
+    ],
+    "description": "<h3>Visit Malaysia</h3><p>Malaysia is a tropical paradise waiting to be explored. Our E-visa service makes it easy for you to plan your trip.</p><ul><li>Official E-visa processing</li><li>Comprehensive document checklist</li><li>Support for hotel and flight bookings</li></ul>"
+  },
+  {
+    "id": "turkey",
+    "title": "Turkey Sticker Visa for Bangladeshis",
+    "country": "Turkey",
+    "type": "Sticker Visa",
+    "fee": "18,000 BDT",
+    "duration": "10-15 Days",
+    "validity": "180 Days",
+    "entry": "Single Entry",
+    "continent": "Europe",
+    "images": [
+      "https://images.unsplash.com/photo-1518391846015-55a9cc003b25?auto=format&fit=crop&w=1200&q=80"
+    ],
+    "requirements": [
+      "Original Passport",
+      "Biometric Photos",
+      "Health Insurance",
+      "Bank solvency and statement",
+      "Police clearance (if required)"
+    ],
+    "description": "<h3>Turkey Visa Assistance</h3><p>Turkey sticker visa requires careful documentation. We ensure your file is presented professionally to the Turkish embassy.</p><ul><li>Full file preparation</li><li>Appointment scheduling support</li><li>Travel insurance assistance</li></ul>"
+  }
+]

@@ -1,0 +1,64 @@
+/* Hero Header */
+.about-hero {
+  background: linear-gradient(rgba(0, 64, 64, 0.7), rgba(0, 64, 64, 0.7)), 
+              url('https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1600&q=80');
+  background-size: cover;
+  background-position: center;
+  height: 300px;
+}
+
+/* Story Section */
+.story-img-wrapper {
+  padding-right: 30px;
+}
+
+.experience-badge {
+  position: absolute;
+  bottom: -20px;
+  right: 0;
+  min-width: 140px;
+  box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);
+}
+
+/* Feature Cards */
+.feature-card {
+  transition: all 0.3s ease;
+  border-bottom: 3px solid transparent;
+}
+
+.feature-card:hover {
+  transform: translateY(-10px);
+  border-bottom: 3px solid var(--secondary-coral);
+}
+
+.btn-teal {
+  background-color: var(--primary-teal);
+  color: white;
+  border: none;
+  transition: 0.3s;
+}
+
+.btn-teal:hover {
+  background-color: #006666;
+  color: white;
+}
+
+/* Section Header Extras */
+.header-line {
+  width: 60px;
+  height: 3px;
+  background-color: var(--secondary-coral);
+  margin-top: 10px;
+}
+
+.bg-alice-blue {
+  background-color: var(--accent-alice-blue);
+}
+
+/* Responsive */
+@media (max-width: 991px) {
+  .story-img-wrapper {
+    padding-right: 0;
+    margin-bottom: 40px;
+  }
+}

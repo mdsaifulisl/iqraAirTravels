@@ -1,0 +1,197 @@
+/* Variables & Root Setup */
+/* :root {
+  --primary-teal: #008080;
+  --secondary-coral: #FF6B6B;
+  --accent-alice-blue: #F0F8FF;
+  --text-primary: #2C3E50;
+  --text-secondary: #7F8C8D;
+  --white: #FFFFFF;
+  --black: #000000;
+  --light-coral: #FFE5E5;
+  --slider-overlay: rgba(0, 64, 64, 0.7);
+  --transition: all 0.3s ease;
+  --shadow-sm: 0 2px 5px rgba(0,0,0,0.1);
+  --shadow-md: 0 4px 10px rgba(0,0,0,0.15);
+} */
+:root {
+  --primary-teal: #032753;
+  --secondary-coral: #F26E2C;
+  --accent-alice-blue: #e7b170;
+
+  --text-primary: #2C3E50;
+  --text-secondary: #7F8C8D;
+
+  --white: #FFFFFF;
+  --black: #000000;
+
+  --slider-overlay: rgba(3, 39, 83, 0.75);
+
+  --transition: all 0.3s ease;
+  --shadow-sm: 0 2px 5px rgba(0,0,0,0.1);
+  --shadow-md: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+
+/*
+032753
+F26E2C
+F69522
+ক্লাইন্টের লোগো কালার হলো এটা এখন আমি কালার দেওয়ার আগেই এইকালারগুলা দিয়ে ডিজাইন করেফেলি এখন কি করবো?
+
+*/
+
+/* Global Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif; /* ট্রাভেল সাইটের জন্য পপিন্স বা রোবোটো ভালো মানায় */
+  background-color: var(--white);
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+.opacity-0 { opacity: 0; }
+.opacity-100 { opacity: 1; }
+.z-3 { z-index: 3; }
+.transition-3s { transition: all 0.3s ease-in-out; }
+/* Custom Classes */
+.bg-light-coral {
+  background-color: var(--light-coral); /* #FFE5E5 */
+}
+.bg-teal {
+  background-color: var(--primary-teal); /* #008080 */
+}
+.text-teal { color: var(--primary-teal); }
+.text-coral { color: var(--secondary-coral); }
+.bg-text-coral { background-color: var(--secondary-coral); }
+.text-white { color: var(--white); }
+
+a {
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+ul {
+  list-style: none;
+}
+.additional-details ol{
+  list-style: decimal;
+}
+.additional-details ul{
+  list-style: disc;
+}
+.additional-details ul li{
+  list-style: disc;
+}
+.additional-details ol li{
+  list-style: decimal;
+}
+.additional-details ul li{
+  list-style: disc;
+}
+/*  */
+.additional-details2 ol{
+  list-style: decimal;
+}
+.additional-details2 ul{
+  list-style: disc;
+}
+.additional-details2 ul li{
+  list-style: disc;
+}
+.additional-details2 ol li{
+  list-style: decimal;
+}
+.additional-details2 ul li{
+  list-style: disc;
+}
+.additional-details2 h1, .additional-details2 h2, .additional-details2 h3, .additional-details2 h4, .additional-details2 h5, .additional-details2 h6{
+  margin-bottom: 1rem!important;
+}
+.additional-details2 p{
+  margin-bottom: 1rem!important;
+}
+
+
+.form-focus:focus {
+  outline: none!important;
+  box-shadow: none!important;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--primary-teal);
+  font-weight: 700;
+}
+
+.text-secondary-custom {
+  color: var(--text-secondary);
+}
+
+/* Common Buttons */
+.btn-coral {
+  background-color: var(--secondary-coral);
+  color: var(--white);
+  padding: 10px 25px;
+  border: none;
+  border-radius: 5px;
+  font-weight: 600;
+  transition: var(--transition);
+  cursor: pointer;
+}
+
+.btn-coral:hover {
+  background-color: #e05a5a; /* Slightly darker coral */
+  transform: translateY(-2px);
+}
+
+.btn-outline-teal {
+  background: transparent;
+  border: 2px solid var(--primary-teal);
+  color: var(--primary-teal);
+  padding: 10px 25px;
+  border-radius: 5px;
+  font-weight: 600;
+}
+
+.btn-outline-teal:hover {
+  background: var(--primary-teal);
+  color: var(--white);
+}
+
+
+/* Section Styling */
+.section-padding {
+  padding: 80px 0;
+}
+
+.bg-alice-blue {
+  background-color: var(--accent-alice-blue);
+}
+
+.section-title {
+  text-align: center;
+  /* margin-bottom: 40px; */
+  position: relative;
+}
+
+.section-title::after {
+  content: '';
+  width: 60px;
+  height: 3px;
+  background: var(--secondary-coral);
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.details-content h2, .details-content h3, .details-content h4, .details-content h5, .details-content h6 {
+  margin: 1rem 0!important;
+}
+.details-content p {
+  margin: .5rem 0!important;
+}

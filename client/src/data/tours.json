@@ -1,0 +1,91 @@
+[
+  {
+    "id": 1,
+    "title": "Mesmerizing Switzerland Adventure",
+    "location": "Alps, Switzerland",
+    "duration": "7 Days, 6 Nights",
+    "groupSize": "15 People",
+    "price": "$1250",
+    "rating": 4.8,
+    "reviews": 124,
+    "category": "Adventure",
+    "images": [
+      "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e",
+      "https://images.unsplash.com/photo-1518391846015-55a9cc003b25",
+      "https://images.unsplash.com/photo-1533105079780-92b9be482077"
+    ],
+    "highlights": [
+      "Cable car ride to Mt. Titlis",
+      "Lucerne City Walking Tour",
+      "Lake Brienz Cruise",
+      "Stay in Luxury Chalets"
+    ],
+    "description": "<h3>1. Additional Details</h3><p>Experience the magic of the Swiss Alps with our premium adventure tour. Our team is here to help you every step of the way, providing personalized guidance and support to ensure your journey is successful.</p><ul><li>Luxury Stay in Swiss Chalets</li><li>Authentic chocolate tasting sessions</li><li>Panoramic views of Lucerne and Interlaken</li></ul>"
+  },
+  {
+    "id": 2,
+    "title": "Modern Tokyo Discovery",
+    "location": "Japan",
+    "duration": "5 Days, 4 Nights",
+    "groupSize": "20 People",
+    "price": "$850",
+    "rating": 4.8,
+    "reviews": 85,
+    "category": "City Tour",
+    "images": [
+      "https://images.unsplash.com/photo-1518391846015-55a9cc003b25",
+      "https://images.unsplash.com/photo-1503899036084-c55cdd92da26"
+    ],
+    "highlights": [
+      "Visit Meiji Shrine",
+      "Shibuya Crossing experience",
+      "Mount Fuji day trip",
+      "Authentic Ramen workshop"
+    ],
+    "description": "<h3>Tokyo Itinerary</h3><p>Discover the perfect blend of tradition and technology in the heart of Japan. Explore the neon-lit streets of Shinjuku and the serene temples of Asakusa in Japan's bustling capital.</p><ul><li>Neon-lit Shinjuku nightlife tour</li><li>Serene Asakusa temple visits</li><li>High-tech Tokyo Skytree experience</li></ul>"
+  },
+  {
+    "id": 3,
+    "title": "Santorini Sunset Dream",
+    "location": "Greece",
+    "duration": "7 Days, 6 Nights",
+    "groupSize": "10 People",
+    "price": "$1200",
+    "rating": 5.0,
+    "reviews": 210,
+    "category": "Honeymoon",
+    "images": [
+      "https://images.unsplash.com/photo-1533105079780-92b9be482077",
+      "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff"
+    ],
+    "highlights": [
+      "Sunset Sailing Cruise",
+      "Wine Tasting in Oia",
+      "Stay in Caldera view hotel",
+      "Private Photography Session"
+    ],
+    "description": "<h3>Romantic Escape</h3><p>Perfect for couples looking for a serene and picturesque vacation. Witness the world's most beautiful sunsets over iconic blue-domed churches and white-washed buildings.</p><ul><li>Luxury stay with Caldera views</li><li>Private wine tasting sessions in Oia</li><li>Romantic sunset sailing cruise</li></ul>"
+  },
+  {
+    "id": 4,
+    "title": "Dubai Luxury Safari",
+    "location": "UAE",
+    "duration": "4 Days, 3 Nights",
+    "groupSize": "12 People",
+    "price": "$990",
+    "rating": 4.7,
+    "reviews": 98,
+    "category": "Adventure",
+    "images": [
+      "https://images.unsplash.com/photo-1512453979798-5ea266f8880c",
+      "https://images.unsplash.com/photo-1526495124232-a04e1849168c"
+    ],
+    "highlights": [
+      "Overnight Desert Camping",
+      "Burj Khalifa Top Floor access",
+      "Dune Bashing & Camel Rides",
+      "Luxury Yacht Dinner"
+    ],
+    "description": "<h3>Luxury in the Desert</h3><p>Experience the grand lifestyle and adrenaline-pumping activities in Dubai. From gold souks to desert dunes, experience the unmatched luxury and adventure of UAE.</p><ul><li>Exclusive Burj Khalifa top-floor access</li><li>Thrilling dune bashing sessions</li><li>Gourmet dinner on a luxury yacht</li></ul>"
+  }
+]

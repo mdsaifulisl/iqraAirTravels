@@ -1,0 +1,49 @@
+[
+  {
+    "id": 1,
+    "title": "Saiful Islam Visa Guide for Bangladeshis: How to Apply for a Visa",
+    "author": "Md. Saiful Islam",
+    "date": "March 05, 2026",
+    "category": "Visa Guide",
+    "content": "<h3>Visa Application Mastery</h3><p>Applying for a visa can often feel like a daunting task, but with the right preparation, it can be a seamless experience for any traveler. Ensure your passport has at least 6 months of validity and gather professional photographs according to embassy specifications. Prepare a clear bank statement for financial proof and write a concise cover letter explaining your visit purpose.</p>",
+    "images": [
+      "https://images.unsplash.com/photo-1518391846015-55a9cc003b25?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=1200&q=81",
+      "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=1200&q=82"
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Top 10 Places to Visit in Japan in 2024",
+    "author": "Admin",
+    "date": "May 15, 2024",
+    "category": "Travel Tips",
+    "content": "<h3>Navigating Japan</h3><p>Japan is a unique blend of ancient traditions and modern life. For a smooth solo trip, you must understand the local culture. Learning basic bow etiquette shows respect to the locals. Regarding transport, the <strong>Japan Rail Pass</strong> is your best friend. It allows unlimited travel on the Shinkansen (bullet trains).</p>",
+    "images": [
+      "https://images.unsplash.com/photo-1503220317375-aaad61436b1b?auto=format&fit=crop&w=1200&q=80",
+      "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=1200&q=80"
+    ]
+  },
+  {
+    "id": 3,
+    "title": "How to Find Cheap Flight Tickets in 2024",
+    "author": "Admin",
+    "date": "June 02, 2024",
+    "category": "Flights",
+    "content": "<h3>Airfare Savings Secrets</h3><p>Planning a trip but worried about the budget? Finding cheap flights is an art. One of the most effective methods is using <strong>Incognito Mode</strong> while searching, as airlines often track your cookies to increase prices. Try to book your tickets at least 3-4 weeks in advance.</p>",
+    "images": [
+      "https://images.unsplash.com/photo-1503220317375-aaad61436b1b?auto=format&fit=crop&w=1200&q=80"
+    ]
+  },
+  {
+    "id": 4,
+    "title": "The Ultimate Packing List for Solo Travelers",
+    "author": "Admin",
+    "date": "June 10, 2024",
+    "category": "Solo Travel",
+    "content": "<h3>Pack Like a Pro</h3><p>Solo traveling is an adventure of a lifetime, but packing the wrong items can make it stressful. The golden rule is: <strong>Pack Light</strong>. Focus on versatile clothing that can be layered. Don't forget a universal power adapter and a compact first-aid kit.</p>",
+    "images": [
+      "https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?auto=format&fit=crop&w=1200&q=80"
+    ]
+  }
+]

@@ -1,0 +1,57 @@
+/* Sidebar & Layout Responsive Logic */
+:root {
+  --sidebar-width: 260px;
+}
+
+/* ডেস্কটপের জন্য কন্টেন্ট এরিয়ার মার্জিন */
+@media (min-width: 992px) {
+  .admin-main-content {
+    margin-left: var(--sidebar-width);
+    transition: var(--transition);
+  }
+}
+
+/* মোবাইলের জন্য সাইডবার স্লাইড এনিমেশন */
+@media (max-width: 991.98px) {
+  .sidebar-wrapper {
+    transform: translateX(-100%);
+  }
+  .sidebar-wrapper.show-sidebar {
+    transform: translateX(0);
+  }
+  .admin-main-content {
+    margin-left: 0;
+  }
+}
+
+/* কাস্টম বাটন এবং টেক্সট স্টাইল (আপনার ভ্যারিয়েবল ব্যবহার করে) */
+.bg-teal {
+  background-color: var(--primary-teal) !important;
+  color: var(--white) !important;
+}
+
+.text-teal {
+  color: var(--primary-teal) !important;
+}
+
+.text-coral {
+  color: var(--secondary-coral) !important;
+}
+
+.bg-alice-blue {
+  background-color: var(--accent-alice-blue) !important;
+}
+
+/* সাইডবার মেনু হোভার ইফেক্ট */
+.nav-link.hover-bg-light:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transition: var(--transition);
+}
+
+.transition-all {
+  transition: var(--transition);
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}

@@ -1,0 +1,226 @@
+/* Destinations Custom Styles */
+.text-teal {
+  color: #116466; 
+}
+
+.btn-coral {
+  background-color: var(--secondary-coral);
+  border: none;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.btn-coral:hover {
+  background-color: #e65a50;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(255, 111, 97, 0.4);
+}
+
+.destination-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.destination-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1) !important;
+}
+
+.destination-card:hover .card-img-top {
+  transform: scale(1.1);
+}
+
+.destination-overlay {
+  background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 50%);
+}
+
+.bg-coral {
+  background-color: #ff6f61 !important;
+}
+
+
+/* Destinations Custom Styles tetails style */
+/* Custom Styles using your CSS Variables */
+
+.btn-back-custom {
+  background-color: var(--white);
+  color: var(--primary-teal);
+  border: none;
+  border-radius: 50px;
+  padding: 8px 20px;
+  font-weight: bold;
+  transition: var(--transition);
+}
+
+.btn-back-custom:hover {
+  background-color: var(--secondary-coral);
+  color: var(--white);
+}
+
+.btn-book-now {
+  background-color: var(--secondary-coral);
+  color: var(--white);
+  border: none;
+  transition: var(--transition);
+}
+
+.btn-book-now:hover {
+  background-color: var(--primary-teal);
+  color: var(--white);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.border-top-custom {
+  border-top: 5px solid var(--secondary-coral) !important;
+}
+
+.custom-content {
+  color: var(--text-primary);
+  line-height: 1.8;
+}
+
+.highlight-item {
+  background-color: var(--light-coral);
+  padding: 10px 15px;
+  border-radius: 10px;
+  font-weight: 500;
+}
+
+.rating-badge {
+  background: var(--accent-alice-blue);
+  padding: 5px 15px;
+  border-radius: 50px;
+  color: var(--text-primary);
+}
+
+/* React Quill Image Support */
+.custom-content img {
+  max-width: 100%;
+  border-radius: 15px;
+  margin: 15px 0;
+}
+
+.hover-zoom:hover {
+  transform: scale(1.1);
+  transition: transform 0.3s ease;
+}
+.object-fit-cover {
+  object-fit: cover;
+}
+
+
+
+/* Destinations Custom Styles end */
+
+
+/* Air Tickets */
+
+.flight-deal-card {
+  background: #fff;
+  border: 1px solid #eee;
+  transition: 0.3s;
+}
+
+.flight-deal-card:hover {
+  border-color: var(--primary-teal);
+  transform: translateX(5px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.hover-shadow:hover {
+  box-shadow: 0 10px 20px rgba(0, 128, 128, 0.1);
+}
+
+.mt-n5 {
+  margin-top: -50px !important;
+  position: relative;
+  z-index: 5;
+}
+
+.bg-alice-blue {
+  background-color: var(--accent-alice-blue);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .flight-deal-card {
+    text-align: center;
+  }
+  .flight-deal-card img {
+    width: 100% !important;
+    height: 150px !important;
+  }
+}
+
+/* Air Tickets end */
+
+
+/* Contact Us */
+
+.bg-alice-blue {
+  background-color: var(--accent-alice-blue) !important;
+}
+
+.icon-box {
+  transition: all 0.3s ease;
+}
+
+.contact-info-card:hover .icon-box {
+  background-color: var(--secondary-coral) !important;
+  color: white !important;
+  transform: scale(1.1);
+}
+
+.map-container {
+  border: 1px solid #eee;
+}
+
+.mt-n5 {
+  margin-top: -60px !important;
+  position: relative;
+  z-index: 10;
+}
+
+@media (max-width: 991px) {
+  .mt-n5 {
+    margin-top: -30px !important;
+  }
+}
+
+/* Contact Us end */
+
+
+/* Login Page */
+.login-logo-circle {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  border: 2px dashed var(--primary-teal);
+}
+
+.bg-alice-blue {
+  background-color: var(--accent-alice-blue);
+}
+
+.btn-teal {
+  background-color: var(--primary-teal);
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.btn-teal:hover {
+  background-color: #006666; /* Darker Teal */
+  transform: translateY(-2px);
+}
+
+.text-coral {
+  color: var(--secondary-coral);
+}
+
+/* Input focus style */
+.form-control:focus {
+  background-color: #fff !important;
+  box-shadow: 0 0 0 0.25rem rgba(0, 128, 128, 0.1);
+  border: 1px solid var(--primary-teal) !important;
+}
