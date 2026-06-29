@@ -10,7 +10,7 @@
 
 .top-header.hide-top {
   margin-top: -40px;
-  opacity: 0;
+  opacity: 0; 
 }
 
 .top-icon { color: var(--primary-teal); }
@@ -19,7 +19,7 @@
 
 /* --- Main Header --- */
 .main-header {
-  background-color: var(--primary-teal);
+  background-color: var(--white);
   height: 75px;
   position: sticky;
   top: 0;
@@ -47,7 +47,7 @@
 }
 
 .nav-item {
-  color: var(--white);
+  color: var(--primary-teal);
   font-weight: 500;
   font-size: 15px;
   text-decoration: none;

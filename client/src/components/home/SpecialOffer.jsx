@@ -1,6 +1,8 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const SpecialOffer = () => {
+  const navigate = useNavigate();
   return (
     <section className="special-offer-section py-5">
       <div className="container">
@@ -12,7 +14,7 @@ const SpecialOffer = () => {
               <p className="lead text-secondary-custom mb-4">
                 Experience the Maldives like never before. Book your luxury water villa today and get exclusive perks.
               </p>
-              <button className="btn btn-teal px-5 py-3 fw-bold shadow-lg">Grab This Deal Now</button>
+              <button onClick={() => navigate("/tours")} className="btn btn-teal px-5 py-3 fw-bold shadow-lg">Grab This Deal Now</button>
             </div>
             <div className="col-lg-5 d-none d-lg-block">
               <img 

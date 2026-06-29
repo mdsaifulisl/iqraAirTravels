@@ -1,27 +1,27 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
-import { FaSave, FaArrowLeft, FaCloudUploadAlt, FaUserTie, FaEnvelope, FaShieldAlt, FaPhoneAlt, FaLock } from "react-icons/fa";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { FaSave, FaArrowLeft, FaCloudUploadAlt, FaUserTie, FaEnvelope, FaShieldAlt, FaPhoneAlt } from "react-icons/fa";
+import { Link, useParams, } from "react-router-dom";
 import { useUsers } from "../../../hooks/useUsers"; 
 
 const AddTeamMember = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const isEditMode = Boolean(id);
-  const { handleAddUser, handleUpdateUser, fetchUserById, loading, message, fetchUsers } = useUsers();
+  const { handleAddUser, handleUpdateUser, fetchUserById, loading, message, setMessage, fetchUsers } = useUsers();
 
   const [selectedImage, setSelectedImage] = useState(null);
+  // নতুন লোকাল স্টেট - সাবমিট ট্র্যাকিং এর জন্য
+  const [isSaving, setIsSaving] = useState(false); 
+  
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    phone: "",
+    phone: "", 
     role: "Moderator",
     status: "Active",
     bio: "",
-    password: "", 
   });
 
-  // এডিট মোডে ডাটা লোড করা
   useEffect(() => {
     if (isEditMode) {
       const loadUser = async () => {
@@ -34,7 +34,6 @@ const AddTeamMember = () => {
             role: userData.role || "Moderator",
             status: userData.status || "Active",
             bio: userData.bio || "",
-            password: "", 
           });
           if (userData.image) {
             setSelectedImage({ preview: userData.image, isExisting: true });
@@ -63,8 +62,8 @@ const AddTeamMember = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSaving(true); 
     
-    // ফাইল পাঠানোর জন্য FormData অবজেক্ট তৈরি
     const data = new FormData();
     data.append("name", formData.name);
     data.append("email", formData.email);
@@ -73,33 +72,49 @@ const AddTeamMember = () => {
     data.append("status", formData.status);
     data.append("bio", formData.bio);
     
-    // যদি পাসওয়ার্ড দেওয়া হয় (ক্রিয়েট মোডে রিকোয়্যার্ড, এডিটে অপশনাল)
-    if (formData.password) {
-      data.append("password", formData.password);
-    }
-
-    // যদি নতুন ইমেজ সিলেক্ট করা হয়
     if (selectedImage?.file) {
       data.append("image", selectedImage.file);
     }
 
-    let result;
-    if (isEditMode) {
-      result = await handleUpdateUser(id, data);
-    } else {
-      result = await handleAddUser(data);
-    }
+    try {
+      let result;
+      if (isEditMode) {
+        result = await handleUpdateUser(id, data);
+      } else {
+        result = await handleAddUser(data);
+      }
 
-    if (result.success) {
-      navigate("/admin/users");
-      await fetchUsers();
-    } else {
-      alert(result.message || "Error saving data");
+      if (result.success) {
+        await fetchUsers(); 
+        // navigate("/admin/users");
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          role: "Moderator",
+          status: "Active",
+          bio: "",
+        });
+        setSelectedImage(null);
+      } else {
+        setMessage(result.message || "Error saving data");
+      }
+    } catch (error) {
+      console.error(error); 
+    } finally {
+      setIsSaving(false); 
     }
   };
 
+
   if (loading && isEditMode) {
-    return <div className="text-center mt-5">Loading User Data...</div>;
+    return (
+      <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "60vh" }}>
+        <div className="spinner-border text-teal" role="status">
+          <span className="visually-hidden">Loading User Data...</span>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -108,7 +123,7 @@ const AddTeamMember = () => {
         <h3 className="fw-bold mb-0" style={{ color: "var(--primary-teal)" }}>
           {isEditMode ? "Edit Team Member" : "Add New Member"}
         </h3>
-        <Link to="/admin/users" className="btn btn-outline-secondary rounded-pill px-4 shadow-sm">
+        <Link to="/admin/users" className="btn btn-outline-secondary rounded-pill px-4 shadow-sm" onClick={() => setMessage("")}>
           <FaArrowLeft className="me-2" /> Back
         </Link>
       </div>
@@ -133,7 +148,7 @@ const AddTeamMember = () => {
                   <label className="small fw-bold mb-1">Email Address</label>
                   <div className="input-group">
                     <span className="input-group-text bg-light border-0"><FaEnvelope size={14} /></span>
-                    <input name="email" type="email" className="form-control border-0 bg-light py-3" value={formData.email} onChange={handleChange} required />
+                    <input name="email" type="email" className="form-control border-0 bg-light py-3" value={formData.email} onChange={handleChange} placeholder="example@mail.com" required />
                   </div>
                 </div>
 
@@ -141,7 +156,7 @@ const AddTeamMember = () => {
                   <label className="small fw-bold mb-1">Phone Number</label>
                   <div className="input-group">
                     <span className="input-group-text bg-light border-0"><FaPhoneAlt size={14} /></span>
-                    <input name="phone" type="text" className="form-control border-0 bg-light py-3" value={formData.phone} onChange={handleChange} />
+                    <input name="phone" type="text" className="form-control border-0 bg-light py-3" value={formData.phone} onChange={handleChange} placeholder="Phone Number" />
                   </div>
                 </div>
 
@@ -157,25 +172,9 @@ const AddTeamMember = () => {
                   </div>
                 </div>
 
-                <div className="col-md-6">
-                  <label className="small fw-bold mb-1">{isEditMode ? "Change Password (Optional)" : "Password"}</label>
-                  <div className="input-group">
-                    <span className="input-group-text bg-light border-0"><FaLock size={14} /></span>
-                    <input 
-                      name="password" 
-                      type="password" 
-                      className="form-control border-0 bg-light py-3" 
-                      placeholder={isEditMode ? "••••••••" : "Enter a secure password"}
-                      value={formData.password}
-                      onChange={handleChange}
-                      required={!isEditMode} 
-                    />
-                  </div>
-                </div>
-
                 <div className="col-12 mt-3">
                   <label className="small fw-bold mb-1">Short Biography</label>
-                  <textarea name="bio" className="form-control border-0 bg-light p-3" rows="4" value={formData.bio} onChange={handleChange}></textarea>
+                  <textarea name="bio" className="form-control border-0 bg-light p-3" rows="5" value={formData.bio} onChange={handleChange} placeholder="Write a short bio..."></textarea>
                 </div>
               </div>
             </div>
@@ -214,8 +213,9 @@ const AddTeamMember = () => {
               </div>
             </div>
 
-            <button type="submit" disabled={loading} className="btn w-100 mt-4 py-3 rounded-4 shadow fw-bold text-white" style={{backgroundColor: 'var(--secondary-coral)'}}>
-              <FaSave className="me-2" /> {loading ? "Saving..." : (isEditMode ? "Update Member" : "Create Member")}
+            {/* ফিক্সড বাটন কন্ডিশন: loading এর জায়গায় isSaving ব্যবহার করা হয়েছে */}
+            <button type="submit" disabled={isSaving} className="btn w-100 mt-4 py-3 rounded-4 shadow fw-bold text-white" style={{backgroundColor: 'var(--secondary-coral)'}}>
+              <FaSave className="me-2" /> {isSaving ? "Saving..." : (isEditMode ? "Update Member" : "Create Member")}
             </button>
           </div>
         </div>

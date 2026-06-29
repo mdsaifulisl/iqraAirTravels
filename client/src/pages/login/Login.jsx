@@ -1,22 +1,24 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { FaGoogle, FaGithub, FaEnvelope, FaLock, FaPlane, FaEye, FaEyeSlash, FaKey } from 'react-icons/fa';
+import { FaEnvelope, FaLock, FaPlane, FaEye, FaEyeSlash, FaKey } from 'react-icons/fa';
 import { useAuth } from '../../hooks/useAuth';
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [formData, setFormData] = useState({ email: '', password: '' });
-  const { login, message } = useAuth();
+  const { login, message, sendOtp, verifyOtp, resetPassword } = useAuth();
 
   // Forgot Password Modal States
   const [showModal, setShowModal] = useState(false);
-  const [modalStep, setModalStep] = useState(1); // Step 1: Email, Step 2: OTP, Step 3: New Password
+  const [modalStep, setModalStep] = useState(1); 
   const [resetData, setResetData] = useState({ email: '', otp: '', newPassword: '' });
+  const [modalError, setModalError] = useState('');
+  const [modalSuccess, setModalSuccess] = useState('');
+  const [modalLoading, setModalLoading] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    console.log("Login Attempt:", formData);
     const response = await login(formData.email, formData.password);
     if (response.success) {
       window.location.href = '/admin';
@@ -24,27 +26,74 @@ const Login = () => {
   };
 
   // Forgot Password Flow Handlers
-  const handleEmailSubmit = (e) => {
+  const handleEmailSubmit = async (e) => {
     e.preventDefault();
-    console.log("Sending OTP to:", resetData.email);
-    // ওটিপি পাঠানোর পর ২ নম্বর স্টেপে নিয়ে যাবে
-    setModalStep(2);
+    setModalError('');
+    setModalSuccess('');
+    setModalLoading(true);
+
+    const response = await sendOtp(resetData.email);
+    setModalLoading(false);
+
+    if (response.success) {
+      setModalSuccess(response.message);
+      setTimeout(() => {
+        setModalSuccess('');
+        setModalStep(2);
+      }, 1500);
+    } else {
+      setModalError(response.message);
+    }
   };
 
-  const handleOtpSubmit = (e) => {
+  const handleOtpSubmit = async (e) => {
     e.preventDefault();
-    console.log("Verifying OTP:", resetData.otp);
-    // ওটিপি ম্যাচ হলে ৩ নম্বর স্টেপে নিয়ে যাবে
-    setModalStep(3);
+    setModalError('');
+    setModalSuccess('');
+    setModalLoading(true);
+
+    const response = await verifyOtp(resetData.email, resetData.otp);
+    setModalLoading(false);
+
+    if (response.success) {
+      setModalSuccess(response.message);
+      setTimeout(() => {
+        setModalSuccess('');
+        setModalStep(3);
+      }, 1500);
+    } else {
+      setModalError(response.message);
+    }
   };
 
-  const handlePasswordReset = (e) => {
+  const handlePasswordReset = async (e) => {
     e.preventDefault();
-    console.log("Setting New Password:", resetData.newPassword);
-    // পাসওয়ার্ড চেঞ্জ সফল হলে মডেল বন্ধ করে স্টেপ রিসেট করবে
+    setModalError('');
+    setModalSuccess('');
+    setModalLoading(true);
+
+    const response = await resetPassword(resetData.email, resetData.otp, resetData.newPassword);
+    setModalLoading(false);
+
+    if (response.success) {
+      setModalSuccess("পাসওয়ার্ড সফলভাবে পরিবর্তন করা হয়েছে!");
+      setTimeout(() => {
+        setShowModal(false);
+        setModalStep(1);
+        setResetData({ email: '', otp: '', newPassword: '' });
+        setModalSuccess('');
+      }, 2000);
+    } else {
+      setModalError(response.message);
+    }
+  };
+
+  const closeModal = () => {
     setShowModal(false);
     setModalStep(1);
-    alert("Password reset successfully!");
+    setModalError('');
+    setModalSuccess('');
+    setResetData({ email: '', otp: '', newPassword: '' });
   };
 
   return (
@@ -83,8 +132,9 @@ const Login = () => {
                     </div>
 
                     <form onSubmit={handleLogin}>
+                      {message && <div className="alert alert-danger py-2 small">{message}</div>}
+                      
                       {/* Email Input */}
-                      {message && <div className="alert alert-danger">{message}</div>}
                       <div className="mb-3">
                         <label className="form-label small fw-bold text-secondary">Email Address</label>
                         <div className="input-group">
@@ -121,11 +171,8 @@ const Login = () => {
                         </div>
                       </div>
 
-                      <div className="d-flex justify-content-between align-items-center mb-4">
-                        <div className="form-check">
-                          <input type="checkbox" className="form-check-input" id="remember" />
-                          <label className="form-check-label small" htmlFor="remember">Remember me</label>
-                        </div>
+                      <div className="d-flex justify-content-end align-items-center mb-4">
+                        
                         <button 
                           type="button" 
                           onClick={() => { setShowModal(true); setModalStep(1); }} 
@@ -140,14 +187,13 @@ const Login = () => {
                       </button>
                     </form>
 
-                    {/* Divider */}
                     <div className="position-relative mb-4 text-center">
                       <hr />
                       <span className="position-absolute top-50 start-50 translate-middle bg-white px-3 small text-muted">Or continue with</span>
                     </div>
 
                     <p className="text-center small mb-0">
-                      Don't have an account? <Link to="/register" className="text-coral fw-bold text-decoration-none">Create Account</Link>
+                      Don't have an account? <span to="/register" className="text-coral fw-bold text-decoration-none">Create Account</span>
                     </p>
 
                   </div>
@@ -159,7 +205,7 @@ const Login = () => {
         </div>
       </div>
 
-      {/* Forgot Password Custom Bootstrap Modal */}
+      {/* Forgot Password Modal */}
       {showModal && (
         <div className="modal fade show d-block" tabIndex="-1" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
           <div className="modal-dialog modal-dialog-centered">
@@ -170,9 +216,13 @@ const Login = () => {
                   {modalStep === 2 && "Verify OTP"}
                   {modalStep === 3 && "Setup New Password"}
                 </h5>
-                <button type="button" className="btn-close" onClick={() => setShowModal(false)}></button>
+                <button type="button" className="btn-close" onClick={closeModal}></button>
               </div>
               <div className="modal-body p-4">
+                
+                {/* Modal Alerts */}
+                {modalError && <div className="alert alert-danger py-2 small">{modalError}</div>}
+                {modalSuccess && <div className="alert alert-success py-2 small">{modalSuccess}</div>}
                 
                 {/* Step 1: Input Email */}
                 {modalStep === 1 && (
@@ -192,7 +242,9 @@ const Login = () => {
                         />
                       </div>
                     </div>
-                    <button type="submit" className="btn btn-teal w-100 py-2 rounded-pill fw-bold">Send OTP</button>
+                    <button type="submit" className="btn btn-teal w-100 py-2 rounded-pill fw-bold" disabled={modalLoading}>
+                      {modalLoading ? "Sending..." : "Send OTP"}
+                    </button>
                   </form>
                 )}
 
@@ -206,7 +258,7 @@ const Login = () => {
                         <span className="input-group-text bg-light border-0"><FaKey className="text-muted" /></span>
                         <input 
                           type="text" 
-                          className="form-control bg-light border-0 py-2 text-center fw-bold letter-spacing-lg" 
+                          className="form-control bg-light border-0 py-2 text-center fw-bold" 
                           placeholder="123456" 
                           maxLength="6"
                           required 
@@ -215,7 +267,9 @@ const Login = () => {
                         />
                       </div>
                     </div>
-                    <button type="submit" className="btn btn-teal w-100 py-2 rounded-pill fw-bold">Verify Code</button>
+                    <button type="submit" className="btn btn-teal w-100 py-2 rounded-pill fw-bold" disabled={modalLoading}>
+                      {modalLoading ? "Verifying..." : "Verify Code"}
+                    </button>
                     <button type="button" className="btn btn-link w-100 text-muted small mt-2 text-decoration-none" onClick={() => setModalStep(1)}>Back to Email</button>
                   </form>
                 )}
@@ -245,7 +299,9 @@ const Login = () => {
                         </button>
                       </div>
                     </div>
-                    <button type="submit" className="btn btn-teal w-100 py-2 rounded-pill fw-bold">Save & Update</button>
+                    <button type="submit" className="btn btn-teal w-100 py-2 rounded-pill fw-bold" disabled={modalLoading}>
+                      {modalLoading ? "Saving..." : "Save & Update"}
+                    </button>
                   </form>
                 )}
 

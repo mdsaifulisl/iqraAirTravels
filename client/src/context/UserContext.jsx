@@ -7,10 +7,9 @@ import {
   getUserById as getUserByIdApi,
 } from "../api/userService";
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const UserContext = createContext();
 
-export const UserProvider = ({ children }) => {
+export const UserProvider = ({ children }) => { 
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -41,17 +40,12 @@ export const UserProvider = ({ children }) => {
       const response = await getUserByIdApi(id);
       if (response.success) {
         setSelectedUser(response.data);
-
         return response.data;
       }
     } catch (err) {
       console.error("Fetch User Error:", err);
-
       setMessage(err.message);
-      setTimeout(() => {
-        setMessage("");
-      }, 3000);
-
+      setTimeout(() => setMessage(""), 3000);
       return null;
     } finally {
       setLoading(false);
@@ -62,16 +56,12 @@ export const UserProvider = ({ children }) => {
     try {
       const response = await updateUserApi(id, formData);
       if (response.success) {
-        // UI স্টেট আপডেট (সরাসরি ম্যাপ করে নতুন ডাটা বসিয়ে দেওয়া)
+        // ফিক্সড: id যেহেতু UUID (String), তাই সরাসরি বা টাইপ সেফটি বজায় রেখে চেক করা হয়েছে
         setUsers((prevUsers) =>
-          prevUsers.map((user) =>
-            user.id === Number(id) ? response.data : user,
-          ),
+          prevUsers.map((user) => (user.id === id ? response.data : user))
         );
         setMessage(response.message);
-        setTimeout(() => {
-          setMessage("");
-        }, 3000);
+        setTimeout(() => setMessage(""), 3000);
         return { success: true };
       }
     } catch (err) {
@@ -83,12 +73,9 @@ export const UserProvider = ({ children }) => {
     try {
       const response = await createUserApi(formData);
       if (response.success) {
-        // নতুন মেম্বারকে লিস্টের সবার উপরে যোগ করা
         setUsers((prevUsers) => [response.data, ...prevUsers]);
         setMessage(response.message);
-        setTimeout(() => {
-          setMessage("");
-        }, 3000);
+        setTimeout(() => setMessage(""), 3000);
         return { success: true };
       }
     } catch (err) {
@@ -102,12 +89,9 @@ export const UserProvider = ({ children }) => {
     try {
       const response = await deleteUserApi(id);
       if (response.success) {
-        // স্টেট থেকে ওই আইডি বাদ দিয়ে দেওয়া
         setUsers((prevUsers) => prevUsers.filter((user) => user.id !== id));
         setMessage(response.message);
-        setTimeout(() => {
-          setMessage("");
-        }, 3000);
+        setTimeout(() => setMessage(""), 3000);
         return { success: true };
       }
     } catch (err) {
@@ -130,6 +114,7 @@ export const UserProvider = ({ children }) => {
         loading,
         selectedUser,
         message,
+        setMessage,
         fetchUsers,
         fetchUserById,
         handleUpdateUser,

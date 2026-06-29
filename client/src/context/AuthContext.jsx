@@ -19,11 +19,9 @@ export const AuthProvider = ({ children }) => {
         }
 
         try {
-            // ব্যাকএন্ডে টোকেন পাঠিয়ে আসল ডাটা আনা
             const res = await axiosInstance.get("/users/verify-me");
             if (res.data.success) {
                 setUser(res.data.user);
-                // লোকাল স্টোরেজের ডাটাও আপডেট করে রাখা ভালো যাতে সিঙ্ক থাকে
                 localStorage.setItem("user", JSON.stringify(res.data.user));
             }
         } catch (err) {
@@ -41,7 +39,7 @@ export const AuthProvider = ({ children }) => {
 
     // Login function
     const login = async (email, password) => {
-        setMessage(""); // পুরানো মেসেজ ক্লিয়ার করা
+        setMessage(""); 
         try {
             const res = await axiosInstance.post("/users/login", { email, password });
             if (res.data.success) {
@@ -49,7 +47,6 @@ export const AuthProvider = ({ children }) => {
                 localStorage.setItem("token", res.data.token);
                 localStorage.setItem("user", JSON.stringify(res.data.user));
                 
-                // এক্সিওস হেডারে টোকেন সেট করা
                 axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${res.data.token}`;
                 return { success: true };
             }
@@ -68,39 +65,88 @@ export const AuthProvider = ({ children }) => {
         delete axiosInstance.defaults.headers.common["Authorization"];
     };
 
-
-
-    // AuthContext.jsx এর ভেতরে
-const updatePassword = async (oldPassword, newPassword) => {
-    setPmessage(""); 
-    try {
-        const res = await axiosInstance.put("/users/change-password", { 
-            oldPassword, 
-            newPassword 
-        });
-        
-        // যদি সাকসেসফুল হয়, মেসেজ স্টেটে সাকসেস মেসেজটি সেট করে দিতে পারেন
-        if (res.data.success) {
-            setPmessage(res.data.message); 
+    // Change Password (Logged in User)
+    const updatePassword = async (oldPassword, newPassword) => {
+        setPmessage(""); 
+        try {
+            const res = await axiosInstance.put("/users/change-password", { 
+                oldPassword, 
+                newPassword 
+            });
+            
+            if (res.data.success) {
+                setPmessage(res.data.message); 
+            }
+            
+            return { success: true, message: res.data.message };
+        } catch (err) {
+            const errorMsg = err.response?.data?.message || "Password change failed";
+            setPmessage(errorMsg); 
+            return { success: false, message: errorMsg };
         }
-        
-        return { success: true, message: res.data.message };
-    } catch (err) {
-        const errorMsg = err.response?.data?.message || "Password change failed";
-        setPmessage(errorMsg); 
-        return { 
-            success: false, 
-            message: errorMsg 
-        };
-    }
-};
+    };
 
+    // ========================================================
+    // FORGOT PASSWORD FLOW FUNCTIONS (NEW)
+    // ========================================================
 
+    // ১. ওটিপি কোড ইমেইলে পাঠানোর ফাংশন
+    const sendOtp = async (email) => {
+        try {
+            const res = await axiosInstance.post("/users/forgot-password/send-otp", { email });
+            return { success: true, message: res.data.message };
+        } catch (err) {
+            return { 
+                success: false, 
+                message: err.response?.data?.message || "Failed to send OTP. Please try again." 
+            };
+        }
+    };
 
+    // ২. ওটিপি কোড ভেরিফাই করার ফাংশন
+    const verifyOtp = async (email, otp) => {
+        try {
+            const res = await axiosInstance.post("/users/forgot-password/verify-otp", { email, otp });
+            return { success: true, message: res.data.message };
+        } catch (err) {
+            return { 
+                success: false, 
+                message: err.response?.data?.message || "Invalid or expired OTP." 
+            };
+        }
+    };
 
+    // ৩. নতুন পাসওয়ার্ড সেভ করার ফাংশন
+    const resetPassword = async (email, otp, newPassword) => {
+        try {
+            const res = await axiosInstance.post("/users/forgot-password/reset-password", { 
+                email, 
+                otp, 
+                newPassword 
+            });
+            return { success: true, message: res.data.message };
+        } catch (err) {
+            return { 
+                success: false, 
+                message: err.response?.data?.message || "Failed to reset password. Please try again." 
+            };
+        }
+    };
 
     return (
-        <AuthContext.Provider value={{ user, login, logout, updatePassword, loading, message, psmessage, setPmessage }}>
+        <AuthContext.Provider value={{ 
+            user, 
+            login, 
+            logout, 
+            updatePassword, 
+            sendOtp, 
+            verifyOtp, 
+            resetPassword, 
+            loading, 
+            message, 
+            psmessage, 
+            setPmessage 
+        }}>
             {children}
         </AuthContext.Provider>
     );

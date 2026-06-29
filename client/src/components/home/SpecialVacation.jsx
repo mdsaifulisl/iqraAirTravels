@@ -1,8 +1,11 @@
 import React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaGift, FaCheckCircle, FaArrowRight } from 'react-icons/fa';
 
 
 const SpecialVacation = () => {
+  const navigate = useNavigate();
+
   return (
     <section className="special-vacation py-5">
       <div className="container">
@@ -59,7 +62,7 @@ const SpecialVacation = () => {
                 </ul>
 
                 <div className="d-flex align-items-center gap-4 flex-wrap mt-5">
-                  <button className="btn btn-coral px-4 py-2 fw-bold d-flex align-items-center gap-2">
+                  <button onClick={() => navigate('/tours')} className="btn btn-coral px-4 py-2 fw-bold d-flex align-items-center gap-2">
                     Book This Offer <FaArrowRight />
                   </button>
                   <div className="price-tag">

@@ -58,7 +58,7 @@ const HeroSlider = () => {
 
   return (
     <section className="hero-wrapper position-relative">
-      {/* Slider Area */}
+      {/* Slider Area */} 
       <div className="manual-slider">
         {sliderData.map((slide, index) => (
           <div key={slide.id} className={`custom-slide ${index === current ? 'active' : ''}`}>

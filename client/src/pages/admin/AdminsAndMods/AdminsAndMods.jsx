@@ -12,7 +12,7 @@ import { useUsers } from "../../../hooks/useUsers";
 import { useAuth } from "../../../hooks/useAuth";
 
 const AdminsAndMods = () => {
-  const { users, handleDeleteUser } = useUsers(); 
+  const { users, handleDeleteUser, setMessage } = useUsers(); 
   const { user: loggedInUser, logout } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -51,10 +51,11 @@ const AdminsAndMods = () => {
           to="/admin/add-admin-and-moderator"
           className="btn text-white px-4 py-2 rounded-pill shadow-sm d-flex align-items-center gap-2"
           style={{ backgroundColor: "var(--primary-teal)" }}
+          onClick={() => setMessage("")} 
         >
           <FaUserPlus /> Add Member
         </Link>
-        )}
+        )} 
       </div>
 
       <div className="row g-4">

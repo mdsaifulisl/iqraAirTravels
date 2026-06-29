@@ -17,11 +17,12 @@
   --primary-teal: #032753;
   --secondary-coral: #F26E2C;
   --accent-alice-blue: #e7b170;
-
+ 
   --text-primary: #2C3E50;
   --text-secondary: #7F8C8D;
 
-  --white: #FFFFFF;
+  /* --white: #FFFFFF; */
+  --white: #E5E6E7;
   --black: #000000;
 
   --slider-overlay: rgba(3, 39, 83, 0.75);
@@ -32,13 +33,6 @@
 }
 
 
-/*
-032753
-F26E2C
-F69522
-ক্লাইন্টের লোগো কালার হলো এটা এখন আমি কালার দেওয়ার আগেই এইকালারগুলা দিয়ে ডিজাইন করেফেলি এখন কি করবো?
-
-*/
 
 /* Global Reset */
 * {

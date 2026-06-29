@@ -1,3 +1,35 @@
+/*const { DataTypes } = require("sequelize");
+const { sequelize } = require("../config/db");
+
+const User = sequelize.define("User", {
+  id: {
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    primaryKey: true,
+  },
+  name: { type: DataTypes.STRING, allowNull: false },
+  email: { type: DataTypes.STRING, allowNull: false, unique: true },
+  phone: { type: DataTypes.STRING },
+  role: {
+    type: DataTypes.ENUM("Super Admin", "Moderator", "Editor"),
+    defaultValue: "Moderator",
+  },
+  status: {
+    type: DataTypes.ENUM("Active", "Inactive"),
+    defaultValue: "Active",
+  },
+  bio: { type: DataTypes.TEXT },
+  password: { type: DataTypes.STRING, allowNull: false },
+  image: { type: DataTypes.STRING },
+});
+
+module.exports = User;
+*/
+
+
+
+
+
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../config/db");
 
@@ -21,6 +53,17 @@ const User = sequelize.define("User", {
   bio: { type: DataTypes.TEXT },
   password: { type: DataTypes.STRING, allowNull: false },
   image: { type: DataTypes.STRING },
+  // OTP ভেরিফিকেশনের জন্য নতুন ২ টি কলাম
+  otpCode: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  otpExpires: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
+}, {
+  timestamps: true, 
 });
 
 module.exports = User;

@@ -59,10 +59,15 @@ const navLinks = [
 
       <Helmet>
         <title>{settings?.siteName || "Expert Travel"}</title>
+        <meta property="og:title" content={settings?.metaTitle || "Iqra Air Travels"} />
+        <meta property="og:description" content={settings?.metaDescription || "Welcome to Iqra Air Travels - Your premium travel agency."} />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content={settings?.siteLogo || "/logo.png"} />
+
         {settings?.siteFavicon && (
-          <link rel="icon" type="image/png" href={settings?.siteFavicon || "/vite.svg"} />
+          <link rel="icon" type="image/png" href={settings?.siteFavicon || " "} />
         )}
-      </Helmet>
+      </Helmet>   
 
       {/* Top Header */}
       <div
@@ -71,10 +76,11 @@ const navLinks = [
         <div className="container d-flex justify-content-between align-items-center h-100">
           <div className="top-left d-flex gap-4">
             <span className="d-flex align-items-center gap-1">
-              <FaEnvelope className="top-icon" /> {settings?.siteEmail || "info@expertcoder.com"}
+              <FaEnvelope className="top-icon text-coral" /> <span className="text-teal fw-bold">{settings?.siteEmail || "info@expertcoder.com"}</span>
             </span>
+          
             <span className="d-flex align-items-center gap-1">
-              <FaPhoneAlt className="top-icon" /> +88 {settings?.phone || "0123456789"}
+              <FaPhoneAlt className="top-icon text-coral" /> <span className="text-teal fw-bold">{settings?.sitePhone || "+880 1234 5678"}</span>
             </span>
           </div>
           <div className="top-right d-flex gap-3">
@@ -94,7 +100,7 @@ const navLinks = [
             <span className="logo-text">
               <img
                 className="img-fluid"
-                src={settings?.siteLogo}
+                src={settings?.siteLogo || "/logo.png"}
                 alt={settings?.siteName || "Logo"}
                 style={{
                   height: "40px", 
@@ -114,7 +120,7 @@ const navLinks = [
                 <span className="logo-text text-white">
                   <img
                 className="img-fluid"
-                src={settings?.siteLogo}
+                src={settings?.siteLogo || "/logo.png"}
                 alt={settings?.siteName || "Logo"}
                 style={{
                   height: "30px", 
@@ -203,3 +209,6 @@ const navLinks = [
 };
 
 export default Header;
+
+
+// এটা আমার হেডার এখন mata title টা কোথায় রাখবো Meta Description তো ফুটারে রেখেছি ই 
