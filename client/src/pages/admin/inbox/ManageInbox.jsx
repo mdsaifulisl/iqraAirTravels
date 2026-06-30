@@ -24,12 +24,12 @@ const ManageInbox = () => {
   const [selectedMsg, setSelectedMsg] = useState(null);
   const [filterStatus, setFilterStatus] = useState("All");
 
-  // পেজ লোড হলে একবার ডাটা রিফ্রেশ করা
+  // data refresh 
   useEffect(() => {
     fetchMessages();
   }, []);
 
-  // ডিলিট হ্যান্ডলার যা Context এর removeMessage কল করবে
+  // Delete functionality 
   const handleDelete = async (id) => {
     const confirmed = window.confirm("Are you sure you want to delete this message?");
     if (!confirmed) return;
@@ -77,7 +77,7 @@ const ManageInbox = () => {
           value={filterStatus}
           onChange={(e) => setFilterStatus(e.target.value)}
         >
-          <option value="All">All Messages</option>
+          <option value="All">All</option>
           <option value="Unread">Unread</option>
           <option value="Read">Read</option>
         </select>
@@ -141,13 +141,13 @@ const ManageInbox = () => {
               </div>
 
               <div className="d-flex gap-2">
-                <a
+                {/* <a
                   href={`mailto:${selectedMsg.email}`}
                   className="btn text-white px-4 py-2 rounded-pill shadow-sm fw-bold small"
                   style={{ backgroundColor: "var(--primary-teal)" }}
                 >
                   <FaReply className="me-1" /> Reply via Email
-                </a>
+                </a> */}
                 <button
                   onClick={() => handleDelete(selectedMsg.id)}
                   className="btn btn-outline-danger px-4 py-2 rounded-pill shadow-sm fw-bold small"

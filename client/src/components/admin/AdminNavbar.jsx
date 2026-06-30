@@ -3,9 +3,10 @@ import { Helmet } from "react-helmet-async";
 import { FaUserCircle, FaBars } from "react-icons/fa";
 import { useAuth } from "../../hooks/useAuth";
 import useSetting from "../../hooks/useSetting";
+import { Link } from "react-router-dom";
 
 const AdminNavbar = ({ toggleSidebar }) => {
-  const { user } = useAuth();
+  const { user } = useAuth(); 
   const { settings } = useSetting();
 
   // ইউজার ডাটা না আসা পর্যন্ত বা ইউজার না থাকলে একটি সেফ চেক
@@ -22,7 +23,8 @@ const AdminNavbar = ({ toggleSidebar }) => {
         )}
       </Helmet>
 
-      <nav className="navbar navbar-light bg-white shadow-sm px-3 py-2 sticky-top">
+      {/* <nav className="navbar navbar-light bg-white shadow-sm px-3 py-2 sticky-top"> */}
+      <nav className="navbar navbar-light bg-white shadow-sm px-3 py-2 position-fixed top-0 start-0 w-100 z-3 responsive-nav">
         <div className="container-fluid">
           {/* মোবাইলে সাইডবার টগল করার বাটন */}
           <button
@@ -51,12 +53,14 @@ const AdminNavbar = ({ toggleSidebar }) => {
             {/* ইউজার প্রোফাইল ইমেজ বা আইকন */}
             <div className="profile-wrapper">
               {userImage ? (
+                <Link to={`/admin/view-profile/${user.id}`}>
                 <img
                   src={userImage}
                   alt="profile"
                   className="rounded-circle shadow-sm border border-2 border-light"
                   style={{ width: "35px", height: "35px", objectFit: "cover" }}
                 />
+                </Link>
               ) : (
                 <FaUserCircle
                   size={32}

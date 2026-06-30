@@ -52,7 +52,7 @@ const EnquiryForm = ({ title = "Enquire Now", subtitle = "Fill out the form belo
   };
 
   return (
-    <div className="card border-0 shadow-lg rounded-4 p-4 sticky-top" style={{ top: "100px" }}>
+    <div className="card border-0 shadow-lg rounded-4 p-4 sticky-top bg-white" style={{ top: "100px" }}>
       <h4 className="fw-bold text-teal mb-3">{title}</h4>
       <p className="small text-muted mb-4">{subtitle}</p>
 

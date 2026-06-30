@@ -20,7 +20,7 @@ const AdminLayout = () => {
           height: "100vh",
           zIndex: 1050,
           left: 0,
-          transition: "0.3s ease",
+          transition: "0.3s ease", 
         }}
       >
         <Sidebar closeSidebar={() => setIsSidebarOpen(false)} />
@@ -41,11 +41,12 @@ const AdminLayout = () => {
         style={{ minWidth: 0, minHeight: "100vh" }}
       >
         <AdminNavbar toggleSidebar={toggleSidebar} />
-        <div className="p-3 p-md-4">
+        {/* <div className="p-3 p-md-4 "> */}
+        <div className="p-3 p-md-4 pt-5 mt-3 pt-lg-3 mt-lg-0">
           <Outlet />
         </div>
       </div>
-    </div>
+    </div> 
   );
 };
 

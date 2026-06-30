@@ -286,7 +286,12 @@
   outline: none!important;
   box-shadow: none!important;
 }
-
+.form-control2:focus {
+  background-color: transparent !important;
+  outline: none!important;
+  box-shadow: none!important;
+  border: none!important;  
+}
 
 /* Quill Description Specific Styles */
 .visa-description-content .ql-editor {

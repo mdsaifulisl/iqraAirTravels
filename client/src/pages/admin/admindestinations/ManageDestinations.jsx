@@ -82,7 +82,7 @@ const ManageDestinations = () => {
                           style={{ width: "60px", height: "45px", objectFit: "cover" }} 
                         />
                         <div>
-                          <h6 className="mb-0 fw-bold text-dark">{dest.title}</h6>
+                          <h6 className="mb-0 fw-bold text-dark text-truncate">{dest.title.length > 20 ? `${dest.title.slice(0, 20)}...` : dest.title}</h6>
                           <small className="text-muted d-flex align-items-center gap-1">
                             <FaMapMarkerAlt size={10} style={{color: 'var(--secondary-coral)'}} /> {dest.location}
                           </small>

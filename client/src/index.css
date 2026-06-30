@@ -62,6 +62,8 @@ body {
 .text-coral { color: var(--secondary-coral); }
 .bg-text-coral { background-color: var(--secondary-coral); }
 .text-white { color: var(--white); }
+.bg-white { background-color: var(--white)!important; }
+.bg-alice-blue { background-color: var(--accent-alice-blue); }
 
 a {
   text-decoration: none;

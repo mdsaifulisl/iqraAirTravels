@@ -113,7 +113,7 @@ const DestinationDetails = () => {
                 </h1>
 
                 {/* Quick Info Grid */}
-                <div className="row g-3 mb-5 py-3 border-top border-bottom text-center">
+                <div className="row g-3 mb-5 py-3 border-top border-bottom text-center bg-alice-blue rounded-4">
                   <div className="col-4 border-end">
                     <small className="text-secondary d-block text-uppercase">
                       Duration

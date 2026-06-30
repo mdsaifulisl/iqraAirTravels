@@ -190,7 +190,7 @@ const navLinks = [
             
 
             <button
-              className="mobile-toggle-btn d-lg-none border-0 bg-transparent"
+              className="mobile-toggle-btn d-lg-none border-0 bg-transparent text-teal"
               onClick={() => setIsMobile(true)}
             >
               <FaBars />

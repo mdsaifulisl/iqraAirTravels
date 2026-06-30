@@ -203,7 +203,7 @@ const TourDetails = () => {
           <div className="col-lg-4">
             <div className="position-sticky" style={{ top: "100px" }}>
               <div className="card border-0 shadow-lg rounded-4 overflow-hidden mb-4">
-                <div className="bg-text-coral text-white p-4 text-center" style={{backgroundColor: '#ff7e5f'}}>
+                <div className="bg-text-coral text-white p-4 text-center">
                   <small className="d-block opacity-75 text-uppercase fw-bold mb-1">Total Package Cost</small>
                   <h2 className="fw-bold mb-0 text-white display-5">{tour.price} <span className="fs-6 fw-normal">/ person</span></h2>
                 </div>

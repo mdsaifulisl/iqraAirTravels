@@ -12,6 +12,7 @@ import {
   FaEnvelope,
   FaPhoneAlt,
   FaMapMarkerAlt,
+  FaHandshake,
 } from "react-icons/fa";
 import useSetting from "../../../hooks/useSetting";
 import { useAuth } from "../../../hooks/useAuth";
@@ -321,6 +322,7 @@ const handleSave = async () => {
                   Contact & Social Media
                 </h5>
                 <div className="row g-3">
+                  
                   <div className="col-md-6">
                     <label className="small fw-bold mb-1">
                       <FaEnvelope className="me-1 text-teal" /> Public Email
@@ -363,6 +365,19 @@ const handleSave = async () => {
                   <h6 className="fw-bold mb-3 text-teal">
                     Social Media Profiles
                   </h6>
+
+                  <div className="col-md-6">
+                    <label className="small fw-bold mb-1">
+                      <FaHandshake className="text-primary me-1" /> Affiliate Link
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control bg-light border-0 py-2"
+                      name="affiliateLink"
+                      value={formData.affiliateLink || ""}
+                      onChange={handleInputChange}
+                    />
+                  </div>
 
                   <div className="col-md-6">
                     <label className="small fw-bold mb-1">

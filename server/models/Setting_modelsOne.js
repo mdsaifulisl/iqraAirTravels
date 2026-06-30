@@ -20,6 +20,7 @@ const Setting = sequelize.define(
     siteEmail: { type: DataTypes.STRING },
     phone: { type: DataTypes.STRING },
     address: { type: DataTypes.TEXT },
+    affiliateLink: { type: DataTypes.STRING }, 
     facebook: { type: DataTypes.STRING },
     instagram: { type: DataTypes.STRING },
     linkedin: { type: DataTypes.STRING },

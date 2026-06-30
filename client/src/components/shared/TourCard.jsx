@@ -17,7 +17,7 @@ const TourCard = ({ tourData }) => {
   return (
     <>
       {tourData.map((tour) => {
-        const plainDescription = extractText(tour.description).replace(/\u00A0/g, " ");
+        // const plainDescription = extractText(tour.description).replace(/\u00A0/g, " ");
 
         return (
           <div className="col-lg-4 col-md-6 mb-4" key={tour.id}>
@@ -52,26 +52,26 @@ const TourCard = ({ tourData }) => {
                 </div>
 
                
-                <h5 className="card-title text-teal fw-bold mb-2" style={{ height: "48px", overflow: "hidden" }}>
+                <h5 className="card-title text-teal fw-bold mb-2" style={{ height: "auto", overflow: "hidden" }}>
                   {tour.title}
                 </h5>
 
         
-                <p className="text-muted small mb-3">
+                {/* <p className="text-muted small mb-3">
                   {plainDescription.length > 80
                     ? `${plainDescription.slice(0, 80)}...`
                     : plainDescription}
-                </p>
+                </p> */}
 
                 
-                <div className="mb-3">
+                <div className="mb-1">
                   <span className="badge bg-light text-secondary border small fw-normal">
                     <FaUsers className="me-1" /> {tour.groupSize}
                   </span>
                 </div>
 
-              
-                <div className="d-flex justify-content-between align-items-center border-top pt-3 mt-auto">
+                    <hr className="" />
+                <div className="d-flex justify-content-between align-items-center border-top pt-1 mt-auto">
                   <span className="text-secondary small d-flex align-items-center gap-1">
                     <FaClock className="text-teal" /> {tour.duration}
                   </span>

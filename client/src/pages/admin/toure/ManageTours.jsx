@@ -98,7 +98,7 @@ const ManageTours = () => {
                           style={{ width: "60px", height: "45px", objectFit: "cover" }} 
                         />
                         <div>
-                          <h6 className="mb-0 fw-bold text-dark">{tour.title}</h6>
+                          <h6 className="mb-0 fw-bold text-dark text-truncate">{tour.title.length > 40 ? tour.title.slice(0, 40) + "..." : tour.title}</h6>
                           <small className="text-muted d-flex align-items-center gap-1">
                             <FaMapMarkerAlt style={{color: 'var(--secondary-coral)'}} /> {tour.location}
                           </small>

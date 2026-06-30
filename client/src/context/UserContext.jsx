@@ -23,6 +23,7 @@ export const UserProvider = ({ children }) => {
     try {
       const response = await fetchAllUsersApi();
       if (response.success) setUsers(response.data);
+      console.log("Fetched Users:", response.data);
     } catch (err) {
       if (err.response?.status === 401) {
         console.log("Unauthorized access. Token might be expired.");
@@ -56,7 +57,7 @@ export const UserProvider = ({ children }) => {
     try {
       const response = await updateUserApi(id, formData);
       if (response.success) {
-        // ফিক্সড: id যেহেতু UUID (String), তাই সরাসরি বা টাইপ সেফটি বজায় রেখে চেক করা হয়েছে
+        
         setUsers((prevUsers) =>
           prevUsers.map((user) => (user.id === id ? response.data : user))
         );

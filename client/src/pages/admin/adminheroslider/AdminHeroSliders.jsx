@@ -168,10 +168,10 @@ const AdminHeroSlider = () => {
               faqs.map((faq, index) => (
                 <div
                   key={faq.id || index}
-                  className="bg-light p-3 rounded-3 mb-3 border-start border-4"
+                  className="bg-light p-2 rounded-3 mb-3 border-start border-4"
                   style={{ borderColor: "var(--primary-teal)" }}
                 >
-                  <div className="d-flex justify-content-between align-items-start">
+                  <div className="d-flex flex-column align-items-start">
                     <div className="flex-grow-1">
                       <h6 className="fw-bold mb-1">
                         {index + 1}. {faq.question}
@@ -187,7 +187,7 @@ const AdminHeroSlider = () => {
                         </span>
                       </div>
                     </div>
-                    <div className="d-flex gap-2 ms-3">
+                    <div className="d-flex gap-2 ms-0 mt-2">
                       <Link
                         to={`/admin/edit-faq/${faq.id}`}
                         className="btn btn-sm btn-white border-0 shadow-none bg-white"

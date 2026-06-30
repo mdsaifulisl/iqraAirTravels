@@ -22,7 +22,7 @@ const Filter = ({
         </span>
         <input 
           type="text" 
-          className="form-control border-0 shadow-none ps-0 bg-transparent" 
+          className="form-control form-control2 border-0 shadow-none ps-0 bg-transparent" 
           placeholder="Search here..." 
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}

@@ -9,11 +9,11 @@ const BlogCard = ({ BlogCardData }) => {
         tempDiv.innerHTML = html;
         return tempDiv.textContent || tempDiv.innerText || "";
     };
-
+ 
     return (
         <>
             {BlogCardData?.map((post) => {
-                const plainContent = getPlainText(post.content);
+                const plainContent = getPlainText(post.content).replace(/\u00A0/g, " ");
 
                 return (
                     <div className="col-lg-4 col-md-6 mb-4" key={post.id}>

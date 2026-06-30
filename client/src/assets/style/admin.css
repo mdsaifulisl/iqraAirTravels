@@ -11,6 +11,15 @@
   }
 }
 
+/* বড় স্ক্রিনের জন্য (Desktop/Laptop - 992px and up) */
+@media (min-width: 992px) {
+  .responsive-nav {
+    position: sticky !important; /* বড় স্ক্রিনে স্টিকি টপ হয়ে যাবে */
+    top: 0 !important;
+    left: auto !important;
+  }
+}
+
 /* মোবাইলের জন্য সাইডবার স্লাইড এনিমেশন */
 @media (max-width: 991.98px) {
   .sidebar-wrapper {
