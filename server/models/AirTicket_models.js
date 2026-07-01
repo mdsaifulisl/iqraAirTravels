@@ -10,22 +10,22 @@ const AirTicket = sequelize.define('AirTicket', {
     from: {
         type: DataTypes.STRING,
         allowNull: false
-    },
+    }, 
     to: {
         type: DataTypes.STRING,
         allowNull: false
     },
     airline: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     },
     price: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     },
     trip_type: {
         type: DataTypes.ENUM('Round Trip', 'One Way', 'Multi-City'),
-        defaultValue: 'Round Trip'
+        defaultValue: 'one way',
     },
     image: {
         type: DataTypes.STRING,

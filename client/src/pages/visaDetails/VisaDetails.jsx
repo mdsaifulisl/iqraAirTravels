@@ -83,7 +83,7 @@ const VisaDetails = () => {
           backgroundSize: "cover",
           backgroundPosition: "center",
           transition: "background-image 1.2s ease-in-out",
-          // সেফটি চেক: images[index] সরাসরি কল না করে কন্ডিশনাললি করুন
+          // সেফটি চেক: images[index] সরাসরি কল না করে কন্ডিশনাললি করুন 
           backgroundImage: visa?.images?.length > 0 
             ? `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url(${visa.images[currentImageIndex]})`
             : "none",
@@ -190,7 +190,7 @@ const VisaDetails = () => {
           <div className="col-lg-4">
             <div className="position-sticky" style={{ top: "100px" }}>
               <div className="card border-0 shadow-lg rounded-4 overflow-hidden mb-4">
-                <div className="bg-coral text-white p-4 text-center">
+                <div className="bg-text-coral text-white p-4 text-center">
                   <small className="d-block opacity-75 text-uppercase fw-bold mb-1">Total Package Cost</small>
                   <h2 className="fw-bold mb-0 text-white fs-3">{visa.fee} <span className="fs-6 fw-normal">/ person</span></h2>
                 </div>

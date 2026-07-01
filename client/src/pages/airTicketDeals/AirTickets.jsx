@@ -1,4 +1,4 @@
-// import React, { useState } from 'react';
+import React from 'react';
 import {
   FaPlaneDeparture,
   FaPlaneArrival,
@@ -8,9 +8,13 @@ import {
 } from "react-icons/fa";
 import EnquiryForm from "../../components/shared/EnquiryForm";
 import { useAirTickets } from "../../hooks/useAirTickets";
+import useSetting from "../../hooks/useSetting";
+import airports from "../../data/airports.json";
+
 
 const AirTickets = () => {
   const { airTickets, loading, error } = useAirTickets();
+  const { settings } = useSetting();
 
   const airTicketDealsDamodata = [
     {
@@ -45,39 +49,46 @@ const AirTickets = () => {
     },
   ];
 
-  const airTicketDeals =
-    airTickets.length > 0 ? airTickets : airTicketDealsDamodata;
-
-
-
-
-    // your tikit.com affiliate tracking ID (replace with your actual ID)
-  const AFFILIATE_ID = "your_tracking_id"; 
+  const airTicketDeals = airTickets?.length > 0 ? airTickets : airTicketDealsDamodata;
 
   // user clicks "Book Now" for a deal
-  const handleBooking = (deal) => {
-    // tikit.com search URL with query parameters for from, to, and affiliate tracking
-    // উদাহরণ: https://tikit.com/search?from=DAC&to=DXB&ref=myid
-    const baseUrl = "https://tikit.com/search";
-    const queryParams = new URLSearchParams({
-      from: deal.from.split('(')[1]?.replace(')', '') || deal.from, // only airport code (DAC)
-      to: deal.to.split('(')[1]?.replace(')', '') || deal.to,     // only airport code (BKK)
-      ref: AFFILIATE_ID,
-      utm_source: "expert_travel"
-    });
 
-    const finalUrl = `${baseUrl}?${queryParams.toString()}`;
+  const handleBooking = (fromAirportName, toAirportName) => {
+
+    const fromAirport = airports.find((airport) => airport.name === fromAirportName);
+    const toAirport = airports.find((airport) => airport.name === toAirportName);
+
+    const dbTrackUrl =
+      settings?.affiliateLink ||
+      "https://www.trip.com/flights/Kuala%20Lumpur-to-Dhaka/tickets-KUL-DAC?flighttype=S&dcity=KUL&acity=DAC&Allianceid=7899074&SID=296372406&trip_sub1=&trip_sub3=D18363431&linkhub_token=sl_uO9kVSJTKV2";
     
-    // open the tikit.com search results in a new tab
-    window.open(finalUrl, "_blank", "noopener,noreferrer");
+    let allianceId = "7899074";
+    let sid = "296372406";
+    let tripSub3 = "D18363431";
+    
+    const fromCode = fromAirport?.code || "";
+    const toCode = toAirport?.code || "";
+
+    try {
+      if (dbTrackUrl) {
+        const urlObj = new URL(dbTrackUrl);
+        allianceId = urlObj.searchParams.get("Allianceid") || urlObj.searchParams.get("AllianceID") || allianceId;
+        sid = urlObj.searchParams.get("SID") || sid;
+        tripSub3 = urlObj.searchParams.get("trip_sub3") || tripSub3;
+      }
+    // eslint-disable-next-line no-unused-vars
+    } catch (error) {
+      console.error("Invalid URL in DB");
+    }
+
+    let affiliateUrl = `https://www.trip.com/flights/${fromCode}-to-${toCode}/tickets-${fromCode}-${toCode}?flighttype=S&dcity=${fromCode}&acity=${toCode}&Allianceid=${allianceId}&SID=${sid}&trip_sub1=&trip_sub3=${tripSub3}`;
+
+    console.log("Redirecting to Affiliate URL: ", affiliateUrl);
+    window.open(affiliateUrl, "_blank");
   };
 
-
   if (loading) return <div className="text-center p-5">Loading Tickets...</div>;
-  if (error)
-    return <div className="alert alert-danger m-4">Error: {error}</div>; 
-
-
+  if (error) return <div className="alert alert-danger m-4">Error: {error}</div>; 
 
   return (
     <div className="air-tickets-page pb-5">
@@ -120,7 +131,7 @@ const AirTickets = () => {
                           objectFit: "cover",
                         }}
                       />
-                      <div className="flex-grow-1">
+                      <div className="flex-grow-1"> 
                         <div className="d-flex flex-wrap justify-content-center justify-content-md-between align-items-center text-center mb-2 gap-2 gap-md-0">
                           <h5 className="fw-bold text-dark mb-0">
                             {deal.from}{" "}
@@ -129,19 +140,23 @@ const AirTickets = () => {
                           </h5>
                           <span
                             className="badge bg-alice-blue text-teal"
-                            style={{ textAlign: "certer" }}
+                            style={{ textAlign: "center" }}
                           >
-                            {deal.trip_type}
+                            {deal.type || deal.trip_type}
                           </span>
                         </div>
-                        <p className="text-muted small mb-0">
-                          Airline: {deal.airline}
-                        </p>
-                        <h4 className="text-coral fw-bold mt-2 mb-0">
-                          {deal.price}
-                        </h4>
+                        {deal.airline && (
+                          <p className="text-muted small mb-0">
+                            Airline: {deal.airline}
+                          </p>
+                        )}
+                        {deal.price && (
+                          <h4 className="text-coral fw-bold mt-2 mb-0">
+                            {deal.price}
+                          </h4>
+                        )}
                       </div>
-                      <button onClick={() => handleBooking(deal)} className="btn btn-teal rounded-pill px-4">
+                      <button onClick={() => handleBooking(deal.from, deal.to)} className="btn btn-teal rounded-pill px-4">
                         Book Now
                       </button>
                     </div>
@@ -190,5 +205,3 @@ const AirTickets = () => {
 };
 
 export default AirTickets;
-
-

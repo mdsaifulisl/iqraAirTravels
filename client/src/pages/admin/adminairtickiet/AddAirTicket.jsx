@@ -19,7 +19,7 @@ const AddAirTicket = () => {
     to: "",
     airline: "",
     price: "",
-    trip_type: "Round Trip", // ব্যাকএন্ড এনাম (trip_type) অনুযায়ী পরিবর্তন
+    trip_type: "Round Trip", 
     description: "",
     image: null,
   });
@@ -41,7 +41,7 @@ const AddAirTicket = () => {
               description: data.description || "",
               image: null, 
             });
-            setPreviewImage(data.image); // ব্যাকএন্ড থেকে আসা ফুল URL
+            setPreviewImage(data.image); 
           }
         // eslint-disable-next-line no-unused-vars
         } catch (err) {
@@ -76,10 +76,10 @@ const AddAirTicket = () => {
     submitData.append("to", formData.to);
     submitData.append("airline", formData.airline);
     submitData.append("price", formData.price);
-    submitData.append("trip_type", formData.trip_type); // কি-নাম ঠিক করা হয়েছে
+    submitData.append("trip_type", formData.trip_type); 
     submitData.append("description", formData.description);
     
-    // শুধু যদি নতুন ইমেজ সিলেক্ট করা হয় তবেই FormData তে ইমেজ অ্যাড হবে
+    // 
     if (formData.image) {
       submitData.append("image", formData.image);
     }
@@ -153,7 +153,7 @@ const AddAirTicket = () => {
                       placeholder="e.g. Emirates"
                       value={formData.airline}
                       onChange={(e) => setFormData({...formData, airline: e.target.value})}
-                      required
+                      
                     />
                   </div>
                 </div>
@@ -185,7 +185,7 @@ const AddAirTicket = () => {
                     placeholder="e.g. 50,000 BDT"
                     value={formData.price}
                     onChange={(e) => setFormData({...formData, price: e.target.value})}
-                    required
+                    
                   />
                 </div>
               </div>

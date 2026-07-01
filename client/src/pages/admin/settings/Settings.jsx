@@ -359,7 +359,7 @@ const handleSave = async () => {
                       value={formData.address || ""}
                       onChange={handleInputChange}
                     ></textarea>
-                  </div>
+                  </div> 
 
                   <hr className="my-4 opacity-10" />
                   <h6 className="fw-bold mb-3 text-teal">
@@ -368,7 +368,7 @@ const handleSave = async () => {
 
                   <div className="col-md-6">
                     <label className="small fw-bold mb-1">
-                      <FaHandshake className="text-primary me-1" /> Affiliate Link
+                      <FaHandshake className="text-primary me-1" /> Affiliate URL
                     </label>
                     <input
                       type="text"

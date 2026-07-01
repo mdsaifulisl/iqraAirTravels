@@ -6,7 +6,6 @@ import { useTours } from '../../hooks/useTours';
 
 const FeaturedTours = () => {
   const { tours } = useTours();
-  console.log("Tours from context in FeaturedTours:", tours); 
 
   const tourList = tours.length > 0 ? tours.slice(0, 3) : TourJsonData.slice(0, 3); 
   return (
