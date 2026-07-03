@@ -47,7 +47,7 @@ const VisaService = () => {
     <div className="visa-page pb-5">
       {/* Header Section */}
       <section className="about-hero d-flex align-items-center justify-content-center text-center text-white mb-5" 
-        style={{backgroundImage: `linear-gradient(rgba(0, 128, 128, 0.8), rgba(0, 128, 128, 0.8)), url('https://images.unsplash.com/photo-1544027993-37dbfe43562a?auto=format&fit=crop&w=1200&q=80')`}}>
+        style={{backgroundImage: `linear-gradient(rgba(0, 128, 128, 0.8), rgba(0, 128, 128, 0.8)), url('/visa.avif')`, height: '300px'}}>
         <div className="container">
           <h1 className="display-4 fw-bold">Visa Assistance</h1>
           <p className="lead">Search and filter to find the right visa service for you</p>

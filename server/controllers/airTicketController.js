@@ -36,7 +36,6 @@ const formatTicketData = (ticket) => {
 exports.createTicket = async (req, res) => {
     try {
         const { from, to, airline, price, type, description } = req.body;
-        console.log(req.body);
 
         let imagePath = null;
         if (req.file) {

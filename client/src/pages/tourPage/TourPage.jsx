@@ -27,7 +27,7 @@ const TourPage = () => {
       {/* Hero Header */}
       <section className="about-hero d-flex align-items-center justify-content-center text-center text-white mb-5" 
         style={{
-          backgroundImage: `linear-gradient(rgba(0, 128, 128, 0.8), rgba(0, 128, 128, 0.8)), url('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1200&q=80')`, 
+          backgroundImage: `linear-gradient(rgba(0, 128, 128, 0.8), rgba(0, 128, 128, 0.8)), url('/tour.avif')`, 
           height: '300px'
         }}>
         <div className="container">

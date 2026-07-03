@@ -45,12 +45,23 @@ Create a `.env` file in the root directory:
 
 ```env
 DB_HOST=localhost
+
 DB_USER=root
 DB_PASSWORD=root
 DB_NAME=travel_agency_db
-PORT=5000
+
+# DB_USER=reliable_iqraAirTravels
+# DB_NAME=reliable_iqraAirTravels
+# DB_PASSWORD=iqraAirTravels
+# BASE_URL=https://iqraairtravels.reliablekrishi.com
+
 BASE_URL=http://localhost:5000
+EMAIL_USER=saiful01741899@gmail.com
+EMAIL_PASS=sphavwsxjmxkymrl
 JWT_SECRET=0ajnhadsfbnikjlsadfhjkln&*(*3wldafskljbfsda;l
+
+PORT=5000
+
 ```
 
 ---

@@ -96,7 +96,7 @@ const AirTickets = () => {
       <section
         className="about-hero d-flex align-items-center justify-content-center text-center text-white mb-5"
         style={{
-          backgroundImage: `linear-gradient(rgba(13, 129, 129, 0.7), rgba(171, 204, 204, 0.7)), url('https://images.unsplash.com/photo-1499750310107-5fef28a66643?auto=format&fit=crop&w=1200&q=80')`,
+          backgroundImage: `linear-gradient(rgba(13, 129, 129, 0.7), rgba(171, 204, 204, 0.7)), url('/blog.avif')`,
           height: "350px",
         }}
       >

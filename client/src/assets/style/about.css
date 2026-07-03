@@ -1,7 +1,7 @@
 /* Hero Header */
 .about-hero {
   background: linear-gradient(rgba(0, 64, 64, 0.7), rgba(0, 64, 64, 0.7)), 
-              url('https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=1600&q=80');
+              url('/about.avif');
   background-size: cover;
   background-position: center;
   height: 300px;

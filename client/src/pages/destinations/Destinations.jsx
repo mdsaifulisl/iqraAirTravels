@@ -26,7 +26,7 @@ const Destinations = () => {
       <section 
         className="destinations-hero d-flex align-items-center justify-content-center text-center text-white"
         style={{
-          background: `linear-gradient(rgba(0,128,128,0.6), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1488085061387-422e29b40080?auto=format&fit=crop&w=1600&q=80')`,
+          background: `linear-gradient(rgba(0,128,128,0.6), rgba(0,0,0,0.7)), url('/destinations.avif')`,
           height: "50vh",
           backgroundSize: "cover",
           backgroundPosition: "center",
