@@ -37,6 +37,7 @@ const Slider = sequelize.define('Slider', {
     }
 }, {
     timestamps: true, // CreatedAt & UpdatedAt
+    tableName: 'sliders', // টেবিলের নাম নির্দিষ্ট করা হয়েছে
 });
 
 module.exports = Slider;

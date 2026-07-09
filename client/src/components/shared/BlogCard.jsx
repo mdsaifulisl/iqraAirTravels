@@ -9,7 +9,7 @@ const BlogCard = ({ BlogCardData }) => {
         tempDiv.innerHTML = html;
         return tempDiv.textContent || tempDiv.innerText || "";
     };
- 
+
     return (
         <>
             {BlogCardData?.map((post) => {
@@ -55,3 +55,4 @@ const BlogCard = ({ BlogCardData }) => {
 };
 
 export default BlogCard;
+

@@ -8,9 +8,7 @@ const BASE_URL = process.env.BASE_URL || "http://localhost:5000";
 // --- ফাইল ডিলিট করার কমন ফাংশন ---
 const deleteFile = (filePath) => {
     if (!filePath) return;
-    // যদি ফুল URL থাকে, তবে শুধুমাত্র পাথটুকু আলাদা করে নেওয়া
     const relativePath = filePath.includes(BASE_URL) ? filePath.split(BASE_URL)[1] : filePath;
-    // আপনার প্রজেক্ট স্ট্রাকচার অনুযায়ী পাথটি অ্যাডজাস্ট করুন (এখানে '..' দিয়ে রুট বোঝানো হয়েছে)
     const fullPath = path.join(__dirname, '..', relativePath);
     
     if (fs.existsSync(fullPath)) {
@@ -21,19 +19,50 @@ const deleteFile = (filePath) => {
     }
 };
 
-// ইমেজ পাথকে ফুল URL-এ রূপান্তর করার হেল্পার ফাংশন
+// ডাটা ফরম্যাটিং ফাংশন
 const formatData = (data) => {
     if (!data) return null;
     const item = data.toJSON();
-    if (item.images && Array.isArray(item.images)) {
-        item.images = item.images.map(img => 
-            img.startsWith('http') ? img : `${BASE_URL}${img}`
-        );
+
+    if (item.highlights && typeof item.highlights === 'string') {
+        try {
+            item.highlights = JSON.parse(item.highlights);
+        } catch (e) {
+            console.error("Error parsing highlights field:", e);
+            item.highlights = []; 
+        }
     }
+
+    if (item.requirements && typeof item.requirements === 'string') {
+        try {
+            item.requirements = JSON.parse(item.requirements);
+        } catch (e) {
+            console.error("Error parsing requirements field:", e);
+            item.requirements = [];
+        }
+    }
+
+    if (item.images && typeof item.images === 'string') {
+        try {
+            item.images = JSON.parse(item.images);
+        } catch (e) {
+            console.error("Error parsing images field:", e);
+            item.images = []; 
+        }
+    }
+
+    if (item.images && Array.isArray(item.images)) {
+        item.images = item.images
+            .filter(img => img !== null && img !== undefined && img !== "")
+            .map(img => img.startsWith('http') ? img : `${BASE_URL}${img}`);
+    } else {
+        item.images = []; 
+    }
+
     return item;
 };
 
-// ১. সব ডেস্টিনেশন পাওয়া
+// ১. সব ডেস্টিনেশন পাওয়া
 exports.getAllDestinations = async (req, res) => {
     try {
         const destinations = await Destination.findAll({ order: [['createdAt', 'DESC']] });
@@ -44,7 +73,7 @@ exports.getAllDestinations = async (req, res) => {
     }
 };
 
-// ২. আইডি দিয়ে নির্দিষ্ট ডেস্টিনেশন পাওয়া
+// ২. আইডি দিয়ে নির্দিষ্ট ডেস্টিনেশন পাওয়া
 exports.getDestinationById = async (req, res) => {
     try {
         const destination = await Destination.findByPk(req.params.id);
@@ -89,52 +118,98 @@ exports.createDestination = async (req, res) => {
     }
 };
 
-// ৪. ডেস্টিনেশন আপডেট করা (deleteFile ফাংশনসহ)
+// ৪. ডেস্টিনেশন আপডেট করা
 exports.updateDestination = async (req, res) => {
     try {
-        const destination = await Destination.findByPk(req.params.id);
+        const id = req.params.id;
+        const destination = await Destination.findByPk(id);
         if (!destination) return res.status(404).json({ success: false, message: "Destination not found" });
 
-        const updateData = { ...req.body };
+        // ১. বডি অবজেক্ট ক্লিন ফিল্টারিং (extra fields বাদ দেওয়ার জন্য)
+        const updateData = {
+            title: req.body.title,
+            location: req.body.location,
+            price: req.body.price,
+            duration: req.body.duration,
+            description: req.body.description
+        };
 
-        // highlights হ্যান্ডলিং
-        if (updateData.highlights && typeof updateData.highlights === 'string') {
-            updateData.highlights = JSON.parse(updateData.highlights);
-        } 
+        if (req.body.rating) updateData.rating = parseFloat(req.body.rating);
 
-        // ইমেজ আপডেট লজিক
+        // highlights সেফ হ্যান্ডলিং
+        let finalHighlights = [];
+        if (req.body.highlights) {
+            try {
+                finalHighlights = typeof req.body.highlights === 'string'
+                    ? JSON.parse(req.body.highlights)
+                    : req.body.highlights;
+            } catch (e) {
+                if (typeof req.body.highlights === 'string') {
+                    finalHighlights = req.body.highlights.split(',').map(h => h.trim());
+                }
+            }
+        }
+        updateData.highlights = finalHighlights;
+
+        // ২. ইমেজ আপডেট লজিক
         let finalImages = [];
-        const oldImages = destination.images || [];
+        let checkExisting = false;
 
         // ফ্রন্টএন্ড থেকে আসা বিদ্যমান ইমেজ (যা রাখতে হবে)
         if (req.body.existingImages) {
-            const existing = JSON.parse(req.body.existingImages);
-            finalImages = existing.map(img => img.includes(BASE_URL) ? img.split(BASE_URL)[1] : img);
+            try {
+                const existing = typeof req.body.existingImages === 'string'
+                    ? JSON.parse(req.body.existingImages)
+                    : req.body.existingImages;
+
+                if (Array.isArray(existing)) {
+                    checkExisting = true;
+                    finalImages = existing.map(img => img.includes(BASE_URL) ? img.split(BASE_URL)[1] : img);
+                }
+            } catch (e) {
+                console.error("Existing images parsing error:", e);
+            }
         }
 
         // নতুন আপলোড করা ইমেজ যোগ করা
-        if (req.files && req.files.length > 0) {
+        const hasNewFiles = req.files && req.files.length > 0;
+        if (hasNewFiles) {
             const folder = req.uploadFolder || 'destinations';
             const newPaths = req.files.map(file => `/uploads/${folder}/${file.filename}`);
             finalImages = [...finalImages, ...newPaths];
         }
 
-        // *** এখানে আপনার deleteFile ফাংশনটি ব্যবহার করা হয়েছে ***
-        oldImages.forEach(oldPath => {
-            if (!finalImages.includes(oldPath)) {
-                deleteFile(oldPath); // এটি অটোমেটিক ফাইলটি ফোল্ডার থেকে মুছে দেবে
+        // ৩. পুরোনো ফাইল ডিলিট করার সেফটি লজিক
+        let oldImages = destination.getDataValue("images") || [];
+        if (typeof oldImages === 'string') {
+            try { oldImages = JSON.parse(oldImages); } catch (e) { oldImages = []; }
+        }
+
+        if (checkExisting || hasNewFiles) {
+            if (Array.isArray(oldImages)) {
+                oldImages.forEach(oldPath => {
+                    if (!finalImages.includes(oldPath)) {
+                        deleteFile(oldPath); 
+                    }
+                });
             }
-        });
+            updateData.images = finalImages; // সিকুয়েলাইজ মডেলের জন্য পিওর অ্যারে পাস
+        } else {
+            // যদি ফ্রন্টএন্ড থেকে কোনো ছবির মডিফিকেশন ডাটা না আসে
+            updateData.images = Array.isArray(oldImages) ? oldImages : [];
+        }
 
-        updateData.images = finalImages;
-
+        // ৪. ডাটাবেজ আপডেট ও ফ্রেশ ডাটা রিটার্ন
         await destination.update(updateData);
+        
+        const updatedDestination = await Destination.findByPk(id);
         res.status(200).json({ 
             success: true, 
             message: "Destination updated successfully!", 
-            data: formatData(destination) 
+            data: formatData(updatedDestination) 
         });
     } catch (error) {
+        console.error("Update Destination Error:", error);
         res.status(500).json({ success: false, error: error.message });
     }
 };
@@ -145,9 +220,14 @@ exports.deleteDestination = async (req, res) => {
         const destination = await Destination.findByPk(req.params.id);
         if (!destination) return res.status(404).json({ success: false, message: "Destination not found" });
 
-        // সব ইমেজ ডিলিট করার জন্য deleteFile ফাংশন ব্যবহার
-        if (destination.images && Array.isArray(destination.images)) {
-            destination.images.forEach(img => deleteFile(img));
+        // সব ইমেজ পার্স করে ডিলিট করা (স্ট্রিং/অ্যারে সেফটি ফিক্স)
+        let imagesToDelete = destination.getDataValue("images") || [];
+        if (typeof imagesToDelete === "string") {
+            try { imagesToDelete = JSON.parse(imagesToDelete); } catch(e) { imagesToDelete = []; }
+        }
+
+        if (Array.isArray(imagesToDelete) && imagesToDelete.length > 0) {
+            imagesToDelete.forEach(img => deleteFile(img));
         }
 
         await destination.destroy();

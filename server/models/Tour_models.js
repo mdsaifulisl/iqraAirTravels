@@ -56,7 +56,8 @@ const Tour = sequelize.define('Tour', {
 }, {
   timestamps: true, // createdAt এবং updatedAt অটো তৈরি হবে
   charset: 'utf8mb4', // বাংলা সাপোর্ট করার জন্য
-  collate: 'utf8mb4_unicode_ci'
+  collate: 'utf8mb4_unicode_ci',
+  tableName: 'tours' // টেবিলের নাম নির্দিষ্ট করা হয়েছে
 });
 
 module.exports = Tour; 

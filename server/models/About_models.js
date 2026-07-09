@@ -25,6 +25,7 @@ const About = sequelize.define('About', {
     }
 }, {
     timestamps: true,
+    tableName: 'abouts'
 });
 
 module.exports = About;

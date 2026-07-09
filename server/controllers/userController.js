@@ -11,7 +11,7 @@ const BASE_URL = process.env.BASE_URL || "http://localhost:5000";
 
 // Nodemailer Transporter Setup
 const transporter = nodemailer.createTransport({
-  service: "gmail", // অথবা আপনার ব্যবহৃত মেইল প্রোভাইডার (Hostinger, SendGrid ইত্যাদি)
+  service: "gmail", 
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS || "sphavwsxjmxkymrl",
@@ -138,30 +138,38 @@ exports.createUser = async (req, res) => {
     });
 
     const mailOptions = {
-      from: `"Iqra Air Travels" <${process.env.EMAIL_USER}>`,
-      to: email,
-      subject: "Welcome to Iqra Air Travels Team - Account Created",
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #eee; border-radius: 8px;">
-          <h2 style="color: #008080; text-align: center;">Welcome, ${name}!</h2>
-          <p>An administrative account has been created for you at <strong>Iqra Air Travels</strong> with the role of <strong>${role}</strong>.</p>
-          
-          <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #008080;">
-            <p style="margin: 0 0 10px 0;"><strong>Your Login Credentials:</strong></p>
-            <p style="margin: 5px 0;"><strong>Email:</strong> ${email}</p>
-            <p style="margin: 5px 0;"><strong>Temporary Password:</strong> <span style="background: #eef; padding: 2px 6px; font-family: monospace; font-size: 16px; font-weight: bold; color: #d9534f;">${generatedPassword}</span></p>
-          </div>
-          
-          <p style="color: #555; font-size: 13px;">Please log in using these credentials and change your password as soon as possible for security reasons.</p>
-          
-          <hr style="border: 0; border-top: 1px solid #eee; margin-top: 30px;">
-          <p style="color: #999; font-size: 11px; text-align: center; margin-top: 10px;">
-            This is an automated administrative notification from Iqra Air Travels.<br>
-            Dhaka, Bangladesh | Support: info@iqraairtravels.com
-          </p>
-        </div>
-      `,
-    };
+  from: `"Iqra Air Travels" <${process.env.EMAIL_USER}>`,
+  to: email,
+  subject: "Welcome to Iqra Air Travels Team - Account Created",
+  html: `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #eee; border-radius: 8px;">
+      <h2 style="color: #008080; text-align: center;">Welcome, ${name}!</h2>
+      <p>An administrative account has been created for you at <strong>Iqra Air Travels</strong> with the role of <strong>${role}</strong>.</p>
+      
+      <div style="background-color: #f9f9f9; padding: 15px; border-radius: 5px; margin: 20px 0; border-left: 4px solid #008080;">
+        <p style="margin: 0 0 10px 0;"><strong>Your Login Credentials:</strong></p>
+        <p style="margin: 5px 0;"><strong>Email:</strong> ${email}</p>
+        <p style="margin: 5px 0;"><strong>Temporary Password:</strong> <span style="background: #eef; padding: 2px 6px; font-family: monospace; font-size: 16px; font-weight: bold; color: #d9534f;">${generatedPassword}</span></p>
+      </div>
+
+      <!-- Login Button Section -->
+      <div style="text-align: center; margin: 25px 0;">
+        <a href="${process.env.BASE_URL || 'http://localhost:5000'}/login" 
+           style="background-color: #008080; color: white; padding: 12px 25px; text-decoration: none; font-weight: bold; border-radius: 5px; display: inline-block; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+           Login to Your Account
+        </a>
+      </div>
+      
+      <p style="color: #555; font-size: 13px; text-align: center;">Please log in using these credentials and change your password as soon as possible for security reasons.</p>
+      
+      <hr style="border: 0; border-top: 1px solid #eee; margin-top: 30px;">
+      <p style="color: #999; font-size: 11px; text-align: center; margin-top: 10px;">
+        This is an automated administrative notification from Iqra Air Travels.<br>
+        Uchitpura bazar, Araihazar, Narayanganj, Dhaka, Bangladesh | Support: iqra.air.bd@gmail.com
+      </p>
+    </div>
+  `,
+};
 
     transporter.sendMail(mailOptions).catch((err) => {
       console.error("Background Email Sending Error: ", err);

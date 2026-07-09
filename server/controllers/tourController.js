@@ -1,13 +1,13 @@
 const Tour = require("../models/Tour_models");
 const fs = require("fs");
 const path = require("path");
-require("dotenv").config(); // .env ফাইল লোড করার জন্য
+require("dotenv").config();
 
 const BASE_URL = process.env.BASE_URL || "http://localhost:5000";
 
 // file delete function
 const deleteFile = (filePath) => {
-  // filepath base url
+  if (!filePath) return;
   const relativePath = filePath.includes(BASE_URL)
     ? filePath.split(BASE_URL)[1]
     : filePath;
@@ -23,11 +23,37 @@ const deleteFile = (filePath) => {
 // data formatting function
 const formatTourData = (tour) => {
   const tourData = tour.toJSON();
+
+  if (tourData.highlights && typeof tourData.highlights === "string") {
+    try {
+      tourData.highlights = JSON.parse(tourData.highlights);
+    } catch (e) {
+      console.error("Error parsing tour highlights:", e);
+      tourData.highlights = []; 
+    }
+  }
+
+  if (!tourData.highlights || !Array.isArray(tourData.highlights)) {
+    tourData.highlights = [];
+  }
+
+  if (tourData.images && typeof tourData.images === "string") {
+    try {
+      tourData.images = JSON.parse(tourData.images);
+    } catch (e) {
+      console.error("Error parsing tour images:", e);
+      tourData.images = [];
+    }
+  }
+
   if (tourData.images && Array.isArray(tourData.images)) {
     tourData.images = tourData.images.map((img) =>
-      img.startsWith("http") ? img : `${BASE_URL}${img}`,
+      img.startsWith("http") ? img : `${BASE_URL}${img}`
     );
+  } else {
+    tourData.images = []; 
   }
+
   return tourData;
 };
 
@@ -50,7 +76,7 @@ exports.createTour = async (req, res) => {
     let imagePaths = [];
     if (req.files && req.files.length > 0) {
       imagePaths = req.files.map(
-        (file) => `/uploads/${req.uploadFolder}/${file.filename}`,
+        (file) => `/uploads/${req.uploadFolder}/${file.filename}`
       );
     }
 
@@ -64,8 +90,7 @@ exports.createTour = async (req, res) => {
       reviews: reviews || 0,
       category,
       images: imagePaths,
-      highlights:
-        typeof highlights === "string" ? JSON.parse(highlights) : highlights,
+      highlights: typeof highlights === "string" ? JSON.parse(highlights) : highlights,
       description,
     });
 
@@ -115,76 +140,110 @@ exports.updateTour = async (req, res) => {
     if (!tour)
       return res.status(404).json({ success: false, message: "no tour found" });
 
-    // ১. data sanitization
-    const updateData = { ...req.body };
+    // ১. অবজেক্ট একদম ক্লিন রাখা (req.body এর বাইরের আবর্জনা বাদ দিতে)
+    const updateFields = {
+      title: req.body.title,
+      location: req.body.location,
+      duration: req.body.duration,
+      groupSize: req.body.groupSize,
+      price: req.body.price,
+      category: req.body.category,
+    };
 
-    // Description Fix: নিশ্চিত করা যে এটি স্ট্রিং এবং ভ্যালিড
-    if (updateData.description) {
-      if (Array.isArray(updateData.description)) {
-        updateData.description = updateData.description[0];
-      }
-    } else {
-      // যদি বডিতে ডেসক্রিপশন না থাকে, তবে আগেরটাই রাখো
-      updateData.description = tour.description;
+    // ডেসক্রিপশন, রেটিং, রিভিউ সেফ হ্যান্ডলিং
+    if (req.body.description) {
+      updateFields.description = Array.isArray(req.body.description) 
+        ? req.body.description[0] 
+        : req.body.description;
     }
+    if (req.body.rating) updateFields.rating = parseFloat(req.body.rating);
+    if (req.body.reviews) updateFields.reviews = parseInt(req.body.reviews);
 
-    // রেটিং এবং রিভিউ ফিক্স
-    updateData.rating = (updateData.rating === "" || !updateData.rating) 
-      ? tour.rating 
-      : parseFloat(updateData.rating);
-    
-    updateData.reviews = (updateData.reviews === "" || !updateData.reviews) 
-      ? tour.reviews 
-      : parseInt(updateData.reviews);
-
-    // ২. highlights handling
-    if (updateData.highlights) {
+    // ২. Highlights Handling (পিওর অ্যারে রাখতে হবে, স্ট্রিংফাই নয়)
+    let finalHighlights = [];
+    if (req.body.highlights) {
       try {
-        if (typeof updateData.highlights === "string") {
-          updateData.highlights = JSON.parse(updateData.highlights);
-        }
+        finalHighlights = typeof req.body.highlights === "string"
+          ? JSON.parse(req.body.highlights)
+          : req.body.highlights;
       } catch (e) {
-        updateData.highlights = tour.highlights;
+        if (typeof req.body.highlights === "string") {
+          finalHighlights = req.body.highlights.split(',').map(h => h.trim());
+        }
       }
     }
 
-    // ৩. image handling (আপনার লজিক ঠিক আছে)
+    // ফ্রন্টএন্ড থেকে কিছু না আসলে ডেটাবেজের পুরোনো ডেটা ব্যাকআপ নেওয়া
+    if (!Array.isArray(finalHighlights) || finalHighlights.length === 0) {
+      let oldHighlights = tour.highlights;
+      if (typeof oldHighlights === "string") {
+        try { oldHighlights = JSON.parse(oldHighlights); } catch(err) { oldHighlights = []; }
+      }
+      finalHighlights = Array.isArray(oldHighlights) ? oldHighlights : [];
+    }
+    updateFields.highlights = finalHighlights; // পিওর অ্যারে পাস করা হলো
+
+    // ৩. Image Handling
     let finalImages = [];
+    let checkExisting = false;
+
     if (req.body.existingImages) {
       try {
-        const existing = JSON.parse(req.body.existingImages);
-        finalImages = existing.map((img) =>
-          img.includes(BASE_URL) ? img.split(BASE_URL)[1] : img
-        );
-      } catch (e) { console.error("Existing images error"); }
+        const existing = typeof req.body.existingImages === "string"
+          ? JSON.parse(req.body.existingImages)
+          : req.body.existingImages;
+
+        if (Array.isArray(existing)) {
+          checkExisting = true;
+          finalImages = existing.map((img) =>
+            img.includes(BASE_URL) ? img.split(BASE_URL)[1] : img
+          );
+        }
+      } catch (e) {
+        console.error("Existing images parse error:", e);
+      }
     }
 
-    if (req.files && req.files.length > 0) {
+    const hasNewFiles = req.files && req.files.length > 0;
+    if (hasNewFiles) {
       const newImagePaths = req.files.map(
         (file) => `/uploads/${req.uploadFolder}/${file.filename}`
       );
       finalImages = [...finalImages, ...newImagePaths];
     }
 
-    // ৪. file deletion
-    const oldImages = tour.getDataValue("images") || [];
-    oldImages.forEach((oldPath) => {
-      if (!finalImages.includes(oldPath)) {
-        deleteFile(oldPath);
+    // ৪. ওল্ড ফাইল ডিলিট করার লজিক
+    let dbOldImages = tour.getDataValue("images") || [];
+    if (typeof dbOldImages === "string") {
+      try { dbOldImages = JSON.parse(dbOldImages); } catch (e) { dbOldImages = []; }
+    }
+
+    if (checkExisting || hasNewFiles) {
+      if (Array.isArray(dbOldImages)) {
+        dbOldImages.forEach((oldPath) => {
+          if (!finalImages.includes(oldPath)) {
+            deleteFile(oldPath);
+          }
+        });
       }
-    });
+      updateFields.images = finalImages; // পিওর অ্যারে পাস করা হলো
+    } else {
+      // যদি ফ্রন্টএন্ড থেকে নতুন ছবি বা এক্সিস্টিং ইমেজের কোনো ডেটা না আসে
+      updateFields.images = Array.isArray(dbOldImages) ? dbOldImages : [];
+    }
 
-    updateData.images = finalImages.length > 0 ? finalImages : tour.images;
-
-    // ৫. database update (এখানেই আসল পরিবর্তন)
-    await tour.update(updateData);
-
+    // ৫. ডাটাবেজ আপডেট ও রেসপন্স
+    await tour.update(updateFields);
+    
+    // রি-ফেচ করে ফ্রেশ ডেটা রিটার্ন
+    const updatedTour = await Tour.findByPk(id);
     res.status(200).json({
       success: true,
       message: "ট্যুর সফলভাবে আপডেট হয়েছে",
-      data: formatTourData(tour),
+      data: formatTourData(updatedTour),
     });
   } catch (error) {
+    console.error("Update Tour Error:", error);
     res.status(500).json({ success: false, error: error.message });
   }
 };
@@ -198,13 +257,16 @@ exports.deleteTour = async (req, res) => {
         .status(404)
         .json({ success: false, message: "ট্যুরটি পাওয়া যায়নি" });
 
-    // ডাটাবেজ থেকে অরিজিনাল পাথ নিয়ে ফাইল ডিলিট করা
-    const imagesToDelete = tour.getDataValue("images") || [];
-    if (imagesToDelete.length > 0) {
+    let imagesToDelete = tour.getDataValue("images") || [];
+    if (typeof imagesToDelete === "string") {
+      try { imagesToDelete = JSON.parse(imagesToDelete); } catch(e) { imagesToDelete = []; }
+    }
+
+    if (Array.isArray(imagesToDelete) && imagesToDelete.length > 0) {
       imagesToDelete.forEach((imagePath) => deleteFile(imagePath));
     }
 
-    await tour.destroy();
+    await tour.destroy(); 
     res.status(200).json({
       success: true,
       message: "ট্যুর এবং সংশ্লিষ্ট সব ছবি ডিলিট করা হয়েছে",

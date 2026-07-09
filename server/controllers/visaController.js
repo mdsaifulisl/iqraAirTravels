@@ -23,7 +23,7 @@ const deleteFile = (filePath) => {
   }
 };
 
-// --- হেল্পার ফাংশন: ডাটা ফরম্যাট করা (Front-end এ পাঠানোর জন্য) ---
+// ---  ---
 const formatData = (data) => {
   if (!data) return null;
   const item = data.toJSON();
@@ -37,14 +37,25 @@ const formatData = (data) => {
     }
   }
 
+ 
+  if (item.images && typeof item.images === 'string') {
+    try {
+      item.images = JSON.parse(item.images);
+    } catch (e) {
+      console.error("Error parsing images JSON in formatData:", e);
+      item.images = []; 
+    }
+  }
+
   // Image URL mapping
   if (item.images && Array.isArray(item.images)) {
     item.images = item.images
-      .filter(img => img !== null)
+      .filter(img => img !== null && img !== undefined && img !== "") // নাল, আনডিফাইন্ড বা খালি স্ট্রিং রিমুভ করা
       .map((img) => (img.startsWith("http") ? img : `${BASE_URL}${img}`));
   } else {
     item.images = [];
   }
+
   return item;
 };
 

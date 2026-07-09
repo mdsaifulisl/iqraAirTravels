@@ -32,6 +32,7 @@ const Setting = sequelize.define(
   },
   {
     timestamps: true,
+    tableName: "settings", // টেবিলের নাম নির্দিষ্ট করা হয়েছে
   },
 );
 
