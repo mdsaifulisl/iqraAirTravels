@@ -15,7 +15,7 @@ import {
 } from "react-icons/fa";
 import "../../assets/style/header.css";
 import useSetting from "../../hooks/useSetting";
-import { useAuth } from "../../hooks/useAuth";
+import { useAuth } from "../../hooks/useAuth"; 
 
 
 
@@ -35,14 +35,14 @@ const Header = () => {
   // মেনু আইটেমগুলো এক জায়গায় রাখা হলো
 const navLinks = [
   { name: "Home", path: "/" },
-  { name: "Destinations", path: "/destinations" },
+  { name: "Hajj & Umrah", path: "/hajj&umrah" },
   { name: "Tours", path: "/tours" },
   { name: "Visa Service", path: "/visa-service" },
   { name: "Air Tickets", path: "/air-tickets" },
   { name: "Blog", path: "/blog" },
   { name: "About", path: "/about" },
   { name: "Contact", path: "/contact" },
-  // যদি user থাকে, তবেই এই অবজেক্টটি অ্যারেতে ঢুকবে
+  // যদি user থাকে, তবেই এই অবজেক্টটি অ্যারেতে ঢুকবে 
   ...(user ? [{ name: "Admin", path: "/admin" }] : []),
 ];
 
@@ -76,11 +76,11 @@ const navLinks = [
         <div className="container d-flex justify-content-between align-items-center h-100">
           <div className="top-left d-flex gap-4">
             <span className="d-flex align-items-center gap-1">
-              <FaEnvelope className="top-icon text-coral" /> <span className="text-teal fw-bold">{settings?.siteEmail || "info@expertcoder.com"}</span>
+              <FaEnvelope className="top-icon text-coral" /> <span className="text-teal fw-bold">{settings?.siteEmail || "email not available"}</span>
             </span>
           
             <span className="d-flex align-items-center gap-1">
-              <FaPhoneAlt className="top-icon text-coral" /> <span className="text-teal fw-bold">{settings?.sitePhone || "+880 1234 5678"}</span>
+              <FaPhoneAlt className="top-icon text-coral" /> <span className="text-teal fw-bold">{settings?.phone || "number not available"}</span>
             </span>
           </div>
           <div className="top-right d-flex gap-3">

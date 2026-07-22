@@ -77,9 +77,9 @@ function App() {
                 <Routes>
                   <Route path="/" element={<Home />} />
                   <Route path="/about" element={<About />} />
-                  <Route path="/destinations" element={<Destinations />} />
+                  <Route path="/hajj&umrah" element={<Destinations />} />
                   <Route
-                    path="/destinations/:id"
+                    path="/hajj&umrah/:id"
                     element={<DestinationDetails />}
                   />
                   <Route path="/tours" element={<TourPage />} />

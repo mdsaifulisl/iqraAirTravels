@@ -37,7 +37,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // --- Security Middleware ---
-// app.use(helmet());
+app.use(helmet());
 // app.use(
 //   helmet({
 //     contentSecurityPolicy: {
@@ -75,7 +75,7 @@ const seedAdmin = async () => {
       
       const hashedPassword = await bcrypt.hash("admin123", 10);
       
-      await User.create({ 
+      await User.create({
         name: "Super Admin",
         email: "admin@agency.com",
         password: hashedPassword,

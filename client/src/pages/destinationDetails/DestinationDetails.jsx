@@ -68,7 +68,7 @@ const DestinationDetails = () => {
           onClick={() => navigate(-1)}
           className="btn btn-outline-coral mb-4 rounded-pill px-4 shadow-sm"
         >
-          <FaArrowLeft className="me-2" /> Back to Destinations
+          <FaArrowLeft className="me-2" /> Back to Hajj & Umrah
         </button>
 
         <div className="row g-4">

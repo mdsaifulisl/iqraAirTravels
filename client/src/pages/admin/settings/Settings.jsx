@@ -16,7 +16,7 @@ import {
 } from "react-icons/fa";
 import useSetting from "../../../hooks/useSetting";
 import { useAuth } from "../../../hooks/useAuth";
-
+ 
 const Settings = () => {
   // const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("general");

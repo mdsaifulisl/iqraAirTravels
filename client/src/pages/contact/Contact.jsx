@@ -5,18 +5,26 @@ import {
   FaMapMarkerAlt,
   FaClock,
   FaFacebookF,
-  FaTwitter,
   FaInstagram,
   FaLinkedinIn,
+  FaWhatsapp,
 } from "react-icons/fa";
 import EnquiryForm from "../../components/shared/EnquiryForm";
+import useSetting from "../../hooks/useSetting";
 
 const Contact = () => {
+  const { settings } = useSetting();
+
+  // Settings Data Dynamic Assignment with Safety Fallback
   const contactConfig = {
-    phone: "+880 1234 567 890",
-    email: "info@expertcoder.com",
-    address: "House 12, Road 05, Sector 07, Uttara, Dhaka-1230",
-    hours: "Sat - Thu: 10:00 AM - 07:00 PM",
+    phone: settings?.phone || "Phone number not available",
+    email: settings?.siteEmail || "Email not available",
+    address: settings?.address || "Address not available",
+    hours: "Sat - Thu: 10:00 AM - 07:00 PM", // চাইলে ব্যাকএন্ড থেকেও ডাইনামিক করতে পারেন
+    facebook: settings?.facebook || "#",
+    instagram: settings?.instagram ? (settings.instagram.startsWith("http") ? settings.instagram : `https://${settings.instagram}`) : "#",
+    linkedin: settings?.linkedin ? (settings.linkedin.startsWith("http") ? settings.linkedin : `https://${settings.linkedin}`) : "#",
+    whatsapp: settings?.whatsapp ? `https://wa.me/${settings.whatsapp}` : "#",
   };
 
   return (
@@ -96,17 +104,56 @@ const Contact = () => {
 
               <h6 className="fw-bold text-teal mb-3">Follow Us</h6>
               <div className="d-flex gap-3">
-                {[FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn].map(
-                  (Icon, index) => (
-                    <a
-                      key={index}
-                      href="#"
-                      className="btn btn-teal rounded-circle d-flex align-items-center justify-content-center"
-                      style={{ width: "40px", height: "40px" }}
-                    >
-                      <Icon size={16} />
-                    </a>
-                  ),
+                {/* Facebook */}
+                {contactConfig.facebook !== "#" && (
+                  <a
+                    href={contactConfig.facebook}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="btn btn-teal rounded-circle d-flex align-items-center justify-content-center"
+                    style={{ width: "40px", height: "40px" }}
+                  >
+                    <FaFacebookF size={16} />
+                  </a>
+                )}
+
+                {/* Instagram */}
+                {contactConfig.instagram !== "#" && (
+                  <a
+                    href={contactConfig.instagram}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="btn btn-teal rounded-circle d-flex align-items-center justify-content-center"
+                    style={{ width: "40px", height: "40px" }}
+                  >
+                    <FaInstagram size={16} />
+                  </a>
+                )}
+
+                {/* LinkedIn */}
+                {contactConfig.linkedin !== "#" && (
+                  <a
+                    href={contactConfig.linkedin}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="btn btn-teal rounded-circle d-flex align-items-center justify-content-center"
+                    style={{ width: "40px", height: "40px" }}
+                  >
+                    <FaLinkedinIn size={16} />
+                  </a>
+                )}
+
+                {/* WhatsApp */}
+                {contactConfig.whatsapp !== "#" && (
+                  <a
+                    href={contactConfig.whatsapp}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="btn btn-teal rounded-circle d-flex align-items-center justify-content-center"
+                    style={{ width: "40px", height: "40px" }}
+                  >
+                    <FaWhatsapp size={16} />
+                  </a>
                 )}
               </div>
             </div>
