@@ -1,33 +1,33 @@
-# 🌍 Travel Agency Backend API
+# 🌍 Travel Agency Management System
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Node.js-v22.17.1-339933?style=for-the-badge&logo=node.js&logoColor=white" alt="Node.js">
-  <img src="https://img.shields.io/badge/Express.js-v5.x-000000?style=for-the-badge&logo=express&logoColor=white" alt="Express">
-  <img src="https://img.shields.io/badge/MySQL-Database-4479A1?style=for-the-badge&logo=mysql&logoColor=white" alt="MySQL">
-  <img src="https://img.shields.io/badge/Sequelize-ORM-52B0E7?style=for-the-badge&logo=sequelize&logoColor=white" alt="Sequelize">
-  <img src="https://img.shields.io/badge/JWT-Authentication-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white" alt="JWT">
-  <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License">
+  <img src="https://img.shields.io/badge/Node.js-v22.17.1-339933?style=for-the-badge&logo=node.js&logoColor=white" />
+  <img src="https://img.shields.io/badge/Express.js-v5.x-000000?style=for-the-badge&logo=express&logoColor=white" />
+  <img src="https://img.shields.io/badge/MySQL-Database-4479A1?style=for-the-badge&logo=mysql&logoColor=white" />
+  <img src="https://img.shields.io/badge/Sequelize-ORM-52B0E7?style=for-the-badge&logo=sequelize&logoColor=white" />
+  <img src="https://img.shields.io/badge/JWT-Authentication-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white" />
+  <img src="https://img.shields.io/badge/License-MIT-success?style=for-the-badge" />
 </p>
 
 ---
 
 # 📖 Overview
 
-**Travel Agency Backend API** is a scalable RESTful backend built with **Node.js**, **Express.js**, and **MySQL**. It provides secure authentication, database management, email services, file uploads, and APIs for a modern travel agency application.
+The **Travel Agency Backend API** is a secure and scalable RESTful API built with **Node.js**, **Express.js**, and **MySQL**. It powers a complete travel agency website by providing authentication, database operations, file uploads, email services, and other backend functionalities.
 
-The backend is designed with security, maintainability, and scalability in mind, making it suitable for both development and production environments.
+The project follows a clean and modular architecture, making it easy to maintain, extend, and deploy in both development and production environments.
 
 ---
 
 # 🚀 Tech Stack
 
 | Category | Technology |
-|-----------|------------|
+|----------|------------|
 | Runtime | Node.js v22.17.1 |
 | Framework | Express.js v5.x |
 | Database | MySQL |
 | ORM | Sequelize |
-| Authentication | JSON Web Token (JWT) |
+| Authentication | JWT (JSON Web Token) |
 | Password Hashing | BcryptJS |
 | Email Service | Nodemailer |
 | File Upload | Multer |
@@ -36,13 +36,41 @@ The backend is designed with security, maintainability, and scalability in mind,
 
 ---
 
+# 📂 Project Structure
+
+```text
+Travel-Agency/
+│
+├── client/                     # React Frontend
+│
+├── server/                     # Node.js Backend
+│   ├── config/
+│   ├── controllers/
+│   ├── middleware/
+│   ├── models/
+│   ├── routes/
+│   ├── uploads/
+│   ├── utils/
+│   ├── app.js
+│   ├── package.json
+│   └── .env
+│
+├── database/
+│   └── travel_agency_db.sql     # MySQL Database Backup
+│
+└── README.md
+```
+
+---
+
 # 📦 Prerequisites
 
-Before running the project, make sure you have installed:
+Before running the project, install the following:
 
-- Node.js v22.17.1 or higher
+- Node.js v22.17.1 or later
 - npm
 - MySQL Server
+- MySQL Workbench (Recommended)
 - Git
 
 Verify your installation:
@@ -61,27 +89,78 @@ mysql --version
 
 ```bash
 git clone <repository-url>
-```
-
-```bash
-cd backend
+cd Travel-Agency
 ```
 
 ---
 
 ## 2. Install Dependencies
 
+### Backend
+
 ```bash
+cd server
 npm install
+```
+
+### Frontend
+
+```bash
+cd ../client
+npm install
+```
+
+Or install both together:
+
+```bash
+cd server
+npm run install-all
 ```
 
 ---
 
-## 3. Configure Environment Variables
+# 🗄️ Database Setup
 
-Create a `.env` file in the project root.
+## Step 1: Create Database
 
-Example:
+Open **MySQL Workbench** and execute:
+
+```sql
+CREATE DATABASE travel_agency_db;
+```
+
+---
+
+## Step 2: Import Database
+
+The project includes a database backup:
+
+```text
+database/
+└── travel_agency_db.sql
+```
+
+Using **MySQL Workbench**:
+
+1. Open MySQL Workbench.
+2. Connect to your MySQL server.
+3. Select the **travel_agency_db** database.
+4. Click **Server → Data Import**.
+5. Choose **Import from Self-Contained File**.
+6. Select `travel_agency_db.sql`.
+7. Click **Start Import**.
+
+After importing, all required tables and sample data will be created automatically.
+
+> **⚠️ Important**
+>
+> The application **will not work correctly** unless all required tables exist inside the `travel_agency_db` database.
+
+---
+
+# 🔐 Environment Variables
+
+Create a `.env` file inside the **server** folder.
 
 ```env
 PORT=5000
@@ -95,33 +174,27 @@ DB_NAME=travel_agency_db
 EMAIL_HOST=server301.web-hosting.com
 EMAIL_PORT=465
 EMAIL_USER=support@iqraairtravels.com
-EMAIL_PASS=Support@^~1&
+EMAIL_PASS=your-email-password
 
-JWT_SECRET=0ajnhadsfbnikjlsadfhjkln&*(*3wldafskljbfsda;l
+JWT_SECRET=your-secret-key
 ```
 
-> **⚠️ Security Notice**
+> **⚠️ Never commit your `.env` file to GitHub.**
 >
-> Never commit your `.env` file to GitHub.
-> Add it to your `.gitignore` file before pushing your project.
+> Add `.env` to your `.gitignore`.
 
 ---
 
-## 4. Create the MySQL Database
+# ▶️ Running the Project
 
-```sql
-CREATE DATABASE travel_agency_db;
-```
-
----
-
-## 5. Start the Development Server
+## Start Backend
 
 ```bash
+cd server
 npm run dev
 ```
 
-The API will be available at:
+Backend URL
 
 ```
 http://localhost:5000
@@ -129,21 +202,18 @@ http://localhost:5000
 
 ---
 
-# 🔐 Environment Variables
+## Start Frontend
 
-| Variable | Description |
-|-----------|-------------|
-| `PORT` | Application running port |
-| `BASE_URL` | Base URL of the backend |
-| `DB_HOST` | MySQL host |
-| `DB_USER` | MySQL username |
-| `DB_PASSWORD` | MySQL password |
-| `DB_NAME` | MySQL database name |
-| `EMAIL_HOST` | SMTP server |
-| `EMAIL_PORT` | SMTP port |
-| `EMAIL_USER` | SMTP email account |
-| `EMAIL_PASS` | SMTP email password |
-| `JWT_SECRET` | Secret key used for JWT authentication |
+```bash
+cd client
+npm run dev
+```
+
+Frontend URL
+
+```
+http://localhost:5173
+```
 
 ---
 
@@ -151,30 +221,23 @@ http://localhost:5000
 
 | Script | Description |
 |----------|-------------|
-| `npm start` | Start the production server |
-| `npm run dev` | Start the development server using Nodemon |
-| `npm run build` | Install frontend dependencies and build the client application |
+| `npm start` | Start backend in production mode |
+| `npm run dev` | Start backend using Nodemon |
+| `npm run build` | Install frontend dependencies and build React project |
 | `npm run install-all` | Install backend and frontend dependencies |
 
 ---
 
 # 🛡️ Key Security Features
 
-✅ JWT Authentication
-
-✅ Password Hashing using BcryptJS
-
-✅ Helmet Security Headers
-
-✅ HTTP Parameter Pollution (HPP) Protection
-
-✅ Cross-Origin Resource Sharing (CORS)
-
-✅ Environment Variable Management using Dotenv
-
-✅ Secure File Upload Handling with Multer
-
-✅ Secure Email Sending via Nodemailer
+- ✅ JWT Authentication
+- ✅ Password Hashing with BcryptJS
+- ✅ Helmet Security Headers
+- ✅ HTTP Parameter Pollution Protection (HPP)
+- ✅ Cross-Origin Resource Sharing (CORS)
+- ✅ Environment Variable Protection
+- ✅ Secure File Upload with Multer
+- ✅ Secure Email Sending using Nodemailer
 
 ---
 
@@ -182,36 +245,20 @@ http://localhost:5000
 
 - 🔐 User Authentication
 - 👤 User Registration & Login
-- 🔑 JWT Protected Routes
-- 🔒 Password Encryption
-- 📧 Email Sending
-- 📁 File Upload API
+- 🔑 JWT Protected APIs
+- 👥 User Management
+- 🌍 Destination Management
+- ✈️ Air Ticket Management
+- 🧳 Tour Package Management
+- 📄 Visa Management
+- 📰 Blog Management
+- 📬 Contact Form API
+- ❓ FAQ Management
+- 📁 File Upload
+- 📧 Email Notifications
 - 🗄️ MySQL Database Integration
-- 🔄 Sequelize ORM Support
-- 🌍 RESTful API Architecture
-- 🛡️ Security Middleware Integration
-- ⚡ Scalable Backend Structure
-- 📦 Environment-Based Configuration
-
----
-
-# 📂 Project Structure
-
-```
-backend/
-│
-├── config/
-├── controllers/
-├── middleware/
-├── models/
-├── routes/
-├── uploads/
-├── utils/
-├── app.js
-├── package.json
-├── .env
-└── README.md
-```
+- 🔄 Sequelize ORM
+- ⚡ RESTful API Architecture
 
 ---
 
@@ -225,37 +272,33 @@ http://localhost:5000
 
 ---
 
-# 💻 Development Workflow
+# ✅ Before Running the Website
 
-Install dependencies
+Make sure all of the following are completed:
 
-```bash
-npm install
-```
+- Node.js is installed.
+- npm dependencies are installed.
+- MySQL Server is running.
+- The `travel_agency_db` database has been created.
+- All SQL tables have been imported from `travel_agency_db.sql`.
+- The `.env` file is configured correctly.
+- Backend server is running.
+- Frontend server is running.
 
-Run development server
+Without importing the SQL database, the website cannot function properly because the required tables and data will be missing.
 
-```bash
-npm run dev
-```
+---
 
-Run production server
+# 🚀 Deployment Notes
 
-```bash
-npm start
-```
+Before deploying:
 
-Build frontend
-
-```bash
-npm run build
-```
-
-Install backend & frontend together
-
-```bash
-npm run install-all
-```
+- Update all environment variables.
+- Use a production MySQL database.
+- Set a strong `JWT_SECRET`.
+- Configure your SMTP credentials.
+- Enable HTTPS in production.
+- Import the database into your production MySQL server.
 
 ---
 
@@ -263,26 +306,27 @@ npm run install-all
 
 Contributions are welcome.
 
-1. Fork the repository
-2. Create a new branch
+1. Fork the repository.
+
+2. Create a feature branch.
 
 ```bash
 git checkout -b feature/your-feature
 ```
 
-3. Commit your changes
+3. Commit your changes.
 
 ```bash
 git commit -m "Add new feature"
 ```
 
-4. Push to your branch
+4. Push your branch.
 
 ```bash
 git push origin feature/your-feature
 ```
 
-5. Open a Pull Request
+5. Open a Pull Request.
 
 ---
 
