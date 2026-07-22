@@ -9,12 +9,23 @@ const otpGenerator = require("otp-generator");
 require("dotenv").config();
 const BASE_URL = process.env.BASE_URL || "http://localhost:5000";
 
-// Nodemailer Transporter Setup
+// Nodemailer Transporter Setup Gmail App Password
+// const transporter = nodemailer.createTransport({
+//   service: "gmail", 
+//   auth: {
+//     user: process.env.EMAIL_USER,
+//     pass: process.env.EMAIL_PASS || "sphavwsxjmxkymrl",
+//   },
+// });
+
+// Nodemailer Transporter Setup Cpanel 
 const transporter = nodemailer.createTransport({
-  service: "gmail", 
+  host: process.env.EMAIL_HOST,
+  port: Number(process.env.EMAIL_PORT),
+  secure: true,
   auth: {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS || "sphavwsxjmxkymrl",
+    pass: process.env.EMAIL_PASS,
   },
 });
 

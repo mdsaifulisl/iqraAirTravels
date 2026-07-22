@@ -131,7 +131,7 @@ const AddDestination = () => {
         await createDestination(data);
         alert("Destination Created Successfully!");
       }
-      navigate("/admin/destinations");
+      navigate("/admin/hajj&umrah");
     } catch (err) {
       alert(err.message || "Something went wrong!");
     } finally {

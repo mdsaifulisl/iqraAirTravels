@@ -29,18 +29,13 @@ const Login = () => {
   const handleEmailSubmit = async (e) => {
     e.preventDefault();
     setModalError('');
-    setModalSuccess('');
     setModalLoading(true);
 
     const response = await sendOtp(resetData.email);
     setModalLoading(false);
 
     if (response.success) {
-      setModalSuccess(response.message);
-      setTimeout(() => {
-        setModalSuccess('');
-        setModalStep(2);
-      }, 1500);
+      setModalStep(2);
     } else {
       setModalError(response.message);
     }
@@ -49,18 +44,13 @@ const Login = () => {
   const handleOtpSubmit = async (e) => {
     e.preventDefault();
     setModalError('');
-    setModalSuccess('');
     setModalLoading(true);
 
     const response = await verifyOtp(resetData.email, resetData.otp);
     setModalLoading(false);
 
     if (response.success) {
-      setModalSuccess(response.message);
-      setTimeout(() => {
-        setModalSuccess('');
-        setModalStep(3);
-      }, 1500);
+      setModalStep(3);
     } else {
       setModalError(response.message);
     }
@@ -172,7 +162,6 @@ const Login = () => {
                       </div>
 
                       <div className="d-flex justify-content-end align-items-center mb-4">
-                        
                         <button 
                           type="button" 
                           onClick={() => { setShowModal(true); setModalStep(1); }} 
@@ -193,7 +182,7 @@ const Login = () => {
                     </div>
 
                     <p className="text-center small mb-0">
-                      Don't have an account? <span to="/register" className="text-coral fw-bold text-decoration-none">Create Account</span>
+                      Don't have an account? <Link to="/register" className="text-coral fw-bold text-decoration-none">Create Account</Link>
                     </p>
 
                   </div>
@@ -222,7 +211,7 @@ const Login = () => {
                 
                 {/* Modal Alerts */}
                 {modalError && <div className="alert alert-danger py-2 small">{modalError}</div>}
-                {modalSuccess && <div className="alert alert-success py-2 small">{modalSuccess}</div>}
+                {modalStep === 3 && modalSuccess && <div className="alert alert-success py-2 small">{modalSuccess}</div>}
                 
                 {/* Step 1: Input Email */}
                 {modalStep === 1 && (
