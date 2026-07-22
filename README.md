@@ -88,8 +88,8 @@ mysql --version
 ## 1. Clone the Repository
 
 ```bash
-git clone <repository-url>
-cd Travel-Agency
+git clone https://github.com/mdsaifulisl/iqraAirTravels.git
+cd iqraAirTravels
 ```
 
 ---
@@ -172,8 +172,8 @@ DB_PASSWORD=root
 DB_NAME=travel_agency_db
 
 EMAIL_HOST=server301.web-hosting.com
-EMAIL_PORT=465
-EMAIL_USER=support@iqraairtravels.com
+EMAIL_PORT=225
+EMAIL_USER=support@agency.com
 EMAIL_PASS=your-email-password
 
 JWT_SECRET=your-secret-key
