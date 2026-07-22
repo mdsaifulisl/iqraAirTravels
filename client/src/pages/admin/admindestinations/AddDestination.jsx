@@ -44,7 +44,7 @@ const AddDestination = () => {
               highlights: data.highlights || []
             });
             setDescription(data.description);
-            setExistingImages(data.images || []); // সার্ভার থেকে আসা ছবি
+            setExistingImages(data.images || []); 
           }
         } catch (err) {
           console.error("Fetch Error:", err);
@@ -146,7 +146,7 @@ const AddDestination = () => {
       {/* Header */}
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h3 className="fw-bold mb-0" style={{ color: "var(--primary-teal)" }}>
-          {isEditMode ? "Edit Destination" : "Create Destination"}
+          {isEditMode ? "Edit Hajj & Umrah" : "Create Hajj & Umrah "}
         </h3>
         <Link to="/admin/destinations" className="btn btn-outline-secondary rounded-pill px-4">
           <FaArrowLeft className="me-2" /> Back
@@ -160,7 +160,7 @@ const AddDestination = () => {
               <h5 className="fw-bold mb-4 border-bottom pb-2">Basic Details</h5>
               <div className="row g-3">
                 <div className="col-12">
-                  <label className="small fw-bold mb-1">Destination Title</label>
+                  <label className="small fw-bold mb-1">Hajj & Umrah Title</label>
                   <input type="text" name="title" className="form-control" value={formData.title} onChange={handleChange} required />
                 </div>
                 <div className="col-md-6">
@@ -238,7 +238,7 @@ const AddDestination = () => {
             </div>
 
             <button type="submit" disabled={loading} className="btn w-100 mt-4 py-3 rounded-4 shadow fw-bold text-white" style={{backgroundColor: 'var(--secondary-coral)'}}>
-              <FaSave className="me-2" /> {loading ? "Processing..." : (isEditMode ? "Save Changes" : "Publish Destination")}
+              <FaSave className="me-2" /> {loading ? "Processing..." : (isEditMode ? "Save Changes" : "Publish Hajj & Umrah")}
             </button>
           </div>
         </div>

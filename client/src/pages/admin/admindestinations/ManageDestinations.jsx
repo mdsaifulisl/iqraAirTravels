@@ -35,11 +35,11 @@ const ManageDestinations = () => {
       {/* Header */}
       <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
         <div>
-          <h3 className="fw-bold mb-1" style={{ color: "var(--primary-teal)" }}>Manage Destinations</h3>
-          <p className="text-muted small mb-0">Total {destinations.length} destinations found</p>
+          <h3 className="fw-bold mb-1" style={{ color: "var(--primary-teal)" }}>Manage Hajj & Umrah</h3>
+          <p className="text-muted small mb-0">Total {destinations.length} Hajj & Umrah found</p>
         </div>
         <div>
-          <Link to="/admin/add-destination" className="btn shadow-sm px-4 py-2 rounded-pill fw-bold text-white" 
+          <Link to="/admin/add-hajj-umrah" className="btn shadow-sm px-4 py-2 rounded-pill fw-bold text-white" 
             style={{ backgroundColor: "var(--primary-teal)" }}>
             <FaPlus className="me-2" /> Add New Spot
           </Link>
@@ -62,7 +62,7 @@ const ManageDestinations = () => {
           <table className="table table-hover align-middle mb-0">
             <thead style={{ backgroundColor: "var(--accent-alice-blue)" }}>
               <tr>
-                <th className="ps-4 py-3 text-secondary small text-uppercase">Destination</th>
+                <th className="ps-4 py-3 text-secondary small text-uppercase">Hajj & Umrah</th>
                 <th className="py-3 text-secondary small text-uppercase">Highlights</th>
                 <th className="py-3 text-secondary small text-uppercase">Duration & Rating</th>
                 <th className="py-3 text-secondary small text-uppercase">Price</th>
@@ -106,7 +106,7 @@ const ManageDestinations = () => {
                     <td className="fw-bold" style={{ color: "var(--primary-teal)" }}>{dest.price}</td>
                     <td className="text-end pe-4">
                       <div className="d-flex justify-content-end gap-2">
-                        <button onClick={() => navigate(`/admin/edit-destination/${dest.id}`)} className="btn btn-sm btn-light border rounded-3 shadow-sm">
+                        <button onClick={() => navigate(`/admin/edit-hajj-umrah/${dest.id}`)} className="btn btn-sm btn-light border rounded-3 shadow-sm">
                           <FaEdit style={{ color: "var(--primary-teal)" }} />
                         </button>
                         <button onClick={() => removeDestination(dest.id)} className="btn btn-sm btn-light border rounded-3 shadow-sm">

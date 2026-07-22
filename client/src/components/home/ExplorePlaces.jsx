@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { FaMapMarkerAlt, FaStar, FaClock } from 'react-icons/fa';
-import useDestinations from '../../hooks/useDestinations'; // গ্লোবাল রিফ্রেশের জন্য
+import useDestinations from '../../hooks/useDestinations'; 
 
 const ExplorePlaces = () => {
     // Context থেকে রিয়েল ডাটা নিয়ে আসা
@@ -31,7 +31,7 @@ const ExplorePlaces = () => {
                 <div className="row g-4">
                     {displayDestinations.map((place) => (
                         <div className="col-lg-3 col-md-6" key={place.id}>
-                            <Link to={`/destinations/${place.id}`} className="place-card-wrapper text-decoration-none">
+                            <Link to={`/hajj&umrah/${place.id}`} className="place-card-wrapper text-decoration-none">
                                 <div className="place-card position-relative overflow-hidden rounded-4 shadow-sm h-100 bg-white border">
                                     {/* Image Container */}
                                     <div className="place-image" style={{ height: '250px' }}>
@@ -76,7 +76,7 @@ const ExplorePlaces = () => {
                 {/* View All Button */}
                 <div className="row mt-5">
                     <div className="col-12 text-center">
-                        <Link to="/destinations" className="btn btn-outline-teal px-5 py-2 rounded-pill fw-bold">
+                        <Link to="/hajj&umrah" className="btn btn-outline-teal px-5 py-2 rounded-pill fw-bold">
                             View All Destinations
                         </Link>
                     </div>

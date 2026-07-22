@@ -117,12 +117,12 @@ const Sidebar = ({ closeSidebar }) => {
         {/* Manage Destinations */}
         <li>
           <NavLink 
-            to="/admin/destinations" 
+            to="/admin/hajj&umrah" 
             onClick={closeSidebar}
             className={({ isActive }) => `nav-link text-white d-flex align-items-center gap-3 py-2 border-0 ${isActive ? 'bg-teal shadow-sm' : 'hover-bg-light'}`}
             style={({ isActive }) => isActive ? { backgroundColor: "var(--primary-teal)" } : {}}
           >
-            <FaMapMarkedAlt /> <span className="small fw-bold">Manage Destinations</span>
+            <FaMapMarkedAlt /> <span className="small fw-bold">Manage Hajj & Umrah</span>
           </NavLink>
         </li>
 
