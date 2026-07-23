@@ -24,6 +24,7 @@ const faqRoutes = require("./routes/faqRoutes");
 const aboutRoutes = require("./routes/aboutRoutes");
 const settingRoutes = require("./routes/settingRoutes");
 const userRoutes = require("./routes/userRoutes");
+const bookingRoutes = require("./routes/bookingRoutes");
 
 // Load environment variables
 dotenv.config();
@@ -94,7 +95,7 @@ const seedAdmin = async () => {
 // app.get("/", (req, res) => {
 //   res.send("Travel Agency API is running...");
 // });
-
+ 
 // --- Routes ---
 app.use("/api/tours", tourRoutes);
 app.use("/api/destinations", destinationRoutes);
@@ -107,6 +108,7 @@ app.use("/api/faqs", faqRoutes);
 app.use("/api/about", aboutRoutes);
 app.use("/api/settings", settingRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/bookings", bookingRoutes);
 
 app.use(express.static(path.join(__dirname, "..", "client", "dist")));
 

@@ -7,20 +7,16 @@ import {
   FaCheckCircle,
   FaStar,
   FaArrowLeft,
+  FaCalendarCheck,
 } from "react-icons/fa";
 
 import "react-quill-new/dist/quill.snow.css"; 
 import "../../assets/style/details.css";
 
-// components 
 import Gallery from "../../components/shared/Gallery";
 import EnquiryForm from "../../components/shared/EnquiryForm";
 import ShareLink from "../../components/shared/ShareLink";
-
-// err page
 import ErrorPage from "../error/ErrorPage";
-
-// API
 import { getTourById } from "../../api/tourService";
 
 const TourDetails = () => {
@@ -30,13 +26,11 @@ const TourDetails = () => {
   const [loading, setLoading] = useState(true);
   const [current, setCurrent] = useState(0);
 
-  // ১. এপিআই থেকে ডাটা ফেচ করা
   useEffect(() => {
     const fetchTour = async () => {
       try {
         setLoading(true);
         const response = await getTourById(id);
-        // আপনার এপিআই যদি { success: true, data: ... } ফরম্যাটে পাঠায়
         setTour(response.data || response); 
       } catch (error) {
         console.error("Error fetching tour:", error);
@@ -49,7 +43,6 @@ const TourDetails = () => {
     window.scrollTo(0, 0);
   }, [id]);
 
-  // ২. অটো স্লাইডার লজিক
   useEffect(() => {
     if (tour?.images?.length > 1) {
       const timer = setInterval(() => {
@@ -59,7 +52,6 @@ const TourDetails = () => {
     }
   }, [tour]);
 
-  // ৩. লোডিং অবস্থা
   if (loading) {
     return (
       <div className="container py-5 text-center" style={{ minHeight: '60vh' }}>
@@ -71,16 +63,12 @@ const TourDetails = () => {
     );
   }
 
-  // ৪. ডাটা না পাওয়া গেলে
   if (!tour) {
-    return (
-      <ErrorPage />
-    );
+    return <ErrorPage />;
   }
 
   return (
     <div className="tour-details-page overflow-hidden pb-5">
-      {/* --- Full-Screen Hero Slider Section --- */}
       <div className="tour-hero-container position-relative overflow-hidden" style={{ height: '60vh' }}>
         {tour.images && tour.images.map((img, index) => (
           <div
@@ -115,25 +103,11 @@ const TourDetails = () => {
             </span>
           </div>
         </div>
-        
-        {tour.images?.length > 1 && (
-            <div className="slider-dots d-flex gap-2 position-absolute bottom-0 start-50 translate-middle-x mb-4 z-3">
-              {tour.images.map((_, i) => (
-                <span 
-                  key={i} 
-                  className={`dot cursor-pointer transition-all ${i === current ? 'active bg-coral' : 'bg-white opacity-50'}`} 
-                  onClick={() => setCurrent(i)}
-                  style={{ width: i === current ? '30px' : '10px', height: '10px', borderRadius: '10px' }}
-                ></span>
-              ))}
-            </div>
-        )}
       </div>
 
       <div className="container mt-5 pt-4">
         <div className="row g-5">
           <div className="col-lg-8">
-            {/* Quick Info Bar */}
             <div className="info-bar d-flex flex-wrap gap-4 p-4 bg-alice-blue rounded-4 mb-5 shadow-sm border border-light">
               <div className="d-flex align-items-center gap-3">
                 <div className="icon-box-small bg-white text-teal p-3 rounded-circle shadow-sm">
@@ -155,15 +129,25 @@ const TourDetails = () => {
               </div>
             </div>
 
-            {/* Description */}
             {tour.description && (
               <section className="mb-5">
-                <h3 className="fw-bold text-teal mb-4 d-flex align-items-center gap-2">Tour Details</h3>
+                <div className="w-100 d-flex justify-content-between align-items-center gap-2">
+                  <h3 className="">Tour Details</h3>
+                  <div>
+                    <button
+                    onClick={() => navigate(`/booking?type=tour&id=${tour.id}`)}
+                    className="btn btn-teal w-100 py-3 rounded-pill fw-bold shadow-sm d-flex align-items-center justify-content-center gap-2 mb-4"
+                  >
+                    <FaCalendarCheck /> Book This Tour Now
+                  </button>
+                  </div>
+                </div>
+                {/* <h3 className="fw-bold text-teal mb-4 d-flex align-items-center gap-2">Tour Details</h3> */}
                 <div className="ql-snow bg-white p-4 rounded-4 border border-light">
                   <div className="ql-editor p-0">
                     <div 
                       className="text-secondary fs-5 additional-details details-content" 
-                      style={{ lineHeight: '1.8', lineBreak: 'anywhere',}}
+                      style={{ lineHeight: '1.8', lineBreak: 'anywhere'}}
                       dangerouslySetInnerHTML={{ __html: tour.description }} 
                     />
                   </div>
@@ -171,7 +155,6 @@ const TourDetails = () => {
               </section>
             )}
 
-            {/* Highlights */}
             {tour.highlights && tour.highlights.length > 0 && (
               <section className="mb-5">
                 <h3 className="fw-bold text-teal mb-4 d-flex align-items-center gap-2">What You'll Experience</h3>
@@ -199,7 +182,6 @@ const TourDetails = () => {
             </div>
           </div>
 
-          {/* Sticky Sidebar */}
           <div className="col-lg-4">
             <div className="position-sticky" style={{ top: "100px" }}>
               <div className="card border-0 shadow-lg rounded-4 overflow-hidden mb-4">
@@ -207,9 +189,18 @@ const TourDetails = () => {
                   <small className="d-block opacity-75 text-uppercase fw-bold mb-1">Total Package Cost</small>
                   <h2 className="fw-bold mb-0 text-white display-5">{tour.price} <span className="fs-6 fw-normal">/ person</span></h2>
                 </div>
-                <div className="pt-4 bg-white">
-                  <h5 className="fw-bold text-dark text-center mb-4 border-bottom pb-2">Reserve Your Spot</h5>
+                <div className="p-4 bg-white">
+                  {/* Book Now Main Action Button */}
+                  
+
+                  <h6 className="fw-bold text-muted text-center mb-3">Or Send an Enquiry</h6>
                   <EnquiryForm />
+                  <button
+                    onClick={() => navigate(`/booking?type=tour&id=${tour.id}`)}
+                    className="btn btn-teal w-100 py-3 rounded-pill fw-bold shadow-sm d-flex align-items-center justify-content-center gap-2 mt-4"
+                  >
+                    <FaCalendarCheck /> Book This Tour Now
+                  </button>
                 </div>
               </div>
             </div>

@@ -23,7 +23,7 @@ import AirTickets from "../pages/airTicketDeals/AirTickets";
 import Contact from "../pages/contact/Contact";
 import Login from "../pages/login/Login";
 import ErrorPage from "../pages/error/ErrorPage";
-
+import Booking from "../pages/booking/Booking";
 const PublicRoutes = () => {
   return (
     <>
@@ -42,6 +42,7 @@ const PublicRoutes = () => {
           <Route path="/visa-service/:id" element={<VisaDetails />} />
           <Route path="/air-tickets" element={<AirTickets />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/booking" element={<Booking />} />
           <Route
             path="/login"
             element={

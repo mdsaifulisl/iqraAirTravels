@@ -5,12 +5,6 @@ import { useNavigate } from "react-router-dom";
 const TourCard = ({ tourData }) => {
   const navigate = useNavigate();
 
-  
-  const extractText = (html) => {
-    const tempDiv = document.createElement("div");
-    tempDiv.innerHTML = html;
-    return tempDiv.textContent || tempDiv.innerText || "";
-  }; 
 
  console.log("Tour data received in TourCard:", tourData.toString());
   

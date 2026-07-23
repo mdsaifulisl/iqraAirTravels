@@ -13,22 +13,19 @@ import {
   FaTimes,
   FaHome,
   FaUsersCog,
-  FaImages // Slider/Hero Section এর জন্য নতুন আইকন
+  FaImages,
+  FaClipboardList // Bookings-এর জন্য নতুন আইকন
 } from "react-icons/fa";
 import { useAuth } from "../../hooks/useAuth";
 
 const Sidebar = ({ closeSidebar }) => {
   const navigate = useNavigate();
-  // const { user } = useAuth();
   const { logout } = useAuth();
-
 
   const handleLogout = () => {
     logout();
     navigate("/login");
   };
-
-
 
   return (
     <div className="d-flex flex-column p-3 text-white h-100 shadow-lg overflow-auto">
@@ -66,7 +63,19 @@ const Sidebar = ({ closeSidebar }) => {
           </NavLink>
         </li>
 
-        {/* Hero Slider Management - নতুন যোগ করা হয়েছে */}
+        {/* Manage Bookings - নতুন যোগ করা হয়েছে */}
+        <li>
+          <NavLink 
+            to="/admin/bookings" 
+            onClick={closeSidebar}
+            className={({ isActive }) => `nav-link text-white d-flex align-items-center gap-3 py-2 border-0 ${isActive ? 'bg-teal shadow-sm' : 'hover-bg-light'}`}
+            style={({ isActive }) => isActive ? { backgroundColor: "var(--primary-teal)" } : {}}
+          >
+            <FaClipboardList /> <span className="small fw-bold">Manage Bookings</span>
+          </NavLink>
+        </li>
+
+        {/* Hero Slider Management */}
         <li>
           <NavLink 
             to="/admin/slider-fqn-and-about" 
@@ -114,7 +123,7 @@ const Sidebar = ({ closeSidebar }) => {
           </NavLink>
         </li>
 
-        {/* Manage Destinations */}
+        {/* Manage Hajj & Umrah */}
         <li>
           <NavLink 
             to="/admin/hajj&umrah" 
@@ -177,7 +186,7 @@ const Sidebar = ({ closeSidebar }) => {
         </NavLink>
       </div>
 
-      <button onClick={ handleLogout } className="btn btn-outline-danger d-flex align-items-center gap-2 border-0 py-2">
+      <button onClick={handleLogout} className="btn btn-outline-danger d-flex align-items-center gap-2 border-0 py-2">
         <FaSignOutAlt /> <span className="small fw-bold">Logout</span>
       </button>
     </div>

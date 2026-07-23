@@ -8,6 +8,8 @@ import AdminLayout from "../components/layout/AdminLayout";
 
 // Admin Pages
 import Dashboard from "../pages/admin/Dashboard";
+import ManageBookings from "../pages/admin/bookings/ManageBookings"; // নতুন ইমপোর্ট
+import BookingDetails from "../pages/admin/bookings/BookingDetails"; // নতুন ইমপোর্ট (যদি ডিটেইলস পেজ লাগে)
 import AdminHeroSlider from "../pages/admin/adminheroslider/AdminHeroSliders";
 import AddSlider from "../pages/admin/adminheroslider/AddSlider";
 import AddFAQ from "../pages/admin/adminheroslider/AddFAQ";
@@ -35,6 +37,10 @@ const AdminRoutes = () => {
         <Route element={<AdminLayout />}>
           {/* Dashboard */}
           <Route index element={<Dashboard />} />
+
+          {/* Bookings Management - নতুন যোগ করা হয়েছে */}
+          <Route path="bookings" element={<ManageBookings />} />
+          <Route path="bookings/:id" element={<BookingDetails />} />
 
           {/* Hero Slider & FAQ */}
           <Route path="slider-fqn-and-about" element={<AdminHeroSlider />} />

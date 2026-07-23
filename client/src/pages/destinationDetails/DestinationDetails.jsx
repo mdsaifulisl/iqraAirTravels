@@ -6,6 +6,7 @@ import {
   FaStar,
   FaArrowLeft,
   FaCheckCircle,
+  FaCalendarCheck,
 } from "react-icons/fa";
 import Gallery from "../../components/shared/Gallery";
 import ShareLink from "../../components/shared/ShareLink";
@@ -21,7 +22,7 @@ const DestinationDetails = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    
+
     const fetchDestinationData = async () => {
       try {
         setLoading(true);
@@ -52,9 +53,7 @@ const DestinationDetails = () => {
   }
 
   if (error || !destination) {
-    return (
-      <ErrorPage />
-    );
+    return <ErrorPage />;
   }
 
   return (
@@ -105,12 +104,22 @@ const DestinationDetails = () => {
                   </div>
                 </div>
 
-                <h1
-                  className="fw-bold mb-4"
-                  style={{ color: "var(--primary-teal)" }}
-                >
-                  {destination.title}
-                </h1>
+                <div className="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+                  <h1
+                    className="fw-bold mb-0"
+                    style={{ color: "var(--primary-teal)" }}
+                  >
+                    {destination.title}
+                  </h1>
+
+                  {/* Book Now Button for Hajj */}
+                  <button
+                    onClick={() => navigate(`/booking?type=hajj&id=${destination.id}`)}
+                    className="btn btn-teal px-4 py-3 rounded-pill fw-bold shadow-sm d-flex align-items-center gap-2"
+                  >
+                    <FaCalendarCheck /> Book Package Now
+                  </button>
+                </div>
 
                 {/* Quick Info Grid */}
                 <div className="row g-3 mb-5 py-3 border-top border-bottom text-center bg-alice-blue rounded-4">
@@ -147,7 +156,7 @@ const DestinationDetails = () => {
                   </h4>
                   <div
                     className="ql-editor p-0 additional-details2 details-content"
-                    style={{ lineBreak: 'anywhere' }}
+                    style={{ lineBreak: "anywhere" }}
                     dangerouslySetInnerHTML={{
                       __html: destination.description,
                     }}

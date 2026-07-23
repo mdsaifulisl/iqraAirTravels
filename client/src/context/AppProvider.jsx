@@ -13,6 +13,7 @@ import { AboutProvider } from "./AboutContext";
 import { SettingProvider } from "./SettingContext";
 import { UserProvider } from "./UserContext";
 import { AuthProvider } from "./AuthContext";
+import { BookingProvider } from "./BookingContext";
 
 const AppProvider = ({ children }) => {
   // All providers in an array for easy management and nesting
@@ -29,7 +30,8 @@ const AppProvider = ({ children }) => {
     AboutProvider,
     SettingProvider,
     UserProvider, 
-    AuthProvider
+    AuthProvider,
+    BookingProvider
   ];
 
   // ReduceRight to nest providers around children
