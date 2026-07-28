@@ -9,21 +9,21 @@ import Footer from "../components/layout/Footer";
 import PublicRoute from "../components/auth/PublicRoute";
 
 // Pages
-import Home from "../pages/home/Home";
-import About from "../pages/about/About";
-import Destinations from "../pages/destinations/Destinations";
-import DestinationDetails from "../pages/destinationDetails/DestinationDetails";
-import TourPage from "../pages/tourPage/TourPage";
-import TourDetails from "../pages/tourDetails/TourDetails";
-import BlogPage from "../pages/blogPage/BlogPage";
-import BlogDetails from "../pages/blogDetails/BlogDetails";
-import VisaService from "../pages/visaService/VisaService";
-import VisaDetails from "../pages/visaDetails/VisaDetails";
-import AirTickets from "../pages/airTicketDeals/AirTickets";
-import Contact from "../pages/contact/Contact";
+import Home from "../pages/clients/home/Home";
+import About from "../pages/clients/about/About";
+import Destinations from "../pages/clients/destinations/Destinations";
+import DestinationDetails from "../pages/clients/destinations/DestinationDetails";
+import TourPage from "../pages/clients/tourPage/TourPage";
+import TourDetails from "../pages/clients/tourPage/TourDetails";
+import BlogPage from "../pages/clients/blogPage/BlogPage";
+import BlogDetails from "../pages/clients/blogPage/BlogDetails";
+import VisaService from "../pages/clients/visaService/VisaService";
+import VisaDetails from "../pages/clients/visaService/VisaDetails";
+import AirTickets from "../pages/clients/airTicketDeals/AirTickets";
+import Contact from "../pages/clients/contact/Contact";
 import Login from "../pages/login/Login";
 import ErrorPage from "../pages/error/ErrorPage";
-import Booking from "../pages/booking/Booking";
+import Booking from "../pages/clients/booking/Booking";
 const PublicRoutes = () => {
   return (
     <>
