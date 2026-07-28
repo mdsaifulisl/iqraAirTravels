@@ -1,16 +1,14 @@
- 
 import React, { useState, useEffect } from "react";
 import { FaSave, FaArrowLeft, FaCloudUploadAlt, FaPlane, FaDollarSign, FaTicketAlt, FaTrash } from "react-icons/fa";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { createAirTicket, updateAirTicket, getAirTicketById } from "../../../api/airTicketService";
-
-import { toast } from "react-hot-toast"; // নোটিফিকেশনের জন্য (অপশনাল)
+import { compressImageNative } from "../../../components/helpers/compressor";
+import { toast } from "react-hot-toast";
 
 const AddAirTicket = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const isEditMode = Boolean(id);
-
 
   const [previewImage, setPreviewImage] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -33,11 +31,11 @@ const AddAirTicket = () => {
           if (res.success) {
             const data = res.data;
             setFormData({
-              from: data.from,
-              to: data.to,
-              airline: data.airline,
-              price: data.price,
-              trip_type: data.trip_type,
+              from: data.from || "",
+              to: data.to || "",
+              airline: data.airline || "",
+              price: data.price || "",
+              trip_type: data.trip_type || "Round Trip",
               description: data.description || "",
               image: null, 
             });
@@ -56,14 +54,21 @@ const AddAirTicket = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // সাইজ ভ্যালিডেশন (২ এমবি)
-      if (file.size > 2 * 1024 * 1024) {
-        alert("File size is too large! Max 2MB allowed.");
+      // প্রাথমিক সাইজ চেক (৫ MB পর্যন্ত এলাউড, কারণ পরে কম্প্রেস হবে)
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error("File size is too large! Max 5MB allowed.");
+        e.target.value = "";
         return;
       }
       setFormData({ ...formData, image: file });
-      setPreviewImage(URL.createObjectURL(file)); // সহজ প্রিভিউ মেথড
+      setPreviewImage(URL.createObjectURL(file));
     }
+  };
+
+  // প্রিভিউ রিমুভ হ্যান্ডলার
+  const handleRemoveImage = () => {
+    setFormData({ ...formData, image: null });
+    setPreviewImage(null);
   };
 
   // ৩. সাবমিট হ্যান্ডলার (Create & Update)
@@ -71,20 +76,24 @@ const AddAirTicket = () => {
     e.preventDefault();
     setLoading(true);
 
-    const submitData = new FormData();
-    submitData.append("from", formData.from);
-    submitData.append("to", formData.to);
-    submitData.append("airline", formData.airline);
-    submitData.append("price", formData.price);
-    submitData.append("trip_type", formData.trip_type); 
-    submitData.append("description", formData.description);
-    
-    // 
-    if (formData.image) {
-      submitData.append("image", formData.image);
-    }
-
     try {
+      const submitData = new FormData();
+      submitData.append("from", formData.from.trim());
+      submitData.append("to", formData.to.trim());
+      submitData.append("airline", formData.airline.trim());
+      submitData.append("price", formData.price.trim());
+      submitData.append("trip_type", formData.trip_type); 
+      submitData.append("description", formData.description.trim());
+      
+      // ছবি থাকলে Native Canvas দিয়ে কম্প্রেস করে পাঠানো
+      if (formData.image) {
+        let finalImage = formData.image;
+        if (formData.image.type.startsWith("image/")) {
+          finalImage = await compressImageNative(formData.image, 1600, 1600, 0.7);
+        }
+        submitData.append("image", finalImage);
+      }
+
       let res;
       if (isEditMode) {
         res = await updateAirTicket(id, submitData);
@@ -92,7 +101,7 @@ const AddAirTicket = () => {
         res = await createAirTicket(submitData);
       }
 
-      if (res.success) {
+      if (res?.success) {
         toast.success(isEditMode ? "Updated successfully!" : "Created successfully!");
         navigate("/admin/tickets");
       }
@@ -100,7 +109,6 @@ const AddAirTicket = () => {
       toast.error(err.response?.data?.message || "Something went wrong!");
     } finally {
       setLoading(false);
-      
     }
   };
 
@@ -153,7 +161,7 @@ const AddAirTicket = () => {
                       placeholder="e.g. Emirates"
                       value={formData.airline}
                       onChange={(e) => setFormData({...formData, airline: e.target.value})}
-                      
+                      required
                     />
                   </div>
                 </div>
@@ -181,11 +189,11 @@ const AddAirTicket = () => {
                   <span className="input-group-text bg-light border-0"><FaDollarSign size={14} /></span>
                   <input 
                     type="text" 
-                    className="form-control border-0 bg-light" 
+                    className="form-control border-0 bg-light py-2" 
                     placeholder="e.g. 50,000 BDT"
                     value={formData.price}
                     onChange={(e) => setFormData({...formData, price: e.target.value})}
-                    
+                    required
                   />
                 </div>
               </div>
@@ -194,7 +202,7 @@ const AddAirTicket = () => {
                 <div className="input-group">
                   <span className="input-group-text bg-light border-0"><FaTicketAlt size={14} /></span>
                   <select 
-                    className="form-select border-0 bg-light" 
+                    className="form-select border-0 bg-light py-2" 
                     value={formData.trip_type} 
                     onChange={(e) => setFormData({...formData, trip_type: e.target.value})}
                   >
@@ -212,14 +220,14 @@ const AddAirTicket = () => {
               <label htmlFor="file-upload" className="upload-zone text-center p-4 border border-dashed rounded-4 mb-3" style={{backgroundColor: 'var(--accent-alice-blue)', cursor: 'pointer', display: 'block'}}>
                 <FaCloudUploadAlt size={40} className="mb-2" style={{color: 'var(--primary-teal)'}} />
                 <p className="small mb-1 fw-bold">Click to Upload Image</p>
-                <p className="text-muted extra-small mb-0">PNG, JPG or JPEG (Max 2MB)</p>
-                <input id="file-upload" type="file" accept="image/*" hidden onChange={handleImageChange} />
+                <p className="text-muted extra-small mb-0">PNG, JPG or JPEG (Max 5MB)</p>
+                <input id="file-upload" type="file" accept="image/png, image/jpeg, image/jpg" hidden onChange={handleImageChange} />
               </label>
 
               {previewImage && (
                 <div className="position-relative animate__animated animate__zoomIn">
                   <img src={previewImage} className="img-fluid rounded-3 border w-100" style={{ height: "180px", objectFit: "cover" }} alt="Preview" />
-                  <button type="button" className="btn btn-danger btn-sm position-absolute top-0 end-0 m-2 rounded-circle" onClick={() => { setFormData({...formData, image: null}); setPreviewImage(null); }}>
+                  <button type="button" className="btn btn-danger btn-sm position-absolute top-0 end-0 m-2 rounded-circle shadow-sm" onClick={handleRemoveImage}>
                     <FaTrash size={12} />
                   </button>
                 </div>
@@ -227,7 +235,14 @@ const AddAirTicket = () => {
             </div>
 
             <button type="submit" disabled={loading} className="btn w-100 mt-4 py-3 rounded-4 shadow fw-bold text-white border-0" style={{backgroundColor: 'var(--secondary-coral)'}}>
-              {loading ? "Processing..." : <><FaSave className="me-2" /> {isEditMode ? "Update Ticket" : "Save Air Ticket"}</>}
+              {loading ? (
+                <>
+                  <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+                  Compressing & Saving...
+                </>
+              ) : (
+                <><FaSave className="me-2" /> {isEditMode ? "Update Ticket" : "Save Air Ticket"}</>
+              )}
             </button>
           </div>
         </div>

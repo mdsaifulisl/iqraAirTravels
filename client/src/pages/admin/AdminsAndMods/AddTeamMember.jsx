@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { FaSave, FaArrowLeft, FaCloudUploadAlt, FaUserTie, FaEnvelope, FaShieldAlt, FaPhoneAlt } from "react-icons/fa";
-import { Link, useParams, } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { useUsers } from "../../../hooks/useUsers"; 
+import { compressImageNative } from "../../../components/helpers/compressor";
 
 const AddTeamMember = () => {
+  const navigate = useNavigate();
   const { id } = useParams();
-  // const navigate = useNavigate();
   const isEditMode = Boolean(id);
   const { handleAddUser, handleUpdateUser, fetchUserById, loading, message, setMessage, fetchUsers } = useUsers();
 
   const [selectedImage, setSelectedImage] = useState(null);
-  // নতুন লোকাল স্টেট - সাবমিট ট্র্যাকিং এর জন্য
   const [isSaving, setIsSaving] = useState(false); 
   
   const [formData, setFormData] = useState({
@@ -52,6 +52,12 @@ const AddTeamMember = () => {
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
+
+      // মেমোরি লিক ফিক্স
+      if (selectedImage?.preview && !selectedImage?.isExisting) {
+        URL.revokeObjectURL(selectedImage.preview);
+      }
+
       setSelectedImage({
         preview: URL.createObjectURL(file),
         file: file,
@@ -65,18 +71,20 @@ const AddTeamMember = () => {
     setIsSaving(true); 
     
     const data = new FormData();
-    data.append("name", formData.name);
-    data.append("email", formData.email);
-    data.append("phone", formData.phone);
+    data.append("name", formData.name.trim());
+    data.append("email", formData.email.trim());
+    data.append("phone", formData.phone.trim());
     data.append("role", formData.role);
     data.append("status", formData.status);
     data.append("bio", formData.bio);
     
-    if (selectedImage?.file) {
-      data.append("image", selectedImage.file);
-    }
-
     try {
+      // নতুন ইমেজ সিলেক্ট করা থাকলে কম্প্রেস করা
+      if (selectedImage?.file) {
+        const compressedFile = await compressImageNative(selectedImage.file, 800, 800, 0.75);
+        data.append("image", compressedFile);
+      }
+
       let result;
       if (isEditMode) {
         result = await handleUpdateUser(id, data);
@@ -86,7 +94,6 @@ const AddTeamMember = () => {
 
       if (result.success) {
         await fetchUsers(); 
-        // navigate("/admin/users");
         setFormData({
           name: "",
           email: "",
@@ -100,12 +107,12 @@ const AddTeamMember = () => {
         setMessage(result.message || "Error saving data");
       }
     } catch (error) {
-      console.error(error); 
+      console.error("Submission Error:", error); 
     } finally {
       setIsSaving(false); 
+      navigate(-1);
     }
   };
-
 
   if (loading && isEditMode) {
     return (
@@ -167,7 +174,6 @@ const AddTeamMember = () => {
                     <select name="role" className="form-select border-0 bg-light py-3" value={formData.role} onChange={handleChange} required>
                       <option value="Super Admin">Super Admin</option>
                       <option value="Moderator">Moderator</option>
-                      <option value="Editor">Editor</option>
                     </select>
                   </div>
                 </div>
@@ -213,9 +219,12 @@ const AddTeamMember = () => {
               </div>
             </div>
 
-            {/* ফিক্সড বাটন কন্ডিশন: loading এর জায়গায় isSaving ব্যবহার করা হয়েছে */}
             <button type="submit" disabled={isSaving} className="btn w-100 mt-4 py-3 rounded-4 shadow fw-bold text-white" style={{backgroundColor: 'var(--secondary-coral)'}}>
-              <FaSave className="me-2" /> {isSaving ? "Saving..." : (isEditMode ? "Update Member" : "Create Member")}
+              <FaSave className="me-2" /> 
+              {isSaving 
+                ? (isEditMode ? "Updating..." : "Saving...") 
+                : (isEditMode ? "Update Member" : "Create Member")
+              }
             </button>
           </div>
         </div>

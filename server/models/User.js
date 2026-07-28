@@ -29,7 +29,6 @@ module.exports = User;
 
 
 
-
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../config/db");
 

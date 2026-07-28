@@ -125,7 +125,7 @@ const AdminHeroSlider = () => {
                           className="small fw-bold text-teal"
                           style={{ color: "var(--primary-teal)" }}
                         >
-                          <FaLink /> {item.link}
+                          <FaLink /> {item.link.length > 30 ? item.link.slice(0, 30) + "..." : item.link}
                         </span>
                         <div className="d-flex gap-2">
                           <Link

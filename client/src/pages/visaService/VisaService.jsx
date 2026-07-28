@@ -17,7 +17,7 @@ const VisaService = () => {
   
 
 
-  const visaList = visas.length > 0 ? visas : VisaJsonData; // API থেকে ডাটা না এলে লোকাল JSON ডাটা ব্যবহার করবে
+  const visaList = visas.length > 0 ? visas : VisaJsonData; 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCountry, setSelectedCountry] = useState("All");
 

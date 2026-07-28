@@ -1,9 +1,9 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-    baseURL: 'http://localhost:5000/api', 
-    //  baseURL: '/api', 
-    timeout: 10000,
+    // baseURL: 'http://localhost:5000/api', 
+     baseURL: '/api', 
+    timeout: 60000,
 });
 
 // Request Interceptor
@@ -33,3 +33,5 @@ axiosInstance.interceptors.response.use(
 );
 
 export default axiosInstance;
+
+

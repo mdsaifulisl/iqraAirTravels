@@ -24,7 +24,7 @@ export const UserProvider = ({ children }) => {
     try {
       const response = await fetchAllUsersApi();
       if (response.success) setUsers(response.data);
-      console.log("Fetched Users:", response.data);
+      // console.log("Fetched Users:", response.data);
     } catch (err) {
       if (err.response?.status === 401) {
         console.log("Unauthorized access. Token might be expired.");
@@ -52,7 +52,7 @@ export const UserProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }; 
 
   const handleUpdateUser = async (id, formData) => {
     try {

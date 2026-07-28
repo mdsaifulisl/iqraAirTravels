@@ -20,8 +20,9 @@ export const DestinationProvider = ({ children }) => {
                 setDestinations(res.data);
                 setError(null);
             }
+        // eslint-disable-next-line no-unused-vars
         } catch (err) {
-            setError(err.message || "ডেটা লোড করতে সমস্যা হচ্ছে");
+            setError("network error");
         } finally {
             setLoading(false);
         }

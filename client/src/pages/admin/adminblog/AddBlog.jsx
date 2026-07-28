@@ -1,10 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from "react";
-import { FaSave, FaArrowLeft, FaCloudUploadAlt, FaTrash, FaUserEdit } from "react-icons/fa";
+import { FaSave, FaArrowLeft, FaCloudUploadAlt, FaUserEdit } from "react-icons/fa";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import TextEditor from "../../../components/shared/TextEditor";
 import { createBlog, updateBlog, getBlogById } from "../../../api/blogService";
 import useBlogs from "../../../hooks/useBlogs";
+import { compressImageNative } from "../../../components/helpers/compressor";
 import { toast } from "react-hot-toast";
 
 const AddBlog = () => {
@@ -21,7 +22,7 @@ const AddBlog = () => {
 
   const [formData, setFormData] = useState({
     title: "",
-    author: "Md. Saiful Islam",
+    author: "Osman",
     category: "",
   });
 
@@ -34,11 +35,11 @@ const AddBlog = () => {
           if (res.success) {
             const data = res.data;
             setFormData({
-              title: data.title,
-              author: data.author,
-              category: data.category,
+              title: data.title || "",
+              author: data.author || "Md. Saiful Islam",
+              category: data.category || "",
             });
-            setContent(data.content);
+            setContent(data.content || "");
             setExistingImages(data.images || []);
           }
         // eslint-disable-next-line no-unused-vars
@@ -53,13 +54,15 @@ const AddBlog = () => {
   // ২. ইমেজ হ্যান্ডলার (Multiple Images)
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
-    const validFiles = files.filter(file => file.size <= 2 * 1024 * 1024);
+    // প্রাথমিক সাইজ চেক (৫ MB পর্যন্ত এলাউ করা ভালো, কারণ পরে কম্প্রেস হবে)
+    const validFiles = files.filter(file => file.size <= 5 * 1024 * 1024);
     
     if (validFiles.length < files.length) {
-      toast.error("Some files are too large (Max 2MB)");
+      toast.error("Some files are too large (Max 5MB per image)");
     }
 
-    setSelectedImages([...selectedImages, ...validFiles]);
+    setSelectedImages(prev => [...prev, ...validFiles]);
+    e.target.value = ""; // ইনপুট রিসেট করা যেন একই ফাইল পুনরায় সিলেক্ট করা যায়
   };
 
   // ৩. ইমেজ রিমুভ লজিক
@@ -71,32 +74,43 @@ const AddBlog = () => {
     setExistingImages(existingImages.filter(img => img !== url));
   };
 
-  // ৪. সাবমিট হ্যান্ডলার (FormData সহ)
+  // ৪. সাবমিট হ্যান্ডলার (Parallel Image Compression সহ)
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
-    const submitData = new FormData();
-    submitData.append("title", formData.title);
-    submitData.append("author", formData.author);
-    submitData.append("category", formData.category);
-    submitData.append("content", content); // TextEditor থেকে আসা কন্টেন্ট
-
-    // নতুন ইমেজগুলো অ্যাপেন্ড করা
-    selectedImages.forEach((file) => {
-      submitData.append("images", file);
-    });
-
-    // পুরনো যেগুলো ইউজার ডিলিট করেনি, সেগুলো পাঠানো
-    if (isEditMode) {
-      submitData.append("existingImages", JSON.stringify(existingImages));
-    }
-
     try {
+      const submitData = new FormData();
+      submitData.append("title", formData.title.trim());
+      submitData.append("author", formData.author.trim());
+      submitData.append("category", formData.category);
+      submitData.append("content", content);
+
+      // নির্বাচিত একাধিক ছবি প্যারালালে কম্প্রেস করা
+      if (selectedImages.length > 0) {
+        const compressPromises = selectedImages.map(async (file) => {
+          if (file.type.startsWith("image/")) {
+            return await compressImageNative(file, 1600, 1600, 0.7);
+          }
+          return file;
+        });
+
+        const compressedFiles = await Promise.all(compressPromises);
+
+        compressedFiles.forEach((file) => {
+          submitData.append("images", file);
+        });
+      }
+
+      // পুরনো ছবি পাঠানো (এডিট মোডের ক্ষেত্রে)
+      if (isEditMode) {
+        submitData.append("existingImages", JSON.stringify(existingImages));
+      }
+
       let res;
       if (isEditMode) {
         res = await updateBlog(id, submitData);
-        if (res.success) {
+        if (res?.success) {
           setBlogs((prevBlogs) =>
             prevBlogs.map((blog) =>
               blog.id === id ? { ...blog, ...res.data } : blog
@@ -105,13 +119,13 @@ const AddBlog = () => {
         }
       } else {
         res = await createBlog(submitData);
-        if (res.success) {
+        if (res?.success) {
           setBlogs((prevBlogs) => [res.data, ...prevBlogs]);
         }
       }
 
-      if (res.success) {
-        toast.success(isEditMode ? "Updated!" : "Published!");
+      if (res?.success) {
+        toast.success(isEditMode ? "Updated successfully!" : "Published successfully!");
         navigate("/admin/blog");
       }
     } catch (error) {
@@ -163,7 +177,7 @@ const AddBlog = () => {
                 <label className="small fw-bold mb-1">Author Name</label>
                 <div className="input-group">
                   <span className="input-group-text bg-light border-0"><FaUserEdit size={14} /></span>
-                  <input type="text" className="form-control border-0 bg-light" value={formData.author} onChange={(e) => setFormData({...formData, author: e.target.value})} />
+                  <input type="text" className="form-control border-0 bg-light" value={formData.author} onChange={(e) => setFormData({...formData, author: e.target.value})} required />
                 </div>
               </div>
               <div className="mb-3">
@@ -183,6 +197,7 @@ const AddBlog = () => {
               <label htmlFor="blog-images" className="upload-zone text-center p-3 border border-dashed rounded-4 mb-3" style={{backgroundColor: 'var(--accent-alice-blue)', cursor: 'pointer', display:'block'}}>
                 <FaCloudUploadAlt size={30} className="text-teal mb-2" style={{color: 'var(--primary-teal)'}} />
                 <p className="small mb-0 fw-bold">Upload Images</p>
+                <p className="text-muted extra-small mb-0">PNG, JPG or JPEG (Multiple)</p>
                 <input type="file" id="blog-images" multiple hidden onChange={handleImageChange} accept="image/*" />
               </label>
 
@@ -191,22 +206,29 @@ const AddBlog = () => {
                 {existingImages.map((img, i) => (
                   <div key={`old-${i}`} className="col-4 position-relative">
                     <img src={img} className="img-fluid rounded-3 border" style={{ height: "60px", width: "100%", objectFit: "cover" }} alt="" />
-                    <button type="button" onClick={() => removeExistingImage(img)} className="btn btn-danger btn-sm position-absolute top-0 end-0 p-0 rounded-circle" style={{width:'18px', height:'18px', fontSize:'10px'}}>×</button>
+                    <button type="button" onClick={() => removeExistingImage(img)} className="btn btn-danger btn-sm position-absolute top-0 end-0 p-0 rounded-circle" style={{width:'18px', height:'18px', fontSize:'10px', lineHeight:'1'}}>×</button>
                   </div>
                 ))}
                 
                 {/* নতুন সিলেক্ট করা ইমেজ প্রিভিউ */}
                 {selectedImages.map((file, i) => (
                   <div key={`new-${i}`} className="col-4 position-relative">
-                    <img src={URL.createObjectURL(file)} className="img-fluid rounded-3 border" style={{ height: "60px", width: "100%", objectFit: "cover", opacity: '0.7' }} alt="" />
-                    <button type="button" onClick={() => removeNewImage(i)} className="btn btn-warning btn-sm position-absolute top-0 end-0 p-0 rounded-circle" style={{width:'18px', height:'18px', fontSize:'10px'}}>×</button>
+                    <img src={URL.createObjectURL(file)} className="img-fluid rounded-3 border" style={{ height: "60px", width: "100%", objectFit: "cover", opacity: '0.85' }} alt="" />
+                    <button type="button" onClick={() => removeNewImage(i)} className="btn btn-warning btn-sm position-absolute top-0 end-0 p-0 rounded-circle" style={{width:'18px', height:'18px', fontSize:'10px', lineHeight:'1'}}>×</button>
                   </div>
                 ))}
               </div>
             </div>
 
             <button type="submit" disabled={loading} className="btn w-100 mt-4 py-3 rounded-4 shadow fw-bold text-white border-0" style={{backgroundColor: 'var(--secondary-coral)'}}>
-              {loading ? "Processing..." : <><FaSave className="me-2" /> {isEditMode ? "Update Article" : "Publish Article"}</>}
+              {loading ? (
+                <>
+                  <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+                  Compressing & Saving...
+                </>
+              ) : (
+                <><FaSave className="me-2" /> {isEditMode ? "Update Article" : "Publish Article"}</>
+              )}
             </button>
           </div>
         </div>

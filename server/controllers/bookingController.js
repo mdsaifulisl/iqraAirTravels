@@ -7,7 +7,7 @@ require("dotenv").config();
 
 const BASE_URL = process.env.BASE_URL || "http://localhost:5000";
 
-// ১. ফাইল ডিলিট করার সেফ হেলপার
+// ১. সেফ অসিঙ্ক্রোনাস ফাইল ডিলিট
 const deleteFile = (filePath) => {
   if (!filePath) return;
   try {
@@ -19,24 +19,32 @@ const deleteFile = (filePath) => {
     const fullPath = path.join(__dirname, "..", relativePath);
 
     if (fs.existsSync(fullPath)) {
-      fs.unlinkSync(fullPath);
+      fs.unlink(fullPath, (err) => {
+        if (err) console.error("File delete error:", err.message);
+      });
     }
   } catch (err) {
-    console.error("File delete error:", err.message);
+    console.error("File parsing error:", err.message);
   }
 };
 
 // ২. ডাটা ফরম্যাটিং হেলপার
 const formatBookingData = (booking) => {
-  const bookingData = booking.toJSON();
+  if (!booking) return null;
+  const bookingData = typeof booking.toJSON === "function" ? booking.toJSON() : booking;
 
   if (bookingData.documents && Array.isArray(bookingData.documents)) {
-    bookingData.documents = bookingData.documents.map((doc) => ({
-      ...doc,
-      filePath: doc.filePath.startsWith("http")
-        ? doc.filePath
-        : `${BASE_URL}${doc.filePath.startsWith('/') ? '' : '/'}${doc.filePath}`,
-    }));
+    bookingData.documents = bookingData.documents.map((doc) => {
+      const rawPath = doc.filePath || "";
+      const cleanPath = rawPath.startsWith("/") ? rawPath : `/${rawPath}`;
+      
+      return {
+        ...doc,
+        filePath: rawPath.startsWith("http")
+          ? rawPath
+          : `${BASE_URL.replace(/\/$/, "")}${cleanPath}`,
+      };
+    });
   } else {
     bookingData.documents = [];
   }
@@ -48,9 +56,11 @@ const formatBookingData = (booking) => {
 // CONTROLLER METHODS
 // -------------------------------------------------------------
 
-// ১. নতুন বুকিং তৈরি
+// ১. নতুন বুকিং তৈরি (Mobile Optimized & Robust)
 exports.createBooking = async (req, res) => {
   const t = await sequelize.transaction();
+  let uploadedFiles = req.files || [];
+
   try {
     const {
       bookingType,
@@ -62,28 +72,39 @@ exports.createBooking = async (req, res) => {
       specialRequest,
     } = req.body;
 
+    // ভ্যালিডেশন
     if (!fullName || !phone || !address || !itemId) {
+      await t.rollback();
+      // মোবাইল ফাইল ক্লিনআপ
+      uploadedFiles.forEach((file) => deleteFile(file.path));
+
       return res.status(400).json({
         success: false,
         message: "সব প্রয়োজনীয় তথ্য প্রদান করুন (fullName, phone, address, itemId)",
       });
     }
 
+    // মূল বুকিং ক্রিয়েট
     const newBooking = await Booking.create(
       {
         bookingType: bookingType || "tour",
-        itemId,
-        fullName,
-        phone,
-        email: email || null,
-        address,
-        specialRequest: specialRequest || null,
+        itemId: itemId, // String/Number অটো হ্যান্ডেল হবে
+        fullName: fullName.trim(),
+        phone: phone.trim(),
+        email: email ? email.trim() : null,
+        address: address.trim(),
+        specialRequest: specialRequest ? specialRequest.trim() : null,
       },
       { transaction: t }
     );
 
-    if (req.files && req.files.length > 0) {
+    let documentRecords = [];
+
+    // ফাইল প্রসেসিং
+    if (uploadedFiles.length > 0) {
       let labels = req.body.documentLabels;
+
+      // Safe Label Parsing for Mobile Form-Data
       if (typeof labels === "string") {
         try {
           labels = JSON.parse(labels);
@@ -93,40 +114,55 @@ exports.createBooking = async (req, res) => {
       }
 
       const folder = req.uploadFolder || "Booking_Documents";
-      const documentRecords = req.files.map((file, index) => {
-        const label = Array.isArray(labels) ? labels[index] : labels;
+      
+      documentRecords = uploadedFiles.map((file, index) => {
+        let label = "Document";
+        if (Array.isArray(labels)) {
+          label = labels[index] || labels[0] || "Document";
+        } else if (typeof labels === "string") {
+          label = labels;
+        }
+
         return {
           bookingId: newBooking.id,
           filePath: `/uploads/${folder}/${file.filename}`,
-          label: label || "Document",
+          label: label,
         };
       });
 
+      // ডক ক্রিয়েট
       await BookingDocument.bulkCreate(documentRecords, { transaction: t });
     }
 
+    // ট্রানজ্যাকশন কমিট
     await t.commit();
 
-    const createdBooking = await Booking.findByPk(newBooking.id, {
-      include: [{ model: BookingDocument, as: "documents" }],
-    });
+    // এক্সট্রা ডাটাবেজ কোয়েরি এড়াতে ম্যানুয়ালি রেসপন্স অবজেক্ট তৈরি
+    const responseData = newBooking.toJSON();
+    responseData.documents = documentRecords;
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       message: "আপনার বুকিং অনুরোধটি সফলভাবে গৃহীত হয়েছে! খুব শীঘ্রই আমাদের একজন প্রতিনিধি আপনার সাথে যোগাযোগ করবেন।",
-      data: formatBookingData(createdBooking),
+      data: formatBookingData(responseData),
     });
+
   } catch (error) {
     await t.rollback();
-    // আপলোড ফাইল রোলব্যাক করা
-    if (req.files && req.files.length > 0) {
-      req.files.forEach((file) => {
-        const folder = req.uploadFolder || "Booking_Documents";
+
+    // এরর হলে আপলোড হওয়া ফাইলগুলো ক্লিনআপ
+    if (uploadedFiles.length > 0) {
+      const folder = req.uploadFolder || "Booking_Documents";
+      uploadedFiles.forEach((file) => {
         deleteFile(`/uploads/${folder}/${file.filename}`);
       });
     }
+
     console.error("Create Booking Error:", error);
-    res.status(500).json({ success: false, error: "বুকিং তৈরি করতে সমস্যা হয়েছে" });
+    return res.status(500).json({ 
+      success: false, 
+      error: error.message || "বুকিং তৈরি করতে সমস্যা হয়েছে" 
+    });
   }
 };
 
@@ -301,3 +337,7 @@ exports.deleteBooking = async (req, res) => {
     res.status(500).json({ success: false, error: error.message });
   }
 };
+
+
+
+// message: "আপনার বুকিং অনুরোধটি সফলভাবে গৃহীত হয়েছে! খুব শীঘ্রই আমাদের একজন প্রতিনিধি আপনার সাথে যোগাযোগ করবেন।",

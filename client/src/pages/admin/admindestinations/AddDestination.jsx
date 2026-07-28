@@ -4,6 +4,8 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import TextEditor from "../../../components/shared/TextEditor";
 import { createDestination, updateDestination, getDestinationById } from "../../../api/destinationService";
 import useDestinations from "../../../hooks/useDestinations";
+import { compressImageNative } from "../../../components/helpers/compressor";
+
 const AddDestination = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -12,9 +14,9 @@ const AddDestination = () => {
   const { fetchDestinations } = useDestinations();
 
   const [description, setDescription] = useState("");
-  const [selectedImages, setSelectedImages] = useState([]); // নতুন ফাইল
-  const [previewImages, setPreviewImages] = useState([]); // প্রিভিউ দেখানোর জন্য
-  const [existingImages, setExistingImages] = useState([]); // পুরনো সার্ভারের ছবি
+  const [selectedImages, setSelectedImages] = useState([]); // নতুন সিলেক্ট করা ফাইল অবজেক্ট
+  const [previewImages, setPreviewImages] = useState([]); // নতুন ফাইলের প্রিভিউ URL
+  const [existingImages, setExistingImages] = useState([]); // সার্ভার থেকে আসা পুরনো ছবি
   const [highlightInput, setHighlightInput] = useState("");
   const [loading, setLoading] = useState(false);
   
@@ -27,7 +29,7 @@ const AddDestination = () => {
     highlights: []
   });
 
-  // ১. Edit Mode-এ ডাটা ফেচ করা
+  // ১. Edit Mode-এ ডাটা লোড করা
   useEffect(() => {
     if (isEditMode) {
       const fetchDetail = async () => {
@@ -36,14 +38,14 @@ const AddDestination = () => {
           if (res.success) {
             const data = res.data;
             setFormData({
-              title: data.title,
-              location: data.location,
-              price: data.price,
-              duration: data.duration,
-              rating: data.rating,
+              title: data.title || "",
+              location: data.location || "",
+              price: data.price || "",
+              duration: data.duration || "",
+              rating: data.rating || "5.0",
               highlights: data.highlights || []
             });
-            setDescription(data.description);
+            setDescription(data.description || "");
             setExistingImages(data.images || []); 
           }
         } catch (err) {
@@ -60,21 +62,31 @@ const AddDestination = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  // ২. ইমেজ হ্যান্ডলিং
+  // ২. নতুন ইমেজ সিলেক্ট ও প্রিভিউ হ্যান্ডলিং
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
-    setSelectedImages([...selectedImages, ...files]);
+    
+    // ৫MB এর চেয়ে বড় ফাইল ফিল্টার করা (কম্প্রেশনের সুবিধার্থে)
+    const validFiles = files.filter(file => file.size <= 5 * 1024 * 1024);
+    if (validFiles.length < files.length) {
+      alert("Some files exceed the 5MB size limit.");
+    }
 
-    // প্রিভিউ তৈরি করা
-    const filePreviews = files.map(file => URL.createObjectURL(file));
-    setPreviewImages([...previewImages, ...filePreviews]);
+    setSelectedImages(prev => [...prev, ...validFiles]);
+
+    // নতুন প্রিভিউ URL তৈরি
+    const newPreviews = validFiles.map(file => URL.createObjectURL(file));
+    setPreviewImages(prev => [...prev, ...newPreviews]);
+
+    e.target.value = ""; // ফাইল ইনপুট রিসেট
   };
 
   const removeSelectedImage = (index) => {
-    const updatedFiles = selectedImages.filter((_, i) => i !== index);
-    const updatedPreviews = previewImages.filter((_, i) => i !== index);
-    setSelectedImages(updatedFiles);
-    setPreviewImages(updatedPreviews);
+    // মেমোরি ফ্রী করতে অবজেক্ট URL রিভোক করা
+    URL.revokeObjectURL(previewImages[index]);
+
+    setSelectedImages(selectedImages.filter((_, i) => i !== index));
+    setPreviewImages(previewImages.filter((_, i) => i !== index));
   };
 
   const removeExistingImage = (index) => {
@@ -99,46 +111,57 @@ const AddDestination = () => {
     });
   };
 
-  // ৪. সাবমিট ফাংশন (FormData ব্যবহার করে)
+  // ৪. সাবমিট ফাংশন (Image Compression সহ)
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
-    const data = new FormData();
-    data.append("title", formData.title);
-    data.append("location", formData.location);
-    data.append("price", formData.price);
-    data.append("duration", formData.duration);
-    data.append("rating", formData.rating);
-    data.append("description", description);
-    data.append("highlights", JSON.stringify(formData.highlights));
-
-    // নতুন ইমেজগুলো যুক্ত করা
-    selectedImages.forEach(file => {
-      data.append("images", file);
-    });
-
-    // এডিট মোডে থাকলে পুরনো ছবিগুলোও পাঠাতে হবে (যেগুলো ইউজার ডিলিট করেনি)
-    if (isEditMode) {
-      data.append("existingImages", JSON.stringify(existingImages));
-    }
-
     try {
+      const data = new FormData();
+      data.append("title", formData.title.trim());
+      data.append("location", formData.location.trim());
+      data.append("price", formData.price);
+      data.append("duration", formData.duration);
+      data.append("rating", formData.rating);
+      data.append("description", description);
+      data.append("highlights", JSON.stringify(formData.highlights));
+
+      // নির্বাচিত ইমেজগুলো প্যারালালে কম্প্রেস করা
+      if (selectedImages.length > 0) {
+        const compressPromises = selectedImages.map(async (file) => {
+          if (file.type.startsWith("image/")) {
+            return await compressImageNative(file, 1600, 1600, 0.7);
+          }
+          return file;
+        });
+
+        const compressedFiles = await Promise.all(compressPromises);
+
+        compressedFiles.forEach(file => {
+          data.append("images", file);
+        });
+      }
+
+      // এডিট মোডে থাকলে পুরনো ছবিগুলোও পাঠানো
+      if (isEditMode) {
+        data.append("existingImages", JSON.stringify(existingImages));
+      }
+
       if (isEditMode) {
         await updateDestination(id, data);
-        alert("Destination Updated Successfully!");
+        alert("Hajj & Umrah Package Updated Successfully!");
       } else {
         await createDestination(data);
-        alert("Destination Created Successfully!");
+        alert("Hajj & Umrah Package Created Successfully!");
       }
+
+      fetchDestinations();
       navigate("/admin/hajj&umrah");
     } catch (err) {
       alert(err.message || "Something went wrong!");
     } finally {
       setLoading(false);
     }
-      // ডেস্টিনেশন লিস্ট রিফ্রেশ করা
-      fetchDestinations();
   };
 
   return (
@@ -148,7 +171,7 @@ const AddDestination = () => {
         <h3 className="fw-bold mb-0" style={{ color: "var(--primary-teal)" }}>
           {isEditMode ? "Edit Hajj & Umrah" : "Create Hajj & Umrah "}
         </h3>
-        <Link to="/admin/destinations" className="btn btn-outline-secondary rounded-pill px-4">
+        <Link to="/admin/hajj&umrah" className="btn btn-outline-secondary rounded-pill px-4">
           <FaArrowLeft className="me-2" /> Back
         </Link>
       </div>
@@ -238,7 +261,7 @@ const AddDestination = () => {
             </div>
 
             <button type="submit" disabled={loading} className="btn w-100 mt-4 py-3 rounded-4 shadow fw-bold text-white" style={{backgroundColor: 'var(--secondary-coral)'}}>
-              <FaSave className="me-2" /> {loading ? "Processing..." : (isEditMode ? "Save Changes" : "Publish Hajj & Umrah")}
+              <FaSave className="me-2" /> {loading ? "Compressing & Saving..." : (isEditMode ? "Save Changes" : "Publish Hajj & Umrah")}
             </button>
           </div>
         </div>

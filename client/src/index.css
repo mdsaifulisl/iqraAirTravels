@@ -192,3 +192,57 @@ h1, h2, h3, h4, h5, h6 {
   margin: .5rem 0!important;
 }
 
+h1{
+  font-size: 2.5rem!important;
+}
+h2{
+  font-size: 2rem!important;
+}
+h3{
+  font-size: 1.75rem!important;
+}
+h4{
+  font-size: 1.5rem!important;
+}
+h5{
+  font-size: 1.25rem!important;
+}
+h6{
+  font-size: 1rem!important;
+}
+
+@media (max-width: 991px) {
+  h1{
+    font-size: 2rem!important;
+  }
+  h2{
+    font-size: 1.5rem!important;
+  }
+  h3{
+    font-size: 1.50rem!important;
+  }
+  h4{
+    font-size: 1.25rem!  ;
+  }
+  h5{
+    font-size: 1rem!important;
+  }
+  h6{
+    font-size: 0.75rem!important;
+  }
+}
+
+/* Bootstrap Blog Content Gap Fix */
+.blog-content p {
+  margin-bottom: 1rem; /* প্রতিটি প্যারাগ্রাফের নিচে স্পেস */
+}
+
+/* ফাঁকা লাইন বা Enter দেওয়ার স্পেস বজায় রাখার জন্য */
+.blog-content p:has(br) {
+  min-height: 1.5rem;
+}
+
+/* যদি ব্রাউজারে :has Support না থাকে তার Fallback */
+.ql-editor p br {
+  display: inline-block;
+}

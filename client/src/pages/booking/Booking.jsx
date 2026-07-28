@@ -19,8 +19,9 @@ import {
 import { getDestinationById } from "../../api/destinationService";
 import { getTourById } from "../../api/tourService";
 import { useBookings } from "../../hooks/useBookings";
+import { compressImageNative } from "../../components/helpers/compressor";
 
-const MAX_FILE_SIZE_MB = 5;
+const MAX_FILE_SIZE_MB = 10; // ফোন দিয়ে তোলা বড় ফাইলের জন্য প্রাথমিক লিমিট একটু বাড়াতে পারেন
 
 const Booking = () => {
   const [searchParams] = useSearchParams();
@@ -126,49 +127,60 @@ const Booking = () => {
     e.preventDefault();
     setLoading(true);
 
-    const submissionData = new FormData();
-    submissionData.append("bookingType", bookingType);
-    submissionData.append("itemId", itemId);
-    
-    submissionData.append("fullName", formData.fullName.trim());
-    submissionData.append("email", formData.email.trim());
-    submissionData.append("phone", formData.phone.trim());
-    submissionData.append("address", formData.address.trim());
-    submissionData.append("specialRequest", formData.specialRequest.trim());
+    try {
+      const submissionData = new FormData();
+      submissionData.append("bookingType", bookingType);
+      submissionData.append("itemId", itemId);
+      
+      submissionData.append("fullName", formData.fullName.trim());
+      submissionData.append("email", formData.email.trim());
+      submissionData.append("phone", formData.phone.trim());
+      submissionData.append("address", formData.address.trim());
+      submissionData.append("specialRequest", formData.specialRequest.trim());
 
-    files.forEach((item, index) => {
-      if (item.file) {
-        submissionData.append("documents", item.file);
-        submissionData.append("documentLabels", item.label || `Document ${index + 1}`);
+      // ফাইলগুলো কম্প্রেশন প্রসেসিং
+      for (let i = 0; i < files.length; i++) {
+        const item = files[i];
+        if (item.file) {
+          let finalFile = item.file;
+
+          // কেবল ইমেজের ক্ষেত্রে Native Canvas দিয়ে সাইজ কমানো হবে
+          if (item.file.type.startsWith("image/")) {
+            finalFile = await compressImageNative(item.file, 1600, 1600, 0.7);
+          }
+
+          submissionData.append("documents", finalFile);
+          submissionData.append("documentLabels", item.label || `Document ${i + 1}`);
+        }
       }
-    });
 
-    const res = await createBooking(submissionData);
+      const res = await createBooking(submissionData);
 
-    if (res?.success) {
-      // ১. টেক্সট ফিল্ড রিসেট
-      setFormData({
-        fullName: "",
-        email: "",
-        phone: "",
-        address: "",
-        specialRequest: "",
+      if (res?.success) {
+        // ১. টেক্সট ফিল্ড রিসেট
+        setFormData({
+          fullName: "",
+          email: "",
+          phone: "",
+          address: "",
+          specialRequest: "",
+        });
+
+        // ২. ফাইল স্টেট রিসেট
+        setFiles([
+          { id: Date.now(), file: null, label: "Passport Copy", isRequired: true }
+        ]);
+        setFileError("");
+      }
+    } catch (err) {
+      console.error("Booking error:", err);
+    } finally {
+      setLoading(false);
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
       });
-
-      // ২. ফাইল স্টেট রিসেট
-      setFiles([
-        { id: Date.now(), file: null, label: "Passport Copy", isRequired: true }
-      ]);
-      setFileError("");
     }
-
-    setLoading(false);
-
-    // সাবমিট করার পর স্মুথলি পেজের একদম উপরে স্ক্রোল হবে
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
   };
 
   return (
@@ -193,14 +205,12 @@ const Booking = () => {
                 </p>
               </div>
 
-              {/* সাকসেস মেসেজ */}
               {message && (
                 <div className="alert alert-success py-2 small text-center mb-4 shadow-sm rounded-3">
                   {message}
                 </div>
               )}
 
-              {/* এরর মেসেজ */}
               {error && (
                 <div className="alert alert-danger py-2 small text-center mb-4 shadow-sm rounded-3">
                   {error}
@@ -221,7 +231,7 @@ const Booking = () => {
                         name="fullName"
                         maxLength="60"
                         className="form-control bg-light border-0 py-2"
-                        placeholder="John Doe"
+                        placeholder="Enter your full name"
                         required
                         value={formData.fullName}
                         onChange={handleChange}
@@ -280,14 +290,14 @@ const Booking = () => {
                   </div>
                 </div>
 
-                <div className="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+                <div className="d-flex flex-wrap justify-content-between align-items-center mb-lg-3 border-bottom pb-2 gap-3">
                   <h5 className="fw-bold text-secondary mb-0">
-                    Documents Upload (Max {MAX_FILE_SIZE_MB}MB each)
+                    Documents Upload
                   </h5>
                   <button
                     type="button"
                     onClick={handleAddFile}
-                    className="btn btn-outline-teal btn-sm rounded-pill d-flex align-items-center gap-1 px-3"
+                    className="btn btn-outline-teal btn-sm rounded-pill d-flex align-items-center gap-1 px-3 mb-3 mb-lg-0"
                   >
                     <FaPlus size={12} /> Add More File
                   </button>
@@ -368,7 +378,14 @@ const Booking = () => {
                   className="btn btn-teal w-100 py-3 rounded-pill fw-bold shadow-sm d-flex align-items-center justify-content-center gap-2"
                   disabled={loading}
                 >
-                  {loading ? "Submitting Request..." : <><FaPaperPlane /> Confirm & Submit Booking</>}
+                  {loading ? (
+                    <>
+                      <span className="spinner-border spinner-border-sm me-2" role="status"></span>
+                      Compressing & Submitting...
+                    </>
+                  ) : (
+                    <><FaPaperPlane /> Confirm & Submit Booking</>
+                  )}
                 </button>
               </form>
             </div>

@@ -11,26 +11,32 @@ export const AuthProvider = ({ children }) => {
     const [psmessage, setPmessage] = useState("");
 
     // ১. ইউজার ভেরিফাই করার ফাংশন
-    const verifyUser = useCallback(async () => {
-        const token = localStorage.getItem("token");
-        if (!token) {
-            setLoading(false);
-            return;
-        }
+    // AuthProvider.jsx এর verifyUser ফাংশন
+const verifyUser = useCallback(async () => {
+    const token = localStorage.getItem("token");
+    
+    if (!token) {
+        setLoading(false);
+        return;
+    }
 
-        try {
-            const res = await axiosInstance.get("/users/verify-me");
-            if (res.data.success) {
-                setUser(res.data.user);
-                localStorage.setItem("user", JSON.stringify(res.data.user));
-            }
-        } catch (err) {
-            console.error("Verification error:", err);
-            logout(); 
-        } finally {
-            setLoading(false);
+    try {
+        axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+        const res = await axiosInstance.get("/users/verify-me");
+        
+        if (res.data.success) {
+            setUser(res.data.user);
+            localStorage.setItem("user", JSON.stringify(res.data.user));
+        } else {
+            logout();
         }
-    }, []);
+    } catch (err) {
+        console.error("Verification error:", err);
+        logout(); // ইউজার ইনএক্টিভ (403) হলে বা টোকেন ইনভ্যালিড হলে অটো লগআউট হবে
+    } finally {
+        setLoading(false);
+    }
+}, []);
 
     // page load user verify
     useEffect(() => {
@@ -151,3 +157,5 @@ export const AuthProvider = ({ children }) => {
         </AuthContext.Provider>
     );
 };
+
+

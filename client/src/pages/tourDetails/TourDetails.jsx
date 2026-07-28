@@ -146,7 +146,7 @@ const TourDetails = () => {
                 <div className="ql-snow bg-white p-4 rounded-4 border border-light">
                   <div className="ql-editor p-0">
                     <div 
-                      className="text-secondary fs-5 additional-details details-content" 
+                      className="ql-editor blog-content p-0 additional-details2 details-content" 
                       style={{ lineHeight: '1.8', lineBreak: 'anywhere'}}
                       dangerouslySetInnerHTML={{ __html: tour.description }} 
                     />

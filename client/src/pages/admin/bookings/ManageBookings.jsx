@@ -96,7 +96,7 @@ const ManageBookings = () => {
   }
 
   return (
-    <div className="container-fluid p-4">
+    <div className="container-fluid p-2 p-lg-4">
       <div className="d-flex flex-wrap align-items-center justify-content-between mb-4 gap-3">
         <div>
           <h3 className="fw-bold m-0" style={{ color: "var(--primary-teal, #0f766e)" }}>
@@ -154,38 +154,50 @@ const ManageBookings = () => {
               {filteredBookings.length > 0 ? (
                 filteredBookings.map((b) => (
                   <tr key={b.id}>
+                    {/* ID with Link */}
                     <td className="fw-bold small" title={b.id}>
-                      #{b.id?.substring(0, 8)}...
-                    </td>
-                    <td>
-                      <div className="fw-bold">{b.fullName}</div>
-                      <div className="text-muted small" style={{ fontSize: "12px" }}>
-                        {b.phone}
-                      </div>
-                    </td>
-                    <td>
-                      <div className="fw-semibold text-dark">{b.itemId}</div>
-                      <span className="badge bg-light text-secondary border text-capitalize fw-normal" style={{ fontSize: "11px" }}>
-                        {b.bookingType}
-                      </span>
-                    </td>
-                    <td className="small">
-                      {b.createdAt ? new Date(b.createdAt).toLocaleDateString() : 'N/A'}
-                    </td>
-                    <td>{getStatusBadge(b.status)}</td>
-                    <td className="text-end">
-                      <Link
-                        to={`/admin/bookings/${b.id}`}
-                        className="btn btn-sm btn-outline-primary border-0 me-1"
-                        title="View Details"
-                      >
-                        <FaEye />
+                      <Link to={`/admin/bookings/${b.id}`} className="text-decoration-none text-teal">
+                        #{b.id?.substring(0, 8)}...
                       </Link>
+                    </td>
 
-                      <div className="dropdown d-inline-block me-1">
+                    {/* Customer Info with Link */}
+                    <td>
+                      <Link to={`/admin/bookings/${b.id}`} className="text-decoration-none text-dark d-block">
+                        <div className="fw-bold">{b.fullName}</div>
+                        <div className="text-muted small" style={{ fontSize: "12px" }}>
+                          {b.phone}
+                        </div>
+                      </Link>
+                    </td>
+
+                    {/* Type / Item with Link */}
+                    <td>
+                      <Link to={`/admin/bookings/${b.id}`} className="text-decoration-none text-dark d-block">
+                        <div className="fw-semibold">{b.itemId?.substring(0, 8)}... </div>
+                        <span className="badge bg-light text-secondary border text-capitalize fw-normal" style={{ fontSize: "11px" }}>
+                          {b.bookingType}
+                        </span>
+                      </Link>
+                    </td>
+
+                    {/* Date with Link */}
+                    <td className="small">
+                      <Link to={`/admin/bookings/${b.id}`} className="text-decoration-none text-secondary">
+                        {b.createdAt ? new Date(b.createdAt).toLocaleDateString() : 'N/A'}
+                      </Link>
+                    </td>
+
+                    {/* Status Badge */}
+                    <td>{getStatusBadge(b.status)}</td>
+
+                    {/* Actions Row - Single line with no wrapping */}
+                    <td className="text-end text-nowrap">
+                      <div className="d-inline-flex align-items-center gap-1">
+                        {/* Status Dropdown */}
                         <select
-                          className="form-select form-select-sm py-1 pe-4"
-                          style={{ fontSize: "12px" }}
+                          className="form-select form-select-sm py-1 px-2"
+                          style={{ fontSize: "12px", width: "105px", minWidth: "105px" }}
                           value={b.status || "Pending"}
                           onChange={(e) => handleStatusChange(b.id, e.target.value)}
                         >
@@ -193,15 +205,25 @@ const ManageBookings = () => {
                           <option value="Confirmed">Confirmed</option>
                           <option value="Cancelled">Cancelled</option>
                         </select>
-                      </div>
 
-                      <button
-                        className="btn btn-sm btn-outline-danger border-0"
-                        onClick={() => handleDelete(b.id)}
-                        title="Delete Booking"
-                      >
-                        <FaTrash />
-                      </button>
+                        {/* Eye Button */}
+                        <Link
+                          to={`/admin/bookings/${b.id}`}
+                          className="btn btn-sm btn-outline-primary border-0 px-2"
+                          title="View Details"
+                        >
+                          <FaEye />
+                        </Link>
+
+                        {/* Delete Button */}
+                        <button
+                          className="btn btn-sm btn-outline-danger border-0 px-2"
+                          onClick={() => handleDelete(b.id)}
+                          title="Delete Booking"
+                        >
+                          <FaTrash />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))
@@ -221,4 +243,3 @@ const ManageBookings = () => {
 };
 
 export default ManageBookings;
-

@@ -130,7 +130,7 @@ const VisaDetails = () => {
               
               {visa.description && (
                 <div 
-                  className="text-secondary fs-5 mb-5 additional-details details-content"
+                  className="ql-editor p-0 blog-content additional-details2 details-content"
                   dangerouslySetInnerHTML={{ __html: visa.description }}
                 />
               )}

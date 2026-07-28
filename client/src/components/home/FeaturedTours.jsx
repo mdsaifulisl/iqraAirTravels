@@ -7,7 +7,7 @@ import { useTours } from '../../hooks/useTours';
 const FeaturedTours = () => {
   const { tours } = useTours();
 
-  const tourList = tours.length > 0 ? tours.slice(0, 3) : TourJsonData.slice(0, 3); 
+  const tourList = tours?.length > 0 ? tours?.slice(0, 3) : TourJsonData.slice(0, 3); 
   return (
     <section className="section-padding bg-alice-blue">
       <div className="container">

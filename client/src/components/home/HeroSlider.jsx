@@ -11,6 +11,7 @@ import {
 import useSlider from "../../hooks/useSlider";
 import Airport from "../../data/airports.json";
 import useSetting from "../../hooks/useSetting";
+import { useNavigate } from "react-router-dom";
 
 // country 
 const popularAirports = Airport.map((airport) => ({
@@ -24,54 +25,25 @@ const sliderDataJson = [
   {
     id: 1,
     image:
-      "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1920&q=80",
-    headline: "Dream Your Next Vacation",
-    subtext: "Explore the most beautiful beaches in the world",
-    btn1: "Explore Beaches",
-    btn2: "Learn More",
-    link: "/destinations",
+      "/makka.jpg",
+    headline: "উমরাহ কাফেলা বুকিং চলছে",
+    subtext: "বুকিং চলছে",
+    btn1: "",
+    btn2: "",
+    link: "",
   },
-  {
-    id: 2,
-    image:
-      "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1920&q=80",
-    headline: "Adventure Awaits",
-    subtext: "Trekking, hiking & mountain tours",
-    btn1: "Start Adventure",
-    btn2: "View Tours",
-    link: "/tours",
-  },
-  {
-    id: 3,
-    image:
-      "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?auto=format&fit=crop&w=1920&q=80",
-    headline: "City Breaks",
-    subtext: "Discover vibrant cities & cultures",
-    btn1: "Explore Cities",
-    btn2: "See Deals",
-    link: "/visa-service",
-  },
-  {
-    id: 4,
-    image:
-      "https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=1920&q=80",
-    headline: "Wildlife & Nature",
-    subtext: "Get close to nature with our safari tours",
-    btn1: "Discover Wildlife",
-    btn2: "Book Now",
-    link: "/air-tickets",
-  },
+  
 ];
 
 const HeroSlider = () => {
   const [current, setCurrent] = useState(0);
   const { sliders } = useSlider();
   const { settings } = useSetting();
-  // console.log("Affiliate Link from useSetting:", settings?.affiliateLink);
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    fromAirport: "Kuala Lumpur (KUL)",
-    toAirport: "Dhaka (DAC)",
+    fromAirport: "",
+    toAirport: "",
     departDate: "",
   });
 
@@ -127,7 +99,6 @@ const HeroSlider = () => {
     if (fieldName === "toAirport") setShowToDropdown(false);
   };
 
-  // 
   const getFilteredAirports = (inputValue) => {
     const cleanValue = (inputValue || "").trim().toLowerCase();
     if (!cleanValue) return popularAirports;
@@ -156,6 +127,17 @@ const HeroSlider = () => {
     return cleanStr.substring(0, 3).toUpperCase();
   };
 
+  // লিংক এক্সটার্নাল না ইন্টার্নাল তা চেক করে ন্যাভিগেট করার ফাংশন
+  const handleButtonClick = (link) => {
+    if (!link) return;
+    
+    if (/^https?:\/\//i.test(link)) {
+      window.open(link, "_blank", "noopener,noreferrer");
+    } else {
+      navigate(link);
+    }
+  };
+
   const handleSearchSubmit = (e) => {
     e.preventDefault();
 
@@ -177,7 +159,7 @@ const HeroSlider = () => {
         sid = urlObj.searchParams.get("SID") || sid;
         tripSub3 = urlObj.searchParams.get("trip_sub3") || tripSub3;
       }
-      // eslint-disable-next-line no-unused-vars
+    // eslint-disable-next-line no-unused-vars
     } catch (error) {
       console.error("Invalid URL in DB");
     }
@@ -208,18 +190,31 @@ const HeroSlider = () => {
             </div>
             <div className="container slide-info">
               <div className="row justify-content-center">
-                <div className="col-lg-8 text-center text-white">
+                <div className="col-lg-12 text-center text-white">
                   <h1 className="display-3 fw-bold mb-3 animate-up">
                     {slide?.headline}
                   </h1>
-                  <p className="lead mb-4 animate-down">{slide?.subtext}</p>
+                  {slide?.subtext && (
+                    <p className="lead mb-4 animate-down">{slide?.subtext}</p>
+                  )}
                   <div className="d-flex justify-content-center gap-3 animate-up">
-                    <button className="btn btn-coral px-4 py-2 fw-bold bg-text-coral">
-                      {slide?.btn1}
-                    </button>
-                    <button className="btn btn-outline-light px-4 py-2 fw-bold">
-                      {slide?.btn2}
-                    </button>
+                    {slide?.btn1 && (
+                      <button 
+                        onClick={() => handleButtonClick(slide?.link)} 
+                        className="btn btn-coral px-4 py-2 fw-bold"
+                      >
+                        {slide?.btn1}
+                      </button>
+                    )}
+              
+                    {slide?.btn2 && (
+                      <button 
+                        onClick={() => handleButtonClick(slide?.link)} 
+                        className="btn btn-outline-light px-4 py-2 fw-bold"
+                      >
+                        {slide?.btn2}
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
@@ -359,8 +354,7 @@ const HeroSlider = () => {
                     className="position-absolute w-100 bg-white border border-teal rounded-2 mt-1 shadow-lg overflow-auto webkit-scrollbar-none"
                     style={{
                       zIndex: 1050,
-                      maxHeight:
-                        "250px" /*msOverflowStyle: 'none', scrollbarWidth: 'none' */,
+                      maxHeight: "250px",
                     }}
                   >
                     {getFilteredAirports(formData.toAirport).map((airport) => (

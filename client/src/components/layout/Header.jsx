@@ -15,36 +15,33 @@ import {
 } from "react-icons/fa";
 import "../../assets/style/header.css";
 import useSetting from "../../hooks/useSetting";
-import { useAuth } from "../../hooks/useAuth"; 
-
-
+import { useAuth } from "../../hooks/useAuth";
 
 const Header = () => {
   const { user, logout } = useAuth();
   const [isMobile, setIsMobile] = useState(false);
   const [showTopHeader, setShowTopHeader] = useState(true);
 
-  const { settings } = useSetting(); 
+  const { settings } = useSetting();
 
   const handleLogout = async () => {
-    
     await logout();
     window.location.reload();
   };
 
   // মেনু আইটেমগুলো এক জায়গায় রাখা হলো
-const navLinks = [
-  { name: "Home", path: "/" },
-  { name: "Hajj & Umrah", path: "/hajj&umrah" },
-  { name: "Tours", path: "/tours" },
-  { name: "Visa Service", path: "/visa-service" },
-  { name: "Air Tickets", path: "/air-tickets" },
-  { name: "Blog", path: "/blog" },
-  { name: "About", path: "/about" },
-  { name: "Contact", path: "/contact" },
-  // যদি user থাকে, তবেই এই অবজেক্টটি অ্যারেতে ঢুকবে 
-  ...(user ? [{ name: "Admin", path: "/admin" }] : []),
-];
+  const navLinks = [
+    { name: "Home", path: "/" },
+    { name: "Hajj & Umrah", path: "/hajj&umrah" },
+    { name: "Tours", path: "/tours" },
+    { name: "Visa Service", path: "/visa-service" },
+    { name: "Air Tickets", path: "/air-tickets" },
+    { name: "Blog", path: "/blog" },
+    { name: "About", path: "/about" },
+    { name: "Contact", path: "/contact" },
+    // যদি user থাকে, তবেই এই অবজেক্টটি অ্যারেতে ঢুকবে
+    ...(user ? [{ name: "Admin", path: "/admin" }] : []),
+  ];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -56,18 +53,45 @@ const navLinks = [
 
   return (
     <>
-
       <Helmet>
-        <title>{settings?.siteName || "Expert Travel"}</title>
-        <meta property="og:title" content={settings?.metaTitle || "Iqra Air Travels"} />
-        <meta property="og:description" content={settings?.metaDescription || "Welcome to Iqra Air Travels - Your premium travel agency."} />
+        {/* ১. ব্রাউজার ট্যাব এবং গুগল সার্চের মূল টাইটেল */}
+        <title>
+          {settings?.metaTitle
+            ? `${settings?.siteName || "Iqra Air Travels"} | ${settings.metaTitle} `
+            : settings?.siteName || "Iqra Air Travels"}
+        </title>
+
+        {/* ২. গুগল সার্চ ইঞ্জিনের জন্য স্ট্যান্ডার্ড মেটা ডেসক্রিপশন (এটি বাদ পড়েছিল) */}
+        <meta
+          name="description"
+          content={
+            settings?.metaDescription ||
+            "Welcome to Iqra Air Travels - Your premium travel agency."
+          }
+        />
+
+        {/* ৩. সোশাল মিডিয়া (Facebook, WhatsApp, LinkedIn) শেয়ারিং এর জন্য Open Graph */}
+        <meta
+          property="og:title"
+          content={
+            settings?.metaTitle || settings?.siteName || "Iqra Air Travels"
+          }
+        />
+        <meta
+          property="og:description"
+          content={
+            settings?.metaDescription ||
+            "Welcome to Iqra Air Travels - Your premium travel agency."
+          }
+        />
         <meta property="og:type" content="website" />
         <meta property="og:image" content={settings?.siteLogo || "/logo.png"} />
 
+        {/* ৪. ফেভিকন (Favicon) */}
         {settings?.siteFavicon && (
-          <link rel="icon" type="image/png" href={settings?.siteFavicon || " "} />
+          <link rel="icon" type="image/png" href={settings.siteFavicon} />
         )}
-      </Helmet>   
+      </Helmet>
 
       {/* Top Header */}
       <div
@@ -76,18 +100,44 @@ const navLinks = [
         <div className="container d-flex justify-content-between align-items-center h-100">
           <div className="top-left d-flex gap-4">
             <span className="d-flex align-items-center gap-1">
-              <FaEnvelope className="top-icon text-coral" /> <span className="text-teal fw-bold">{settings?.siteEmail || "email not available"}</span>
+              <FaEnvelope className="top-icon text-coral" />{" "}
+              <span className="text-teal fw-bold">
+                {settings?.siteEmail || "email not available"}
+              </span>
             </span>
-          
+
             <span className="d-flex align-items-center gap-1">
-              <FaPhoneAlt className="top-icon text-coral" /> <span className="text-teal fw-bold">{settings?.phone || "number not available"}</span>
+              <FaPhoneAlt className="top-icon text-coral" />{" "}
+              <span className="text-teal fw-bold">
+                {settings?.phone || "number not available"}
+              </span>
             </span>
           </div>
           <div className="top-right d-flex gap-3">
-            <a className="text-teal" target="_blank" rel="noopener noreferrer" href={settings?.facebook || "#"}><FaFacebookF className="social-icon" /></a>
-            <a className="text-teal" target="_blank" rel="noopener noreferrer" href={settings?.twitter || "#"}><FaTwitter className="social-icon" /></a>
-            <a className="text-teal" target="_blank" rel="noopener noreferrer" href={settings?.instagram || "#"}><FaInstagram className="social-icon" /></a>
-            
+            <a
+              className="text-teal"
+              target="_blank"
+              rel="noopener noreferrer"
+              href={settings?.facebook || "#"}
+            >
+              <FaFacebookF className="social-icon" />
+            </a>
+            <a
+              className="text-teal"
+              target="_blank"
+              rel="noopener noreferrer"
+              href={settings?.twitter || "#"}
+            >
+              <FaTwitter className="social-icon" />
+            </a>
+            <a
+              className="text-teal"
+              target="_blank"
+              rel="noopener noreferrer"
+              href={settings?.instagram || "#"}
+            >
+              <FaInstagram className="social-icon" />
+            </a>
           </div>
         </div>
       </div>
@@ -103,8 +153,8 @@ const navLinks = [
                 src={settings?.siteLogo || "/logo.png"}
                 alt={settings?.siteName || "Logo"}
                 style={{
-                  height: "40px", 
-                  width: "auto", 
+                  height: "40px",
+                  width: "auto",
                   objectFit: "contain",
                   borderRadius: "5px",
                 }}
@@ -116,19 +166,18 @@ const navLinks = [
           <nav className={`nav-menu ${isMobile ? "mobile-show" : ""}`}>
             <div className="mobile-drawer-header d-lg-none">
               <div className="logo">
-                
                 <span className="logo-text text-white">
                   <img
-                className="img-fluid"
-                src={settings?.siteLogo || "/logo.png"}
-                alt={settings?.siteName || "Logo"}
-                style={{
-                  height: "30px", 
-                  width: "auto", 
-                  objectFit: "contain",
-                  borderRadius: "5px",
-                }}
-              />
+                    className="img-fluid"
+                    src={settings?.siteLogo || "/logo.png"}
+                    alt={settings?.siteName || "Logo"}
+                    style={{
+                      height: "30px",
+                      width: "auto",
+                      objectFit: "contain",
+                      borderRadius: "5px",
+                    }}
+                  />
                 </span>
               </div>
               <button className="close-btn" onClick={() => setIsMobile(false)}>
@@ -149,45 +198,41 @@ const navLinks = [
 
             {user ? (
               <button
-          
-              className="nav-item d-block d-lg-none text-danger border-0 p-1 left-0"
-              onClick={handleLogout}
-            >
-              Logout
-            </button>
-            ):(
+                className="nav-item d-block d-lg-none text-danger border-0 p-1 left-0"
+                onClick={handleLogout}
+              >
+                Logout
+              </button>
+            ) : (
               <NavLink
-              to="/login"
-              className="nav-item d-block d-lg-none"
-              onClick={() => setIsMobile(false)}
-            >
-              Login
-            </NavLink>
+                to="/login"
+                className="nav-item d-block d-lg-none"
+                onClick={() => setIsMobile(false)}
+              >
+                Login
+              </NavLink>
             )}
-            
           </nav>
 
           {/* Right Actions */}
           <div className="header-actions d-flex align-items-center">
             {user ? (
-              <button 
-              onClick={handleLogout}
-              className="login-link d-none d-lg-flex align-items-center gap-1 border-0 "
-            >
-              <FaSignOutAlt />
-              <span>Logout</span>
-            </button>
-              
+              <button
+                onClick={handleLogout}
+                className="login-link d-none d-lg-flex align-items-center gap-1 border-0 "
+              >
+                <FaSignOutAlt />
+                <span>Logout</span>
+              </button>
             ) : (
               <Link
-              to="/login"
-              className="login-link d-none d-lg-flex align-items-center gap-1"
-            >
-              <FaUser />
-              <span>Login</span>
-            </Link>
+                to="/login"
+                className="login-link d-none d-lg-flex align-items-center gap-1"
+              >
+                <FaUser />
+                <span>Login</span>
+              </Link>
             )}
-            
 
             <button
               className="mobile-toggle-btn d-lg-none border-0 bg-transparent text-teal"
@@ -211,4 +256,3 @@ const navLinks = [
 export default Header;
 
 
-// এটা আমার হেডার এখন mata title টা কোথায় রাখবো Meta Description তো ফুটারে রেখেছি ই 

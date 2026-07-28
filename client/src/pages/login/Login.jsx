@@ -97,7 +97,7 @@ const Login = () => {
                 {/* Left Side: Travel Banner Image */}
                 <div className="col-md-6 d-none d-md-flex flex-column justify-content-center align-items-center bg-teal text-white p-5 position-relative" 
                      style={{ 
-                       backgroundImage: 'linear-gradient(rgba(0, 128, 128, 0.85), rgba(0, 128, 128, 0.85)), url("https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=800&q=80")', 
+                       backgroundImage: 'linear-gradient(rgba(0, 128, 128, 0.85), rgba(0, 128, 128, 0.85)), url("/login.avif")', 
                        backgroundSize: 'cover', 
                        backgroundPosition: 'center' 
                      }}>

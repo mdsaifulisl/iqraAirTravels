@@ -16,15 +16,19 @@ import {
 } from "react-icons/fa";
 import useSetting from "../../../hooks/useSetting";
 import { useAuth } from "../../../hooks/useAuth";
- 
+import { compressImageNative } from "../../../components/helpers/compressor";
+
 const Settings = () => {
-  // const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("general");
   const { settings, saveSettings, isUpdating } = useSetting();
 
   const [formData, setFormData] = useState({});
   const [logoFile, setLogoFile] = useState(null);
   const [previewLogo, setPreviewLogo] = useState(null);
+
+  const [faviconFile, setFaviconFile] = useState(null);
+  const [previewFavicon, setPreviewFavicon] = useState(null);
+
   const { updatePassword, psmessage, setPmessage, logout } = useAuth();
   const [changePassword, setChangePassword] = useState({
     oldPassword: "",
@@ -32,18 +36,14 @@ const Settings = () => {
     confirmPassword: "",
   });
 
- const [faviconFile, setFaviconFile] = useState(null); 
- const [previewFavicon, setPreviewFavicon] = useState(null);
-
-
-useEffect(() => {
-  if (settings) {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setFormData(settings);
-    setPreviewLogo(settings.siteLogo);
-    setPreviewFavicon(settings.siteFavicon); 
-  }
-}, [settings]);
+  useEffect(() => {
+    if (settings) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setFormData(settings);
+      setPreviewLogo(settings.siteLogo);
+      setPreviewFavicon(settings.siteFavicon);
+    }
+  }, [settings]);
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -53,46 +53,55 @@ useEffect(() => {
     }));
   };
 
-  const handleLogoChange = (e) => {
+  const handleLogoChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      setLogoFile(file);
-      setPreviewLogo(URL.createObjectURL(file));
+      try {
+        const compressedFile = await compressImageNative(file);
+        setLogoFile(compressedFile);
+        setPreviewLogo(URL.createObjectURL(compressedFile));
+      // eslint-disable-next-line no-unused-vars
+      } catch (error) {
+        setLogoFile(file);
+        setPreviewLogo(URL.createObjectURL(file));
+      }
     }
   };
 
-const handleFaviconChange = (e) => {
-  const file = e.target.files[0];
-  if (file) {
-    setFaviconFile(file); 
-    setPreviewFavicon(URL.createObjectURL(file)); 
-  }
-};
-
-// ৩. সেটিংস সেভ করার সময় (খুবই গুরুত্বপূর্ণ)
-const handleSave = async () => {
-  const data = new FormData();
-  
- 
-  Object.keys(formData).forEach((key) => {
-   
-    if (key !== "siteLogo" && key !== "siteFavicon") {
-      data.append(key, formData[key]);
+  const handleFaviconChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      try {
+        const compressedFile = await compressImageNative(file);
+        setFaviconFile(compressedFile);
+        setPreviewFavicon(URL.createObjectURL(compressedFile));
+      // eslint-disable-next-line no-unused-vars
+      } catch (error) {
+        setFaviconFile(file);
+        setPreviewFavicon(URL.createObjectURL(file));
+      }
     }
-  });
+  };
 
-  
-  if (logoFile) {
-    data.append("siteLogo", logoFile);
-  }
+  const handleSave = async () => {
+    const data = new FormData();
 
-  
-  if (faviconFile) {
-    data.append("siteFavicon", faviconFile); 
-  }
+    Object.keys(formData).forEach((key) => {
+      if (key !== "siteLogo" && key !== "siteFavicon") {
+        data.append(key, formData[key]);
+      }
+    });
 
-  await saveSettings(data);
-};
+    if (logoFile) {
+      data.append("siteLogo", logoFile);
+    }
+
+    if (faviconFile) {
+      data.append("siteFavicon", faviconFile);
+    }
+
+    await saveSettings(data);
+  };
 
   const handleChangePassword = async (e) => {
     if (e) e.preventDefault();
@@ -102,7 +111,7 @@ const handleSave = async () => {
     }
     const result = await updatePassword(
       changePassword.oldPassword,
-      changePassword.newPassword,
+      changePassword.newPassword
     );
 
     if (result.success) {
@@ -115,11 +124,11 @@ const handleSave = async () => {
     }
   };
 
-  const hendleChangePasswordinput = (e) => {
-    setChangePassword({
-      ...changePassword,
+  const handleChangePasswordInput = (e) => {
+    setChangePassword((prev) => ({
+      ...prev,
       [e.target.name]: e.target.value,
-    });
+    }));
   };
 
   if (!settings)
@@ -144,7 +153,6 @@ const handleSave = async () => {
       </div>
 
       <div className="row g-4">
-        {/* Sidebar Tabs */}
         <div className="col-lg-3">
           <div className="card border-0 shadow-sm rounded-4 p-2">
             <div className="nav flex-column nav-pills gap-2">
@@ -160,7 +168,11 @@ const handleSave = async () => {
               ].map((tab) => (
                 <button
                   key={tab.id}
-                  className={`nav-link rounded-3 py-3 d-flex align-items-center gap-3 border-0 transition-all ${activeTab === tab.id ? "text-white shadow" : "text-dark hover-bg-light"}`}
+                  className={`nav-link rounded-3 py-3 d-flex align-items-center gap-3 border-0 transition-all ${
+                    activeTab === tab.id
+                      ? "text-white shadow"
+                      : "text-dark hover-bg-light"
+                  }`}
                   style={{
                     backgroundColor:
                       activeTab === tab.id
@@ -176,10 +188,8 @@ const handleSave = async () => {
           </div>
         </div>
 
-        {/* Tab Content */}
         <div className="col-lg-9">
           <div className="card border-0 shadow-sm rounded-4 p-4">
-            {/* 1. GENERAL SETTINGS */}
             {activeTab === "general" && (
               <div className="animate__animated animate__fadeIn">
                 <h5 className="fw-bold mb-4 border-bottom pb-2">
@@ -208,6 +218,7 @@ const handleSave = async () => {
                       onChange={handleInputChange}
                     />
                   </div>
+
                   <div className="col-12 mt-3">
                     <label className="small fw-bold mb-2">
                       Upload Site Logo
@@ -245,7 +256,6 @@ const handleSave = async () => {
                     </div>
                   </div>
 
-                  {/* Upload Favicon (Logo Upload এর ঠিক নিচে এটি বসাতে পারেন) */}
                   <div className="col-12 mt-3">
                     <label className="small fw-bold mb-2">
                       Upload Site Favicon (Icon)
@@ -264,7 +274,6 @@ const handleSave = async () => {
                         />
                       ) : (
                         <div className="text-muted mb-2">
-                          {/* favicon এর জন্য একটি ছোট আইকন বা টেক্সট */}
                           <small>No Icon Selected</small>
                         </div>
                       )}
@@ -275,7 +284,7 @@ const handleSave = async () => {
                         type="file"
                         hidden
                         id="faviconUpload"
-                        onChange={handleFaviconChange} // এই ফাংশনটি হ্যান্ডলার হিসেবে লিখবেন
+                        onChange={handleFaviconChange}
                         accept="image/x-icon, image/png, image/jpeg"
                       />
                       <label
@@ -315,14 +324,12 @@ const handleSave = async () => {
               </div>
             )}
 
-            {/* 2. CONTACT & SOCIAL */}
             {activeTab === "contact" && (
               <div className="animate__animated animate__fadeIn">
                 <h5 className="fw-bold mb-4 border-bottom pb-2">
                   Contact & Social Media
                 </h5>
                 <div className="row g-3">
-                  
                   <div className="col-md-6">
                     <label className="small fw-bold mb-1">
                       <FaEnvelope className="me-1 text-teal" /> Public Email
@@ -349,8 +356,7 @@ const handleSave = async () => {
                   </div>
                   <div className="col-12">
                     <label className="small fw-bold mb-1">
-                      <FaMapMarkerAlt className="me-1 text-teal" /> Office
-                      Address
+                      <FaMapMarkerAlt className="me-1 text-teal" /> Office Address
                     </label>
                     <textarea
                       className="form-control bg-light border-0 py-2"
@@ -359,7 +365,7 @@ const handleSave = async () => {
                       value={formData.address || ""}
                       onChange={handleInputChange}
                     ></textarea>
-                  </div> 
+                  </div>
 
                   <hr className="my-4 opacity-10" />
                   <h6 className="fw-bold mb-3 text-teal">
@@ -408,7 +414,7 @@ const handleSave = async () => {
                       <FaLinkedin
                         className="text-primary me-1"
                         style={{ color: "#0077b5" }}
-                      />{" "}
+                      />
                       LinkedIn Profile
                     </label>
                     <input
@@ -422,8 +428,7 @@ const handleSave = async () => {
                   </div>
                   <div className="col-md-6">
                     <label className="small fw-bold mb-1">
-                      <FaWhatsapp className="text-success me-1" /> WhatsApp
-                      Number
+                      <FaWhatsapp className="text-success me-1" /> WhatsApp Number
                     </label>
                     <input
                       type="text"
@@ -438,7 +443,6 @@ const handleSave = async () => {
               </div>
             )}
 
-            {/* 3. SEO & ANALYTICS */}
             {activeTab === "seo" && (
               <div className="animate__animated animate__fadeIn">
                 <h5 className="fw-bold mb-4 border-bottom pb-2">
@@ -473,9 +477,8 @@ const handleSave = async () => {
               </div>
             )}
 
-            {/* 4. SECURITY */}
             {activeTab === "security" && (
-              <div className="animate__animated animate__fadeIn">
+              <form onSubmit={handleChangePassword} className="animate__animated animate__fadeIn">
                 <h5 className="fw-bold mb-4 border-bottom pb-2">
                   Admin Security
                 </h5>
@@ -494,22 +497,24 @@ const handleSave = async () => {
                     </label>
                     <input
                       name="oldPassword"
-                      value={setChangePassword.oldPassword}
-                      onChange={hendleChangePasswordinput}
+                      value={changePassword.oldPassword}
+                      onChange={handleChangePasswordInput}
                       type="password"
                       placeholder="••••••••"
                       className="form-control bg-light border-0 py-2"
+                      required
                     />
                   </div>
                   <div className="col-md-6">
                     <label className="small fw-bold mb-1">New Password</label>
                     <input
                       name="newPassword"
-                      value={setChangePassword.newPassword}
-                      onChange={hendleChangePasswordinput}
+                      value={changePassword.newPassword}
+                      onChange={handleChangePasswordInput}
                       type="password"
                       placeholder="Enter new password"
                       className="form-control bg-light border-0 py-2"
+                      required
                     />
                   </div>
                   <div className="col-md-6">
@@ -518,21 +523,22 @@ const handleSave = async () => {
                     </label>
                     <input
                       name="confirmPassword"
-                      value={setChangePassword.confirmPassword}
-                      onChange={hendleChangePasswordinput}
+                      value={changePassword.confirmPassword}
+                      onChange={handleChangePasswordInput}
                       type="password"
                       placeholder="Confirm new password"
                       className="form-control bg-light border-0 py-2"
+                      required
                     />
                   </div>
                 </div>
-              </div>
+              </form>
             )}
 
-            {/* Global Save Button */}
             <div className="mt-5 border-top pt-4 text-end">
               {activeTab === "security" ? (
                 <button
+                  type="button"
                   onClick={handleChangePassword}
                   className="btn text-white px-5 py-2 rounded-pill shadow-sm d-inline-flex align-items-center gap-2"
                   style={{
@@ -541,10 +547,11 @@ const handleSave = async () => {
                     opacity: isUpdating ? 0.7 : 1,
                   }}
                 >
-                  change password
+                  Change Password
                 </button>
               ) : (
                 <button
+                  type="button"
                   className="btn text-white px-5 py-2 rounded-pill shadow-sm d-inline-flex align-items-center gap-2"
                   onClick={handleSave}
                   disabled={isUpdating}

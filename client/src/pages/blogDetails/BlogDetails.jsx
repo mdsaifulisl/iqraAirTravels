@@ -182,7 +182,7 @@ const BlogDetails = () => {
             {/* Post Content */}
             <div className="blog-content-area mb-5">
               <div
-                className="ql-editor p-0 additional-details fs-5 text-secondary details-content"
+                className="ql-editor blog-content p-0 additional-details2 details-content"
                 style={{ lineHeight: "1.8", lineBreak: "anywhere" }}
                 dangerouslySetInnerHTML={{ __html: post.content }}
               />

@@ -32,9 +32,9 @@ const BlogCard = ({ BlogCardData }) => {
                             
                             <div className="blog-content p-4 d-flex flex-column flex-grow-1">
                                 {/* টাইটেল ২ লাইনে সীমাবদ্ধ রাখার জন্য স্লাইসিং */}
-                                <h4 className="blog-title h5 fw-bold text-teal mb-3">
+                                <h5 className="blog-title h5 fw-bold text-teal mb-3">
                                     {post.title.length > 55 ? `${post.title.slice(0, 55)}...` : post.title}
-                                </h4>
+                                </h5>
                                 
                                 {/* কন্টেন্ট থেকে শর্ট ডেসক্রিপশন তৈরি */}
                                 <p className="blog-excerpt text-secondary small mb-4">

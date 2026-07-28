@@ -16,7 +16,7 @@ const SpecialVacation = () => {
             <div className="col-lg-6 position-relative">
               <div className="offer-image">
                 <img 
-                  src="https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?auto=format&fit=crop&w=800&q=80" 
+                  src="/image2.avif" 
                   alt="Special Beach Vacation" 
                   className="img-fluid h-100 object-fit-cover"
                 />

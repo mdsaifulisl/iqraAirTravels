@@ -11,15 +11,15 @@ const Destinations = () => {
   const { destinations, loading, error } = useDestinations();
   const destinationsData =
     destinations?.length > 0 ? destinations : destinationsJsonData;
-  const stripHtml = (html) => {
-    const tmp = document.createElement("DIV");
-    tmp.innerHTML = html;
-    return tmp.textContent || tmp.innerText || "";
-  };
+  // const stripHtml = (html) => {
+  //   const tmp = document.createElement("DIV");
+  //   tmp.innerHTML = html;
+  //   return tmp.textContent || tmp.innerText || "";
+  // };
 
   if (loading)
     return <div className="text-center p-5">Loading Destinations...</div>;
-  if (error) return <div className="alert alert-danger m-4">{error}</div>;
+  if (error) return <div className="alert alert-danger m-4 text-center">{error}</div>;
 
   return (
     <div className="destinations-page pb-5">
@@ -84,16 +84,18 @@ const Destinations = () => {
                     </span>
                   </div>
 
-                  <h4 className="card-title fw-bold text-dark mb-3 h5">
-                    {dest.title}
-                  </h4>
+                  <h5 className="card-title fw-bold text-dark mb-3 h5">
+                    {dest.title.length > 70
+                      ? `${dest.title.slice(0, 70)}...`
+                      : dest.title}
+                  </h5>
 
                   {/* Clean Text Description */}
-                  <p className="card-text text-secondary small mb-4 flex-grow-1">
+                  {/* <p className="card-text text-secondary small mb-4 flex-grow-1">
                     {stripHtml(dest.description).length > 90
                       ? `${stripHtml(dest.description).slice(0, 90)}...`
                       : stripHtml(dest.description)}
-                  </p>
+                  </p> */}
 
                   <button
                     onClick={() => navigate(`/hajj&umrah/${dest.id}`)}

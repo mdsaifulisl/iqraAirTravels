@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { FaSave, FaArrowLeft, FaPlus, FaTrash, FaCloudUploadAlt } from "react-icons/fa";
+import { FaSave, FaArrowLeft, FaPlus, FaTrash, FaCloudUploadAlt, FaSpinner } from "react-icons/fa";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import TextEditor from "../../../components/shared/TextEditor";
 import 'react-quill-new/dist/quill.snow.css';
 
-import { createTour, updateTour, getTourById } from "../../../api/tourService"; // API ফাংশনগুলো
-import { useTours } from "../../../hooks/useTours";  // গ্লোবাল রিফ্রেশের জন্য
+import { createTour, updateTour, getTourById } from "../../../api/tourService";
+import { useTours } from "../../../hooks/useTours";
+import { compressImageNative } from "../../../components/helpers/compressor";
 
 const AddTour = () => {
   const { id } = useParams();
@@ -15,6 +16,9 @@ const AddTour = () => {
 
   const [description, setDescription] = useState("");
   const [selectedImages, setSelectedImages] = useState([]); 
+  const [isCompressing, setIsCompressing] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const [formData, setFormData] = useState({
     title: "",
     location: "",
@@ -27,48 +31,72 @@ const AddTour = () => {
 
   // ১. Edit Mode হলে ডাটা লোড করা
   useEffect(() => {
-  if (isEditMode) {
-    const loadTourData = async () => {
-      try {
-        const response = await getTourById(id);
-        if (response.success) {
-          setFormData(response.data);
-          setDescription(response.data.description);
-          
-          // আগের ইমেজগুলো প্রিভিউ হিসেবে সেট করা
-          if (response.data.images && response.data.images.length > 0) {
-            const previousImages = response.data.images.map(imgUrl => ({
-              file: null, 
-              preview: `${imgUrl}`, 
-              isExisting: true 
-            }));
-            setSelectedImages(previousImages);
+    if (isEditMode) {
+      const loadTourData = async () => {
+        try {
+          const response = await getTourById(id);
+          if (response.success) {
+            setFormData(response.data);
+            setDescription(response.data.description || "");
+
+            if (response.data.images && response.data.images.length > 0) {
+              const previousImages = response.data.images.map(imgUrl => ({
+                file: null, 
+                preview: imgUrl, 
+                isExisting: true 
+              }));
+              setSelectedImages(previousImages);
+            }
           }
+        } catch (error) {
+          console.error("ডাটা লোড করতে সমস্যা:", error);
         }
-      } catch (error) {
-        console.error("ডাটা লোড করতে সমস্যা:", error);
-      }
-    };
-    loadTourData();
-  }
-}, [id, isEditMode]);
+      };
+      loadTourData();
+    }
+  }, [id, isEditMode]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleImageChange = (e) => {
+  // ২. ইমেজ সিলেক্ট ও ক্লায়েন্ট-সাইড কমপ্রেশন হ্যান্ডলিং
+  const handleImageChange = async (e) => {
     const files = Array.from(e.target.files);
-    // প্রিভিউ এবং মেইন ফাইল আলাদাভাবে রাখার জন্য
-    const newImages = files.map(file => ({
-      file: file,
-      preview: URL.createObjectURL(file)
-    }));
-    setSelectedImages([...selectedImages, ...newImages]);
+    if (!files.length) return;
+
+    setIsCompressing(true);
+
+    try {
+      const compressedImageObjects = await Promise.all(
+        files.map(async (file) => {
+          // ইমেজ কমপ্রেশন
+          const compressedFile = await compressImageNative(file, 1600, 1600, 0.7);
+          return {
+            file: compressedFile,
+            preview: URL.createObjectURL(compressedFile),
+            isExisting: false
+          };
+        })
+      );
+
+      setSelectedImages((prevImages) => [...prevImages, ...compressedImageObjects]);
+    } catch (error) {
+      console.error("ইমেজ কমপ্রেস করতে সমস্যা হয়েছে:", error);
+    } finally {
+      setIsCompressing(false);
+      e.target.value = ""; // Input reset
+    }
   };
 
+  // ৩. ইমেজ রিমুভ ও মেমোরি ক্লিনআপ
   const removeImage = (index) => {
+    const targetImage = selectedImages[index];
+    if (targetImage && !targetImage.isExisting && targetImage.preview) {
+      URL.revokeObjectURL(targetImage.preview);
+    }
+
     const filtered = selectedImages.filter((_, i) => i !== index);
     setSelectedImages(filtered);
   };
@@ -83,63 +111,58 @@ const AddTour = () => {
     setFormData({ ...formData, highlights: [...formData.highlights, ""] });
   };
 
+  // ৪. সাবমিট হ্যান্ডলার
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isSubmitting) return;
+
+    setIsSubmitting(true);
     const data = new FormData();
-    
-   // ১. সাধারণ ফিল্ডগুলো যোগ করা
-  Object.keys(formData).forEach(key => {
-    // highlights, images এবং description এই ৩টি বাদ দিয়ে বাকি সব লুপে যোগ হবে
-    if (key !== "highlights" && key !== "images" && key !== "description") {
-      data.append(key, formData[key] || "");
-    }
-  });
-  
-  const finalDescription = Array.isArray(description) ? description[0] : description;
-  data.append("description", finalDescription || "");
 
-  data.append("highlights", JSON.stringify(formData.highlights || []));
+    Object.keys(formData).forEach(key => {
+      if (key !== "highlights" && key !== "images" && key !== "description") {
+        data.append(key, formData[key] || "");
+      }
+    });
 
-    // ২. ইমেজ হ্যান্ডলিং (সবচেয়ে গুরুত্বপূর্ণ অংশ)
+    const finalDescription = Array.isArray(description) ? description[0] : description;
+    data.append("description", finalDescription || "");
+    data.append("highlights", JSON.stringify(formData.highlights || []));
+
     const existingImageUrls = [];
 
     selectedImages.forEach((imgObj) => {
       if (imgObj.file) {
-        // যদি এটি নতুন সিলেক্ট করা ফাইল হয়
         data.append("images", imgObj.file);
       } else if (imgObj.isExisting) {
-        // যদি এটি পুরনো ছবি হয়, তবে এর পাথটি আলাদাভাবে ট্র্যাকিং করুন
-        // যাতে ব্যাকএন্ডে আগের ছবিগুলো মুছে না যায়
         const cleanPath = imgObj.preview.replace("http://localhost:5000", "");
         existingImageUrls.push(cleanPath);
       }
     });
 
-    // পুরনো ছবির লিস্টটি স্ট্রিং হিসেবে পাঠান (ব্যাকএন্ডে এটি হ্যান্ডেল করতে হবে)
     data.append("existingImages", JSON.stringify(existingImageUrls));
 
     try {
       if (isEditMode) {
-        // এডিট মোডে আপডেট কল
         await updateTour(id, data);
         alert("ট্যুর সফলভাবে আপডেট হয়েছে!");
       } else {
-        // ক্রিয়েট মোডে কল
         await createTour(data);
         alert("নতুন ট্যুর সফলভাবে তৈরি হয়েছে!");
       }
-      
+
       fetchTours(); 
       navigate("/admin/tours");
     } catch (error) {
       console.error("Submission Error:", error);
       alert(error.response?.data?.message || "সমস্যা হয়েছে, আবার চেষ্টা করুন।");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
     <div className="animate__animated animate__fadeIn pb-5 px-3">
-      {/* হেডার অংশ আগের মতোই থাকবে */}
       <div className="d-flex justify-content-between align-items-center mb-4">
         <div>
           <h3 className="fw-bold mb-0" style={{ color: "var(--primary-teal)" }}>
@@ -161,7 +184,6 @@ const AddTour = () => {
                   <label className="small fw-bold mb-1">Tour Title</label>
                   <input type="text" name="title" className="form-control rounded-3" value={formData.title} onChange={handleChange} required />
                 </div>
-                {/* অন্যান্য ইনপুট ফিল্ড... */}
                 <div className="col-md-6">
                   <label className="small fw-bold mb-1">Location</label>
                   <input type="text" name="location" className="form-control rounded-3" value={formData.location} onChange={handleChange} />
@@ -221,13 +243,22 @@ const AddTour = () => {
               <h5 className="fw-bold mb-3 border-bottom pb-2">Upload Gallery</h5>
               <div className="upload-zone text-center p-4 border border-dashed rounded-4 mb-3" 
                    style={{ borderStyle: 'dashed', cursor: 'pointer', backgroundColor: '#f8faff' }}>
-                <input type="file" multiple accept="image/*" onChange={handleImageChange} id="fileInput" hidden />
+                <input type="file" multiple accept="image/*" onChange={handleImageChange} id="fileInput" hidden disabled={isCompressing} />
                 <label htmlFor="fileInput" className="cursor-pointer w-100 mb-0" style={{cursor: 'pointer'}}>
-                  <FaCloudUploadAlt size={40} style={{color: 'var(--primary-teal)'}} />
-                  <p className="small mb-0">Click to upload JPG, PNG</p>
+                  {isCompressing ? (
+                    <>
+                      <FaSpinner className="spinner-border text-teal mb-2" style={{ width: '24px', height: '24px' }} />
+                      <p className="small mb-0 text-muted">Optimizing images...</p>
+                    </>
+                  ) : (
+                    <>
+                      <FaCloudUploadAlt size={40} style={{color: 'var(--primary-teal)'}} />
+                      <p className="small mb-0">Click to upload JPG, PNG</p>
+                    </>
+                  )}
                 </label>
               </div>
-              
+
               <div className="row g-2">
                 {selectedImages.map((img, i) => (
                   <div key={i} className="col-4 position-relative">
@@ -238,8 +269,16 @@ const AddTour = () => {
               </div>
             </div>
 
-            <button type="submit" className="btn w-100 mt-4 py-3 rounded-4 shadow fw-bold text-white shadow-lg" style={{backgroundColor: 'var(--secondary-coral)'}}>
-              <FaSave className="me-2" /> {isEditMode ? "Save Changes" : "Publish Package"}
+            <button type="submit" disabled={isSubmitting || isCompressing} className="btn w-100 mt-4 py-3 rounded-4 shadow fw-bold text-white shadow-lg" style={{backgroundColor: 'var(--secondary-coral)'}}>
+              {isSubmitting ? (
+                <>
+                  <FaSpinner className="spinner-border spinner-border-sm me-2" /> Saving...
+                </>
+              ) : (
+                <>
+                  <FaSave className="me-2" /> {isEditMode ? "Save Changes" : "Publish Package"}
+                </>
+              )}
             </button>
           </div>
         </div>
@@ -249,4 +288,3 @@ const AddTour = () => {
 };
 
 export default AddTour;
-

@@ -17,14 +17,16 @@ const Home = () => {
     return (
         <div>
             <HeroSlider />
+            <ExplorePlaces />
             <FeaturedTours />
+             
             <SpecialOffer />
             
             {/* Visa Section Added Here */}
             <HomeVisa /> 
 
             <SpecialVacation />
-            <ExplorePlaces />
+            {/* <ExplorePlaces /> */}
             <DesiredCountry />
             {/* <Testimonials /> */}
             <BlogPosts />

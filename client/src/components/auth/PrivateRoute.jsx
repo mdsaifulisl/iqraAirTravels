@@ -4,6 +4,8 @@ import { useAuth } from '../../hooks/useAuth';
 
 const PrivateRoute = ({ children }) => {
     const { user, loading } = useAuth();
+    // console.log("User:", user);
+
     const location = useLocation();
 
     

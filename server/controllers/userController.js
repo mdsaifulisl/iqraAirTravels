@@ -90,19 +90,30 @@ exports.loginUser = async (req, res) => {
 // Get Me
 exports.getMe = async (req, res) => {
   try {
-    const user = await User.findByPk(req.user.id, {
+    const userData = await User.findByPk(req.user.id, {
       attributes: { exclude: ["password", "otpCode", "otpExpires"] },
     });
 
-    if (!user) {
+    if (!userData) {
       return res
         .status(404)
         .json({ success: false, message: "User not found" });
     }
 
-    const imgurl = user.image;
-    if (imgurl) {
-      user.image = `${BASE_URL}${imgurl}`;
+    // Sequelize Instance কে প্লেন JavaScript Object এ কনভার্ট করা
+    const user = userData.toJSON();
+
+    // অ্যাকাউন্ট এক্টিভ কি না চেক করা
+    if (user.status !== "Active") {
+      return res.status(403).json({
+        success: false,
+        message: "Your account is not active. Please contact support.",
+      });
+    }
+
+    // ইমেজ URL প্রসেসিং
+    if (user.image) {
+      user.image = `${BASE_URL}${user.image}`;
     }
 
     res.json({ success: true, user });

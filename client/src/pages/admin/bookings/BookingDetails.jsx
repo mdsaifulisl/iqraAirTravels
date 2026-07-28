@@ -175,7 +175,7 @@ const BookingDetails = () => {
     : `/tours/${booking.itemId}`;
 
   return (
-    <div className="container-fluid p-4">
+    <div className="container-fluid p-1 p-lg-4">
       {/* Header Actions */}
       <div className="d-flex flex-wrap align-items-center justify-content-between mb-4 gap-3">
         <button
@@ -211,7 +211,7 @@ const BookingDetails = () => {
         
         {/* Left Side (Desktop): Package Details */}
         <div className="col-lg-5">
-          <div className="card border-0 shadow-sm p-3 p-md-4 rounded-3 mb-4">
+          <div className="card border-0 shadow-sm p-2 p-lg-4 rounded-3 mb-4">
             <div className="border-bottom pb-3 mb-3">
               <h5 className="fw-bold text-dark m-0 text-truncate">
                 {itemDetails?.title || `Package ID: ${booking.itemId}`}

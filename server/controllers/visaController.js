@@ -6,20 +6,25 @@ require("dotenv").config();
 const BASE_URL = process.env.BASE_URL || "http://localhost:5000";
 
 // --- হেল্পার ফাংশন: ফাইল ডিলিট করা ---
-const deleteFile = (filePath) => {
-  if (!filePath) return;
-  // যদি ফুল URL থাকে তবে শুধু পাথটুকু নেওয়া
-  const relativePath = filePath.includes(BASE_URL)
-    ? filePath.split(BASE_URL)[1]
-    : filePath;
-  
-  const fullPath = path.join(__dirname, "..", relativePath);
 
-  if (fs.existsSync(fullPath)) {
-    fs.unlink(fullPath, (err) => {
-      if (err) console.error("File delete error:", err);
-      else console.log("File deleted from server:", relativePath);
-    });
+const deleteFile = (filePath) => {
+  if (!filePath || typeof filePath !== 'string') return;
+  
+  try {
+    const relativePath = filePath.includes(BASE_URL)
+      ? filePath.split(BASE_URL)[1]
+      : filePath;
+    
+    const fullPath = path.join(__dirname, "..", relativePath);
+
+    if (fs.existsSync(fullPath)) {
+      fs.unlink(fullPath, (err) => {
+        if (err) console.error("File delete error:", err);
+        else console.log("File deleted from server:", relativePath);
+      });
+    }
+  } catch (fileErr) {
+    console.error("Error in deleteFile helper:", fileErr.message);
   }
 };
 
@@ -216,18 +221,59 @@ exports.updateVisa = async (req, res) => {
 };
 
 // ৫. ভিসা ডিলিট
+// --- হেল্পার ফাংশন: ফাইল ডিলিট করা (Safe Method) ---
+
+
+// ৫. ভিসা ডিলিট (FIXED)
 exports.deleteVisa = async (req, res) => {
   try {
     const visa = await Visa.findByPk(req.params.id);
-    if (!visa) return res.status(404).json({ success: false, message: "Visa not found" });
-
-    if (visa.images && visa.images.length > 0) {
-      visa.images.forEach((img) => deleteFile(img));
+    if (!visa) {
+      return res.status(404).json({ success: false, message: "Visa not found" });
     }
 
+    // ১. ইমেজ নিরাপদভাবে পার্স করা (স্ট্রিং বা অ্যারো উভয় ক্ষেত্রে)
+    let imagesToDelete = [];
+    if (visa.images) {
+      if (Array.isArray(visa.images)) {
+        imagesToDelete = visa.images;
+      } else if (typeof visa.images === "string") {
+        try {
+          imagesToDelete = JSON.parse(visa.images);
+        } catch (parseErr) {
+          console.error("Failed to parse visa images JSON on delete:", parseErr.message);
+          imagesToDelete = [];
+        }
+      }
+    }
+
+    // ২. সার্ভার থেকে ফাইল ডিলিট করা
+    if (Array.isArray(imagesToDelete) && imagesToDelete.length > 0) {
+      imagesToDelete.forEach((img) => deleteFile(img));
+    }
+
+    // ৩. ডাটাবেজ থেকে রেকর্ড ডিলিট করা
     await visa.destroy();
-    res.status(200).json({ success: true, message: "Visa deleted successfully!" });
+
+    return res.status(200).json({ 
+      success: true, 
+      message: "Visa deleted successfully!" 
+    });
+
   } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
+    console.error("Delete Visa Error in Production:", error);
+    
+    // Foreign key restriction ধরা পড়ার জন্য
+    if (error.name === 'SequelizeForeignKeyConstraintError') {
+      return res.status(400).json({
+        success: false,
+        message: "Cannot delete this visa because it is referenced in active bookings."
+      });
+    }
+
+    return res.status(500).json({ 
+      success: false, 
+      error: error.message || "Internal Server Error" 
+    });
   }
 };

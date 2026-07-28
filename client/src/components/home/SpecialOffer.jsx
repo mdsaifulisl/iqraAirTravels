@@ -18,7 +18,7 @@ const SpecialOffer = () => {
             </div>
             <div className="col-lg-5 d-none d-lg-block">
               <img 
-                src="https://images.unsplash.com/photo-1544644181-1484b3fdfc62" 
+                src="/image1.jpg" 
                 alt="Special Offer" 
                 className="img-fluid rounded-3 shadow-lg rotate-3"
               />

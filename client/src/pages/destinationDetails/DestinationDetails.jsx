@@ -155,11 +155,11 @@ const DestinationDetails = () => {
                     About this Destination
                   </h4>
                   <div
-                    className="ql-editor p-0 additional-details2 details-content"
+                    className="ql-editor blog-content p-0 additional-details2 details-content"
                     style={{ lineBreak: "anywhere" }}
                     dangerouslySetInnerHTML={{
                       __html: destination.description,
-                    }}
+                    }} 
                   />
                 </div>
 
